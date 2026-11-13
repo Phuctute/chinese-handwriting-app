@@ -2,8 +2,19 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trình Giả Lập Chép Tay Tiếng Trung Phồn Thể</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Chép Tay Tiếng Trung - Vở Ô Ly & Kẻ Ngang</title>
+  
+  <!-- PWA & Mobile Web App Meta Tags -->
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Chép Tay">
+  <meta name="application-name" content="Chép Tay">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
   
   <!-- Preload primary handwriting font for zero delay and zero font glitch -->
   <link rel="preload" href="fonts/JasonHandwriting3.ttf" as="font" type="font/ttf" crossorigin>
@@ -692,26 +703,497 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-  </style>
+  
+    /* ========================================================
+       MODERN RESPONSIVE MOBILE-FIRST UI/UX SYSTEM
+       ======================================================== */
+
+    :root {
+      --header-h: 56px;
+      --bottom-nav-h: 64px;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+    }
+
+    /* PWA Install Button */
+    .btn-pwa {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(37, 99, 235, 0.25));
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-pwa:hover {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(37, 99, 235, 0.35));
+      border-color: #38bdf8;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .btn-pwa.has-prompt {
+      animation: pulsePwa 2.5s infinite;
+    }
+    @keyframes pulsePwa {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(56, 189, 248, 0); }
+    }
+
+    /* Dropdown Action Menu */
+    .dropdown-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      background: #1e293b;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-width: 240px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      padding: 6px;
+      animation: fadeIn 0.15s ease;
+    }
+    .dropdown-menu.show {
+      display: block;
+    }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .dropdown-item:hover {
+      background: rgba(56, 189, 248, 0.12);
+      color: #38bdf8;
+    }
+    .dropdown-item .item-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .dropdown-item .item-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Live Status Pill */
+    .live-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+      display: inline-block;
+    }
+
+    /* Mobile Bottom Navigation Dock */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--bottom-nav-h);
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 900;
+      padding: 0 6px env(safe-area-inset-bottom);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    }
+    .mobile-nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      padding: 6px 0;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+    .mobile-nav-btn:active {
+      transform: scale(0.92);
+    }
+    .mobile-nav-btn.active {
+      color: #38bdf8;
+    }
+    .mobile-nav-btn.active .nav-icon {
+      transform: translateY(-2px);
+    }
+    .mobile-nav-btn.active::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      background: #38bdf8;
+      border-radius: 999px;
+      box-shadow: 0 0 8px #38bdf8;
+    }
+    .mobile-nav-btn .nav-icon {
+      font-size: 19px;
+      transition: transform 0.15s ease;
+    }
+    .mobile-nav-btn.nav-preview-btn {
+      color: #f8fafc;
+    }
+    .mobile-nav-btn.nav-preview-btn .nav-icon {
+      font-size: 20px;
+    }
+    .mobile-nav-btn .nav-badge {
+      position: absolute;
+      top: 4px;
+      right: 18%;
+      background: #2563eb;
+      color: #fff;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 999px;
+      line-height: 1;
+    }
+
+    /* Mobile Floating Action Button (FAB) */
+    .mobile-fab-preview {
+      display: none;
+      position: fixed;
+      bottom: calc(var(--bottom-nav-h) + 14px + env(safe-area-inset-bottom));
+      right: 16px;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      font-weight: 700;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+      z-index: 850;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mobile-fab-preview:active {
+      transform: scale(0.95);
+    }
+    .mobile-fab-preview .fab-badge {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+    }
+
+    /* Mobile Preview Actions */
+    .mobile-preview-actions {
+      display: none;
+      padding: 10px 14px;
+      background: rgba(15, 23, 42, 0.95);
+      border-top: 1px solid var(--border);
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .mobile-edit-btn {
+      display: none;
+    }
+
+    /* PWA Modal Styling */
+    .pwa-card {
+      max-width: 460px;
+      padding: 24px;
+    }
+    .pwa-platform-tabs {
+      display: flex;
+      gap: 8px;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+    }
+    .pwa-tab-btn {
+      flex: 1;
+      padding: 8px 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .pwa-tab-btn.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+    .pwa-pane {
+      display: none;
+      text-align: left;
+    }
+    .pwa-pane.active {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+    .pwa-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .pwa-step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #2563eb;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .step-text {
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--text);
+    }
+    .pwa-url-strip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+    }
+    .pwa-url-strip .url-text {
+      flex: 1;
+      font-family: monospace;
+      font-size: 12px;
+      color: #38bdf8;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Zoom and toolbar actions */
+    .zoom-actions {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .zoom-actions .btn {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+    /* Responsive Breakdown */
+    @media (min-width: 900px) {
+      .main-layout {
+        display: flex;
+        height: calc(100vh - var(--header-h));
+        overflow: hidden;
+      }
+      .sidebar {
+        width: 460px;
+        min-width: 430px;
+        display: flex !important;
+        flex-direction: column;
+        height: 100%;
+        overflow-y: auto;
+      }
+      .preview-area {
+        flex: 1;
+        display: flex !important;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+      }
+      .mobile-bottom-nav {
+        display: none !important;
+      }
+      .mobile-fab-preview {
+        display: none !important;
+      }
+      .btn-text-short {
+        display: none;
+      }
+    }
+
+    @media (max-width: 899px) {
+      body {
+        height: 100dvh;
+      }
+      header {
+        padding: 8px 14px;
+        height: var(--header-h);
+      }
+      .brand-info p, .brand-sub-text {
+        display: none;
+      }
+      .brand-info h1 {
+        font-size: 14.5px;
+      }
+      .btn-text-full {
+        display: none;
+      }
+      .btn-text-short {
+        display: inline;
+      }
+      .desktop-tabs {
+        display: none !important;
+      }
+      .mobile-bottom-nav {
+        display: flex !important;
+      }
+      .mobile-fab-preview {
+        display: flex !important;
+      }
+      .main-layout {
+        display: block;
+        height: calc(100dvh - var(--header-h) - var(--bottom-nav-h));
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Mobile State: Viewing Notebook vs Editing */
+      body.mobile-view-preview .sidebar {
+        display: none !important;
+      }
+      body.mobile-view-preview .preview-area {
+        display: flex !important;
+        height: 100%;
+        width: 100%;
+      }
+      body.mobile-view-preview .mobile-preview-actions {
+        display: flex !important;
+      }
+      body.mobile-view-preview .mobile-edit-btn {
+        display: inline-flex !important;
+      }
+      body.mobile-view-preview .mobile-fab-preview {
+        display: none !important;
+      }
+
+      body:not(.mobile-view-preview) .sidebar {
+        display: block !important;
+        width: 100% !important;
+        height: auto;
+        padding-bottom: 24px;
+        border-right: none;
+      }
+      body:not(.mobile-view-preview) .preview-area {
+        display: none !important;
+      }
+
+      .canvas-viewport {
+        padding: 10px 6px;
+      }
+      .canvas-shadow-wrap {
+        width: 100%;
+        max-width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      #renderCanvas {
+        max-width: 100%;
+        height: auto !important;
+      }
+    }
+</style>
 </head>
 <body>
 
   <!-- Top Header -->
   <header>
     <div class="brand">
-      <div class="brand-icon">✍️</div>
+      <div class="brand-icon">
+        <img src="assets/icon-192.png" alt="App Icon" style="width:100%; height:100%; border-radius:8px; object-fit:cover;">
+      </div>
       <div class="brand-info">
-        <h1>Chép Tay Tiếng Trung Phồn Thể</h1>
-        <p>Bút bi gel đen thực tế • Vở học sinh kẻ ngang & trang đôi • Tự động né dòng sơ đồ</p>
+        <h1>Chép Tay Tiếng Trung</h1>
+        <div class="brand-sub">
+          <span class="live-status"><span class="status-dot"></span>24/7 Trực tuyến</span>
+          <span class="brand-sub-text" style="color:var(--text-muted); font-size:11px;"> • Vở học sinh & trang đôi</span>
+        </div>
       </div>
     </div>
+
     <div class="header-actions">
-      <button class="btn btn-secondary btn-sm" onclick="downloadAllPagesZip()" title="Tải tất cả các trang thành 1 file ZIP">
-        📦 Tải Toàn Bộ (ZIP)
+      <!-- PWA Install Button -->
+      <button class="btn btn-pwa btn-sm" id="headerInstallBtn" onclick="openPwaModal()">
+        <span>📲</span> <span class="btn-text-full">Thêm vào MH chính</span><span class="btn-text-short">Cài App</span>
       </button>
-      <button class="btn btn-primary btn-sm" onclick="downloadCurrentPage()">
-        📥 Tải Trang Này (JPG)
-      </button>
+
+      <!-- Quick Download Action -->
+      <div class="dropdown-wrap" id="downloadDropdownWrap">
+        <button class="btn btn-primary btn-sm" onclick="toggleDownloadDropdown()">
+          <span>📥 Tải</span> <span style="font-size:10px;">▼</span>
+        </button>
+        <div class="dropdown-menu" id="downloadDropdownMenu">
+          <button class="dropdown-item" onclick="downloadCurrentPage(); closeDownloadDropdown();">
+            <span style="font-size:18px;">📄</span>
+            <div>
+              <div class="item-title">Tải trang này (JPG)</div>
+              <div class="item-desc">Xuất ảnh nét trang đang xem</div>
+            </div>
+          </button>
+          <button class="dropdown-item" onclick="downloadAllPagesZip(); closeDownloadDropdown();">
+            <span style="font-size:18px;">📦</span>
+            <div>
+              <div class="item-title">Tải toàn bộ bài (ZIP)</div>
+              <div class="item-desc">Tải tất cả các trang về máy</div>
+            </div>
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -720,7 +1202,7 @@
     
     <!-- Left Sidebar: Controls -->
     <div class="sidebar">
-      <div class="tabs">
+      <div class="tabs desktop-tabs">
         <button class="tab-btn active" onclick="switchTab('text-tab')">📝 Soạn Bài</button>
         <button class="tab-btn" onclick="switchTab('diagram-tab')">📐 Sơ Đồ & Bảng</button>
         <button class="tab-btn" onclick="switchTab('settings-tab')">🎨 Vở & Kiểu Chữ</button>
@@ -1256,19 +1738,43 @@
       <!-- Toolbar -->
       <div class="preview-toolbar">
         <div class="pagination-controls">
-          <button class="btn btn-secondary btn-sm" onclick="prevPage()">◀</button>
+          <button class="btn btn-secondary btn-sm" id="prevPageBtn" onclick="prevPage()">◀</button>
           <span class="page-indicator" id="pageIndicator">Trang 1 / 1</span>
-          <button class="btn btn-secondary btn-sm" onclick="nextPage()">▶</button>
+          <button class="btn btn-secondary btn-sm" id="nextPageBtn" onclick="nextPage()">▶</button>
         </div>
 
-        <div style="font-size: 12px; color: var(--text-muted);">Tự động lưu & đồng bộ nét chữ</div>
+        <!-- Mobile Return Button (Visible only on mobile preview) -->
+        <button class="btn btn-secondary btn-sm mobile-edit-btn" onclick="switchTab('text-tab')">
+          ✏️ Sửa Bài
+        </button>
+
+        <!-- Zoom / Fit Actions -->
+        <div class="zoom-actions">
+          <button class="btn btn-secondary btn-sm" onclick="zoomCanvas(0.1)" title="Phóng to">➕</button>
+          <button class="btn btn-secondary btn-sm" onclick="resetCanvasZoom()" title="Vừa màn hình">🔍 Vừa</button>
+          <button class="btn btn-secondary btn-sm" onclick="zoomCanvas(-0.1)" title="Thu nhỏ">➖</button>
+        </div>
+
+        <div style="font-size: 11.5px; color: var(--text-muted); display:flex; align-items:center; gap:5px;">
+          <span class="status-dot"></span> Tự động đồng bộ nét chữ
+        </div>
       </div>
 
       <!-- Canvas Viewport -->
       <div class="canvas-viewport" id="viewport">
-        <div class="canvas-shadow-wrap">
+        <div class="canvas-shadow-wrap" id="canvasWrap">
           <canvas id="renderCanvas" width="768" height="1024"></canvas>
         </div>
+      </div>
+
+      <!-- Mobile Bottom Action Bar in Preview Mode -->
+      <div class="mobile-preview-actions">
+        <button class="btn btn-primary btn-md" onclick="downloadCurrentPage()" style="flex:1; padding:10px;">
+          📥 Tải Trang Này (JPG)
+        </button>
+        <button class="btn btn-secondary btn-md" onclick="downloadAllPagesZip()" style="flex:1; padding:10px;">
+          📦 Tải Toàn Bộ (ZIP)
+        </button>
       </div>
     </div>
 
@@ -1304,6 +1810,106 @@
   </div>
 
   <div id="toast">Thông báo</div>
+  <!-- Mobile Bottom Navigation Dock (Fixed at bottom on phones) -->
+  <nav class="mobile-bottom-nav">
+    <button class="mobile-nav-btn active" data-tab="text-tab" onclick="switchTab('text-tab')">
+      <span class="nav-icon">📝</span>
+      <span class="nav-label">Soạn bài</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="diagram-tab" onclick="switchTab('diagram-tab')">
+      <span class="nav-icon">📐</span>
+      <span class="nav-label">Sơ đồ</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="settings-tab" onclick="switchTab('settings-tab')">
+      <span class="nav-icon">🎨</span>
+      <span class="nav-label">Kiểu vở</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="ocr-tab" onclick="switchTab('ocr-tab')">
+      <span class="nav-icon">📷</span>
+      <span class="nav-label">Quét ảnh</span>
+    </button>
+    <button class="mobile-nav-btn nav-preview-btn" data-tab="preview-area" onclick="switchTab('preview-area')">
+      <span class="nav-icon">👁️</span>
+      <span class="nav-label">Xem vở</span>
+      <span class="nav-badge" id="mobilePageBadge">1/1</span>
+    </button>
+  </nav>
+
+  <!-- Mobile Floating Action Pill (Quick jump to preview when editing) -->
+  <div class="mobile-fab-preview" id="mobileFabPreview" onclick="switchTab('preview-area')">
+    <span>👁️ Xem Vở</span>
+    <span class="fab-badge" id="fabPageBadge">Trang 1/1</span>
+  </div>
+
+  <!-- PWA Install & Home Screen Modal -->
+  <div class="modal-overlay" id="pwaModal" onclick="if(event.target === this) closePwaModal()">
+    <div class="modal-card pwa-card">
+      <button class="modal-close" onclick="closePwaModal()">✕</button>
+      <div style="margin-bottom: 8px;">
+        <img src="assets/icon-192.png" width="68" height="68" alt="App Icon" style="border-radius:16px; box-shadow: 0 8px 24px rgba(56, 189, 248, 0.25);">
+      </div>
+      <h3 style="font-size: 19px; font-weight: 700; margin: 10px 0 4px;">Cài Đặt Ứng Dụng Chép Tay</h3>
+      <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px;">
+        Thêm vào màn hình chính để dùng như app độc lập: mở nhanh, toàn màn hình, 24/7 không cần mở máy tính!
+      </p>
+
+      <!-- Platform Selection Pills -->
+      <div class="pwa-platform-tabs">
+        <button type="button" class="pwa-tab-btn active" id="pwaTabIos" onclick="switchPwaTab('ios')">🍏 iPhone / iPad</button>
+        <button type="button" class="pwa-tab-btn" id="pwaTabAndroid" onclick="switchPwaTab('android')">🤖 Android / Chrome</button>
+      </div>
+
+      <!-- iOS Safari Instructions -->
+      <div id="pwaIosPane" class="pwa-pane active">
+        <div class="pwa-steps">
+          <div class="pwa-step-item">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              Mở link bằng <strong>Safari</strong>, chạm vào nút <strong>Chia sẻ (Share) ⎋</strong> ở thanh công cụ dưới.
+            </div>
+          </div>
+          <div class="pwa-step-item">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              Cuộn xuống danh sách tùy chọn và chọn <strong>"Thêm vào MH chính" ➕</strong> (Add to Home Screen).
+            </div>
+          </div>
+          <div class="pwa-step-item">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              Chạm nút <strong>"Thêm" (Add)</strong> ở góc trên bên phải. App sẽ xuất hiện trên màn hình chính như app tải từ App Store!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Android / Chrome Instructions -->
+      <div id="pwaAndroidPane" class="pwa-pane">
+        <div id="nativeInstallPromptSection" style="margin-bottom: 12px;">
+          <button type="button" class="btn btn-primary btn-md" style="width:100%; font-size:14.5px; font-weight:700; padding:12px;" onclick="triggerNativeInstall()">
+            🚀 Thêm Vào Màn Hình Chính Ngay
+          </button>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">Bấm nút trên để mở hộp thoại cài đặt ứng dụng của trình duyệt.</div>
+        </div>
+        
+        <div class="pwa-steps" style="margin-top: 8px;">
+          <div class="pwa-step-item">
+            <div class="step-num">★</div>
+            <div class="step-text">
+              Hoặc chạm vào menu <strong>3 chấm ⋮</strong> ở góc phải trình duyệt Chrome ➔ Chọn <strong>"Cài đặt ứng dụng"</strong> hoặc <strong>"Thêm vào màn hình chính"</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Permanent URL Copy Strip -->
+      <div class="pwa-url-strip">
+        <span class="url-text">https://phuctute.github.io/chinese-handwriting-app/</span>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="copyPwaUrl()">📋 Sao Chép</button>
+      </div>
+    </div>
+  </div>
+
 
   <script>
     // State
@@ -1601,16 +2207,172 @@
       };
     }
 
-    // Tab switcher
+    // Modern Responsive Tab & View Switcher
+    let currentActiveTab = 'text-tab';
+
     function switchTab(tabId) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-      
-      const tabMap = { 'text-tab': 0, 'diagram-tab': 1, 'ocr-tab': 2, 'settings-tab': 3 };
-      const idx = tabMap[tabId] ?? 0;
-      document.querySelectorAll('.tab-btn')[idx].classList.add('active');
-      document.getElementById(tabId).classList.add('active');
+      currentActiveTab = tabId;
+
+      if (tabId === 'preview-area') {
+        document.body.classList.add('mobile-view-preview');
+        setTimeout(fitCanvasToViewport, 50);
+      } else {
+        document.body.classList.remove('mobile-view-preview');
+        
+        // Hide all tab contents in sidebar
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        const targetTab = document.getElementById(tabId);
+        if (targetTab) targetTab.classList.add('active');
+
+        // Update desktop tabs
+        document.querySelectorAll('.desktop-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+        const tabMap = { 'text-tab': 0, 'diagram-tab': 1, 'settings-tab': 2, 'ocr-tab': 3 };
+        const idx = tabMap[tabId];
+        if (idx !== undefined) {
+          const dBtn = document.querySelectorAll('.desktop-tabs .tab-btn')[idx];
+          if (dBtn) dBtn.classList.add('active');
+        }
+      }
+
+      // Update mobile bottom nav active state
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        if (btn.getAttribute('data-tab') === tabId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
     }
+
+    // Canvas Zoom & Auto-Fit Engine for Mobile
+    let canvasZoomLevel = 1.0;
+
+    function fitCanvasToViewport() {
+      const vp = document.getElementById('viewport');
+      if (!vp || !canvas) return;
+      const vpW = vp.clientWidth - 16;
+      const vpH = vp.clientHeight - 16;
+      if (vpW <= 0 || vpH <= 0) return;
+      
+      const scaleW = vpW / canvas.width;
+      const scaleH = vpH / canvas.height;
+      const fitScale = Math.min(scaleW, scaleH, 1.25);
+      canvasZoomLevel = Math.max(0.35, Math.min(1.4, fitScale));
+      applyCanvasZoom();
+    }
+
+    function zoomCanvas(delta) {
+      canvasZoomLevel = Math.max(0.3, Math.min(2.0, canvasZoomLevel + delta));
+      applyCanvasZoom();
+    }
+
+    function resetCanvasZoom() {
+      fitCanvasToViewport();
+    }
+
+    function applyCanvasZoom() {
+      const wrap = document.getElementById('canvasWrap');
+      if (wrap) {
+        wrap.style.transform = `scale(${canvasZoomLevel})`;
+        wrap.style.transformOrigin = 'center top';
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth < 900 && document.body.classList.contains('mobile-view-preview')) {
+        fitCanvasToViewport();
+      }
+    });
+
+    // PWA & Mobile Web App Controller
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          console.log('SW registered:', reg.scope);
+        }).catch((err) => {
+          console.warn('SW registration warning:', err);
+        });
+      });
+    }
+
+    let deferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      const btn = document.getElementById('headerInstallBtn');
+      if (btn) btn.classList.add('has-prompt');
+    });
+
+    function openPwaModal() {
+      const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      switchPwaTab(isIos ? 'ios' : 'android');
+      const modal = document.getElementById('pwaModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closePwaModal() {
+      const modal = document.getElementById('pwaModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function switchPwaTab(type) {
+      const tabIos = document.getElementById('pwaTabIos');
+      const tabAndroid = document.getElementById('pwaTabAndroid');
+      const paneIos = document.getElementById('pwaIosPane');
+      const paneAndroid = document.getElementById('pwaAndroidPane');
+
+      if (type === 'ios') {
+        if (tabIos) tabIos.classList.add('active');
+        if (tabAndroid) tabAndroid.classList.remove('active');
+        if (paneIos) paneIos.classList.add('active');
+        if (paneAndroid) paneAndroid.classList.remove('active');
+      } else {
+        if (tabIos) tabIos.classList.remove('active');
+        if (tabAndroid) tabAndroid.classList.add('active');
+        if (paneIos) paneIos.classList.remove('active');
+        if (paneAndroid) paneAndroid.classList.add('active');
+      }
+    }
+
+    function triggerNativeInstall() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then((result) => {
+          if (result.outcome === 'accepted') {
+            showToast('🎉 Đang cài đặt ứng dụng vào điện thoại...');
+          }
+          deferredInstallPrompt = null;
+          closePwaModal();
+        });
+      } else {
+        showToast('ℹ️ Chạm menu 3 chấm ⋮ của Chrome ➔ Chọn "Thêm vào màn hình chính"');
+      }
+    }
+
+    function copyPwaUrl() {
+      navigator.clipboard.writeText('https://phuctute.github.io/chinese-handwriting-app/').then(() => {
+        showToast('📋 Đã sao chép link ứng dụng vào clipboard!');
+      }).catch(() => {
+        showToast('https://phuctute.github.io/chinese-handwriting-app/');
+      });
+    }
+
+    function toggleDownloadDropdown() {
+      const menu = document.getElementById('downloadDropdownMenu');
+      if (menu) menu.classList.toggle('show');
+    }
+
+    function closeDownloadDropdown() {
+      const menu = document.getElementById('downloadDropdownMenu');
+      if (menu) menu.classList.remove('show');
+    }
+
+    window.addEventListener('click', (e) => {
+      const wrap = document.getElementById('downloadDropdownWrap');
+      if (wrap && !wrap.contains(e.target)) {
+        closeDownloadDropdown();
+      }
+    });
 
     // Select notebook template
     function selectNotebookTemplate(filename, elem) {
@@ -2327,6 +3089,13 @@
 
       document.getElementById('prevPageBtn').disabled = (state.currentPage <= 0);
       document.getElementById('nextPageBtn').disabled = (state.currentPage >= state.totalPages - 1);
+
+      // Update mobile badges
+      const curPageText = `${state.currentPage + 1}/${state.totalPages}`;
+      const mBadge = document.getElementById('mobilePageBadge');
+      if (mBadge) mBadge.innerText = curPageText;
+      const fabBadge = document.getElementById('fabPageBadge');
+      if (fabBadge) fabBadge.innerText = `Trang ${curPageText}`;
     }
 
     function prevPage() {
