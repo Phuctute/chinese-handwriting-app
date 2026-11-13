@@ -701,22 +701,16 @@
     <div class="brand">
       <div class="brand-icon">✍️</div>
       <div class="brand-info">
-        <h1>Trình Giả Lập Chép Tay Tiếng Trung Phồn Thể</h1>
-        <p>Biến thiên chữ sống động • Gạch xoá lỗi sai thật • Bút bi gel đen & Sơ đồ bảng vẽ</p>
+        <h1>Chép Tay Tiếng Trung Phồn Thể</h1>
+        <p>Bút bi gel đen thực tế • Vở học sinh kẻ ngang & trang đôi • Tự động né dòng sơ đồ</p>
       </div>
     </div>
     <div class="header-actions">
-      <button class="btn btn-secondary btn-sm" onclick="openMobileModal()" style="border-color: #38bdf8; color: #38bdf8;">
-        📱 Mở Trên Mobile
-      </button>
-      <button class="btn btn-secondary btn-sm" onclick="shuffleRandomVariation()">
-        🎲 Đổi Dáng Chữ
-      </button>
-      <button class="btn btn-accent btn-sm" onclick="renderPillowHD()">
-        ⚡ Xuất Ảnh HD
+      <button class="btn btn-secondary btn-sm" onclick="downloadAllPagesZip()" title="Tải tất cả các trang thành 1 file ZIP">
+        📦 Tải Toàn Bộ (ZIP)
       </button>
       <button class="btn btn-primary btn-sm" onclick="downloadCurrentPage()">
-        📥 Tải Trang Này
+        📥 Tải Trang Này (JPG)
       </button>
     </div>
   </header>
@@ -729,8 +723,8 @@
       <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('text-tab')">📝 Soạn Bài</button>
         <button class="tab-btn" onclick="switchTab('diagram-tab')">📐 Sơ Đồ & Bảng</button>
+        <button class="tab-btn" onclick="switchTab('settings-tab')">🎨 Vở & Kiểu Chữ</button>
         <button class="tab-btn" onclick="switchTab('ocr-tab')">📷 Quét OCR</button>
-        <button class="tab-btn" onclick="switchTab('settings-tab')">📖 Đổi Vở & Nét</button>
       </div>
 
       <!-- Tab 1: Text Input -->
@@ -743,172 +737,176 @@
           <textarea 
             id="textInput" 
             class="text-editor" 
-            placeholder="Dán hoặc gõ đoạn văn tiếng Trung phồn thể vào đây...&#10;&#10;Mẹo: Dùng cú pháp ~~chữ sai~~ để tạo vết bút bi gạch xóa chữ sai siêu thật!&#10;Ví dụ: 忽逢~~桃林~~桃花林，夾岸數百步..."
+            style="height: 230px;"
+            placeholder="Nhập hoặc dán đoạn văn tiếng Trung cần chép tay vào đây...
+(Hỗ trợ viết sai gạch xóa bằng cú pháp ~~từ sai~~)"
           ></textarea>
         </div>
 
-        <div class="tool-strip">
-          <button class="btn btn-secondary btn-sm" id="skipLineBtn" onclick="toggleSkipLine()" style="border-color: #38bdf8; color: #38bdf8;">
-            📖 Viết cách dòng: TẮT
-          </button>
-          <button class="btn btn-secondary btn-sm" onclick="insertTypoSyntax()" title="Chèn cú pháp viết sai gạch đi">
-            ❌ Gạch xóa ~~từ sai~~
-          </button>
-          <button class="btn btn-secondary btn-sm" onclick="convertToTraditional()" title="Chuyển đổi Giản thể sang Phồn thể">
-            🔄 Giản thể ➔ Phồn thể
-          </button>
-          <button class="btn btn-secondary btn-sm" onclick="loadSampleText('taohuayuan')">
-            📜 Đào Hoa Nguyên Ký
-          </button>
-          <button class="btn btn-secondary btn-sm" onclick="loadSampleText('vocab_notes')">
-            📚 Bài học có lỗi gạch xóa
-          </button>
-          <button class="btn btn-danger btn-sm" onclick="clearText()">
-            🗑️ Xóa
-          </button>
-        </div>
-
-        <!-- Realism controls right on Text tab -->
-        <div style="margin-top: 16px; padding: 12px; background: rgba(56, 189, 248, 0.05); border: 1px solid rgba(56, 189, 248, 0.15); border-radius: 8px;">
-          <div style="font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 8px;">
-            ✨ CƠ CHẾ TỰ NHIÊN HÓA ("KHÔNG CHỮ NÀO GIỐNG CHỮ NÀO"):
+        <!-- Quick Actions Toolbar -->
+        <div class="form-group">
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="convertToTraditional()" title="Chuyển toàn bộ Giản thể sang Phồn thể chuẩn Đài Loan">
+              🔄 Giản thể ➜ Phồn thể
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" id="skipLineBtn" onclick="toggleSkipLine()">
+              📖 Viết cách dòng: Tắt
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="insertTypoSyntax()" title="Chèn từ viết sai bị gạch đi">
+              ~~ Gạch chữ sai
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="clearText()" style="margin-left: auto;">
+              🧹 Xóa bài
+            </button>
           </div>
-          
-          <label class="checkbox-wrap" style="margin-bottom: 8px;">
-            <input type="checkbox" id="glyphVariationCheck" checked onchange="triggerUpdate()">
-            <span><b>Khác biệt giữa các chữ trùng lặp:</b> Khi một chữ (như 的, 人, 之...) xuất hiện nhiều lần, dáng chữ, độ nghiêng, nét to nhỏ sẽ tự động biến thiên.</span>
-          </label>
 
-          <label class="checkbox-wrap">
-            <input type="checkbox" id="autoTypoCheck" checked onchange="triggerUpdate()">
-            <span><b>Thỉnh thoảng viết sai gạch đi:</b> Tự động tạo 1–2 vết bút bi gạch xóa chữ viết nhầm ngẫu nhiên mỗi trang như người thật chép bài.</span>
-          </label>
+          <!-- Sample Texts -->
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <span style="font-size: 11px; color: var(--text-muted);">Bài mẫu:</span>
+            <button type="button" class="btn btn-secondary btn-sm" style="font-size: 11px; padding: 2px 8px;" onclick="loadSampleText('taohuayuan')">
+              🌿 Đào Hoa Nguyên Ký
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" style="font-size: 11px; padding: 2px 8px;" onclick="loadSampleText('vocab_notes')">
+              📝 Vở Ghi Từ Vựng
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Tab 2: Diagram & Hand-drawn Tables -->
       <div id="diagram-tab" class="tab-content">
         <div class="form-group">
-          <div class="form-label">
-            <span>Chèn Sơ Đồ / Bản Vẽ / Bảng Kẻ Tay</span>
-            <span class="value-badge" id="diagramStatus">Tắt</span>
+          <div class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>Chế độ Sơ đồ & Bảng kẻ tay</span>
+            <span class="value-badge" id="diagramStatusBadge" style="background:#475569;">Đang tắt</span>
           </div>
 
-          <label class="checkbox-wrap" style="margin-bottom: 12px;">
-            <input type="checkbox" id="diagramEnableCheck" onchange="toggleDiagram(this.checked)">
-            <span><b>Kích hoạt chèn sơ đồ / bảng vẽ trên trang vở</b></span>
-          </label>
+          <!-- Segmented Mode Pills -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px;">
+            <button type="button" class="btn btn-primary btn-sm" id="btnPresetNone" onclick="setDiagramPreset('none')">
+              🚫 Không dùng
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnPresetTable" onclick="setDiagramPreset('table')">
+              📊 Bảng từ vựng
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnPresetMindmap" onclick="setDiagramPreset('mindmap')">
+              🌳 Sơ đồ tư duy
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnPresetCallout" onclick="setDiagramPreset('callout')">
+              📦 Khung ghi chú
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnPresetSketch" onclick="setDiagramPreset('sketch')">
+              🖊️ Tự vẽ tay
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnPresetCustom" onclick="setDiagramPreset('custom')">
+              🖼️ Tải ảnh sơ đồ
+            </button>
+          </div>
 
-          <div id="diagramControls" style="display:none;">
-            <!-- Presets Navigation -->
-            <div style="margin-bottom: 12px;">
-              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Chọn chế độ sơ đồ & bảng:</div>
-              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;">
-                <button type="button" class="btn btn-secondary btn-sm" id="btnPresetTable" onclick="setDiagramPreset('table')">
-                  📊 Bảng từ vựng kẻ tay
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm" id="btnPresetMindmap" onclick="setDiagramPreset('mindmap')">
-                  🌳 Sơ đồ tư duy (Mindmap)
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm" id="btnPresetCallout" onclick="setDiagramPreset('callout')">
-                  📦 Khung ghi chú (Callout)
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm" id="btnPresetSketch" onclick="setDiagramPreset('sketch')">
-                  🖊️ Bảng tự vẽ phác thảo
-                </button>
+          <!-- Panel: Bảng từ vựng (Table) -->
+          <div id="diagPanelTable" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--accent-primary);">
+            <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">📊 Tùy chỉnh Bảng kẻ tay (Tự động vẽ lại theo thời gian thực)</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+              <div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Tiêu đề cột 1:</div>
+                <input type="text" id="tableCol1Input" class="form-select" style="padding: 6px 10px; font-size: 12.5px;" value="生詞 (Từ mới)" oninput="onDiagramChange()">
               </div>
-              <button type="button" class="btn btn-secondary btn-sm" id="btnPresetCustom" style="width:100%; margin-top:6px;" onclick="setDiagramPreset('custom')">
-                🖼️ Tải ảnh sơ đồ có sẵn (AI lọc trong suốt nền)
-              </button>
+              <div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Tiêu đề cột 2:</div>
+                <input type="text" id="tableCol2Input" class="form-select" style="padding: 6px 10px; font-size: 12.5px;" value="釋義與例句 (Giải nghĩa)" oninput="onDiagramChange()">
+              </div>
             </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Nội dung các dòng (Mỗi dòng: Từ | Giải nghĩa):</div>
+            <textarea id="tableRowsInput" class="text-editor" style="height: 90px; font-size: 12px; padding: 8px; line-height: 1.5;" oninput="onDiagramChange()">落英繽紛 | 形容落花繁多，飄零紛飛。
+豁然開朗 | 眼前頓時開闊明亮，喻頓悟。
+怡然自樂 | 高興自得、悠閒自在的樣子。</textarea>
+          </div>
 
-            <!-- Panel 1: Table Customizer -->
-            <div id="diagPanelTable" style="background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
-              <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">📊 Tùy chỉnh Bảng kẻ tay</div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-                <div>
-                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Tiêu đề cột 1:</div>
-                  <input type="text" id="tableCol1Input" class="form-select" style="padding: 6px 10px; font-size: 12.5px;" value="生詞 (Từ mới)" oninput="updateTableHeaders()">
+          <!-- Panel: Sơ đồ tư duy (Mindmap) -->
+          <div id="diagPanelMindmap" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--accent-primary);">
+            <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">🌳 Tùy chỉnh Sơ đồ tư duy (Mindmap)</div>
+            <div style="margin-bottom: 8px;">
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Chủ đề trung tâm:</div>
+              <input type="text" id="mindmapRootInput" class="form-select" style="padding: 6px 10px; font-size: 12.5px;" value="文言文要點" oninput="onDiagramChange()">
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Các nhánh con (mỗi dòng 1 nhánh):</div>
+            <textarea id="mindmapBranchesInput" class="text-editor" style="height: 90px; font-size: 12px; padding: 8px;" oninput="onDiagramChange()">通假字 (說=悅)
+古今異義 (妻子)
+詞類活用 (異之)
+特殊句式 (倒裝)</textarea>
+          </div>
+
+          <!-- Panel: Khung ghi chú (Callout) -->
+          <div id="diagPanelCallout" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--accent-primary);">
+            <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">📦 Tùy chỉnh Khung ghi chú (Callout)</div>
+            <div style="margin-bottom: 8px;">
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Tiêu đề khung:</div>
+              <input type="text" id="calloutTitleInput" class="form-select" style="padding: 6px 10px; font-size: 12.5px;" value="★ 復習重點提示 (Ghi nhớ):" oninput="onDiagramChange()">
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Nội dung ghi chú:</div>
+            <textarea id="calloutContentInput" class="text-editor" style="height: 85px; font-size: 12px; padding: 8px;" oninput="onDiagramChange()">「此人一一為具言所聞，皆嘆惋。」── 桃花源中人聽聞外界亂世，感念自身能得此寧靜天地，深感慶幸與哀憐。</textarea>
+          </div>
+
+          <!-- Panel: Tự vẽ tay trực tiếp (Sketchpad) -->
+          <div id="diagPanelSketch" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--accent-primary);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+              <span style="font-size: 12.5px; font-weight: 600; color: var(--accent-primary);">🖊️ Bảng tự vẽ tay bằng chuột / ngón tay</span>
+              <button type="button" class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 11px;" onclick="clearSketchpad()">🧹 Xóa vẽ lại</button>
+            </div>
+            <div style="display:flex; justify-content:center; background:#fff; border-radius:6px; padding:4px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);">
+              <canvas id="sketchCanvas" width="340" height="150" style="touch-action:none; cursor:crosshair; width:100%; height:150px; border-radius:4px;"></canvas>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+              💡 Vẽ tự do (mũi tên, hình học, công thức...) — Nét vẽ sẽ tự động chép lên vở với chất mực bút bi gel!
+            </div>
+          </div>
+
+          <!-- Panel: Tải ảnh sơ đồ (Custom Upload) -->
+          <div id="diagPanelCustom" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--accent-primary);">
+            <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">🖼️ Tải ảnh sơ đồ / biểu đồ từ máy</div>
+            <div class="dropzone" style="padding: 16px;" onclick="document.getElementById('diagramFileInput').click()">
+              <div class="dropzone-icon" style="font-size:24px;">📈</div>
+              <div class="dropzone-text" style="font-size:12.5px;">Bấm để chọn ảnh sơ đồ</div>
+              <div class="dropzone-hint">AI tự động tách nền giấy trắng & chỉ giữ lại nét mực hòa vào vở</div>
+              <input type="file" id="diagramFileInput" accept="image/*" style="display:none" onchange="handleDiagramUpload(this.files[0])">
+            </div>
+            <div class="form-group" style="margin-top: 10px; margin-bottom: 0;">
+              <div class="form-label" style="font-size: 11.5px;">
+                <span>Độ đậm lọc nét mực</span>
+                <span class="value-badge" id="diagThresholdVal">185</span>
+              </div>
+              <div class="range-wrap">
+                <input type="range" id="diagThresholdSlider" min="100" max="240" value="185" oninput="updateDiagramThreshold(this.value)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Placement Controls (Shown when diagram is active) -->
+          <div id="diagPositionControls" style="display:none;">
+            <!-- Spread Side Selector (if on spread) -->
+            <div id="diagSpreadSideGroup" class="form-group" style="margin-bottom: 10px;">
+              <div class="form-label">
+                <span>Vị trí trên Trang Đôi:</span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px;">
+                  <button type="button" class="btn btn-primary btn-sm" id="btnDiagSideLeft" onclick="setDiagramSpreadSide('left')">👈 Nửa trang trái</button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btnDiagSideRight" onclick="setDiagramSpreadSide('right')">👉 Nửa trang phải</button>
                 </div>
-                <div>
-                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Tiêu đề cột 2:</div>
-                  <input type="text" id="tableCol2Input" class="form-select" style="padding: 6px 10px; font-size: 12.5px;" value="釋義與例句 (Giải nghĩa)" oninput="updateTableHeaders()">
-                </div>
-              </div>
-              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Các dòng nội dung (mỗi dòng: Từ | Giải nghĩa):</div>
-              <textarea id="tableRowsInput" class="text-editor" style="height: 85px; font-size: 12px; padding: 8px;" oninput="updateTableRows()">落英繽紛 | 形容落花繁多，飄零紛飛。\n豁然開朗 | 眼前頓時開闊明亮，喻頓悟。\n怡然自樂 | 高興自得、悠閒自在的樣子。</textarea>
-            </div>
-
-            <!-- Panel 2: Mindmap Customizer -->
-            <div id="diagPanelMindmap" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
-              <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">🌳 Tùy chỉnh Sơ đồ tư duy (Mindmap)</div>
-              <div style="margin-bottom: 8px;">
-                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Chủ đề trung tâm:</div>
-                <input type="text" id="mindmapRootInput" class="form-select" style="padding: 6px 10px; font-size: 12.5px;" value="文言文要點" oninput="updateMindmap()">
-              </div>
-              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Các nhánh con (mỗi dòng 1 nhánh):</div>
-              <textarea id="mindmapBranchesInput" class="text-editor" style="height: 85px; font-size: 12px; padding: 8px;" oninput="updateMindmap()">通假字 (說=悅)\n古今異義 (妻子)\n詞类活用 (異之)\n特殊句式 (倒裝)</textarea>
-            </div>
-
-            <!-- Panel 3: Callout Customizer -->
-            <div id="diagPanelCallout" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
-              <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">📦 Tùy chỉnh Khung ghi chú quan trọng</div>
-              <div style="margin-bottom: 8px;">
-                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Tiêu đề khung:</div>
-                <input type="text" id="calloutTitleInput" class="form-select" style="padding: 6px 10px; font-size: 12.5px;" value="★ 復習重點提示 (Ghi nhớ):" oninput="updateCallout()">
-              </div>
-              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Nội dung ghi chú:</div>
-              <textarea id="calloutContentInput" class="text-editor" style="height: 85px; font-size: 12px; padding: 8px;" oninput="updateCallout()">「此人一一為具言所聞，皆嘆惋。」── 桃花源中人聽聞外界亂世，感念自身能得此寧靜天地，深感慶幸與哀憐。</textarea>
-            </div>
-
-            <!-- Panel 4: Interactive Sketchpad -->
-            <div id="diagPanelSketch" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-                <span style="font-size: 12.5px; font-weight: 600; color: var(--accent-primary);">🖊️ Tự vẽ tay trực tiếp bằng chuột / ngón tay</span>
-                <button type="button" class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 11px;" onclick="clearSketchpad()">🧹 Xóa vẽ lại</button>
-              </div>
-              <div style="display:flex; justify-content:center; background:#fff; border-radius:6px; padding:4px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);">
-                <canvas id="sketchCanvas" width="340" height="150" style="touch-action:none; cursor:crosshair; width:100%; height:150px; border-radius:4px;"></canvas>
-              </div>
-              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
-                💡 Vẽ tự do: mũi tên, hình vẽ, ký hiệu... nét vẽ sẽ tự động đồng bộ lên trang vở với chất mực bút bi gel!
               </div>
             </div>
 
-            <!-- Panel 5: Upload Diagram Image -->
-            <div id="diagPanelCustom" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
-              <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">🖼️ Tải ảnh sơ đồ từ máy / điện thoại</div>
-              <div class="dropzone" style="padding: 16px;" onclick="document.getElementById('diagramFileInput').click()">
-                <div class="dropzone-icon" style="font-size:24px;">📈</div>
-                <div class="dropzone-text" style="font-size:12.5px;">Bấm để chọn ảnh sơ đồ / biểu đồ</div>
-                <div class="dropzone-hint">AI tự động tách nền giấy trắng & chỉ giữ lại nét mực bút bi gel</div>
-                <input type="file" id="diagramFileInput" accept="image/*" style="display:none" onchange="handleDiagramUpload(this.files[0])">
-              </div>
-              <div class="form-group" style="margin-top: 10px; margin-bottom: 0;">
-                <div class="form-label" style="font-size: 11.5px;">
-                  <span>Độ đậm lọc nét mực (Threshold)</span>
-                  <span class="value-badge" id="diagThresholdVal">185</span>
-                </div>
-                <div class="range-wrap">
-                  <input type="range" id="diagThresholdSlider" min="100" max="240" value="185" oninput="updateDiagramThreshold(this.value)">
-                </div>
-              </div>
-            </div>
-
-            <!-- Position & Layout Guarantee -->
             <div class="form-group" style="margin-bottom: 10px;">
               <div class="form-label">
-                <span>Vị trí đặt: Bắt đầu từ dòng số</span>
+                <span>Bắt đầu từ dòng số</span>
                 <span class="value-badge" id="diagStartLineVal">Dòng 8</span>
               </div>
               <div class="range-wrap">
-                <input type="range" id="diagStartLineSlider" min="2" max="22" value="7" oninput="updateDiagramStartLine(this.value)">
+                <input type="range" id="diagStartLineSlider" min="2" max="24" value="7" oninput="updateDiagramStartLine(this.value)">
               </div>
             </div>
 
-            <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-group" style="margin-bottom: 8px;">
               <div class="form-label">
-                <span>Chiều cao sơ đồ (Số dòng chiếm dụng)</span>
+                <span>Chiều cao (Số dòng chiếm dụng)</span>
                 <span class="value-badge" id="diagSpanVal">6 dòng</span>
               </div>
               <div class="range-wrap">
@@ -916,29 +914,8 @@
               </div>
             </div>
 
-            <div id="diagSpreadSideGroup" class="form-group" style="margin-bottom: 10px;">
-              <div class="form-label">
-                <span>Vị trí đặt trên Trang Đôi:</span>
-                <select id="diagSpreadSideSelect" class="form-select" style="padding: 6px 10px; font-size: 12px;" onchange="updateDiagramSpreadSide(this.value)">
-                  <option value="left" selected>👈 Nửa trang bên trái</option>
-                  <option value="right">👉 Nửa trang bên phải</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 0;">
-              <div class="form-label">
-                <span>Đặt trên trang số</span>
-                <select id="diagPageSelect" class="form-select" style="padding: 6px 10px; font-size: 12px;" onchange="updateDiagramPage(this.value)">
-                  <option value="0" selected>Trang 1</option>
-                  <option value="1">Trang 2</option>
-                  <option value="2">Trang 3</option>
-                  <option value="3">Trang 4</option>
-                </select>
-              </div>
-              <div style="font-size: 11px; color: var(--accent-primary); margin-top: 6px; font-weight: 500;">
-                🔒 Cam kết không đè chữ: Các dòng văn bản tự động lùi và chừa trọn vẹn khu vực sơ đồ với khoảng đệm an toàn!
-              </div>
+            <div style="font-size: 11.5px; color: var(--accent-primary); font-weight: 500; background: rgba(56, 189, 248, 0.08); padding: 8px 10px; border-radius: 6px;">
+              🔒 Cam kết tự động né dòng: Các dòng văn bản tự động chừa trọn vẹn khu vực sơ đồ, tuyệt đối không bị đè chữ!
             </div>
           </div>
         </div>
@@ -1239,14 +1216,7 @@
           <button class="btn btn-secondary btn-sm" onclick="nextPage()">▶</button>
         </div>
 
-        <div class="preview-actions">
-          <button class="btn btn-secondary btn-sm" onclick="downloadAllPagesZip()" title="Tải tất cả các trang dưới dạng file ZIP">
-            📦 Tải Toàn Bộ Các Trang (ZIP)
-          </button>
-          <button class="btn btn-primary btn-sm" onclick="downloadCurrentPage()">
-            📥 Tải Trang Này (JPG)
-          </button>
-        </div>
+        <div style="font-size: 12px; color: var(--text-muted);">Tự động lưu & đồng bộ nét chữ</div>
       </div>
 
       <!-- Canvas Viewport -->
@@ -1491,7 +1461,6 @@
 
     // Initialize
     window.addEventListener('DOMContentLoaded', async () => {
-      // Ensure all custom fonts are completely loaded into browser memory
       if (document.fonts) {
         try {
           await document.fonts.ready;
@@ -1500,8 +1469,8 @@
         }
       }
 
-      // Load default notebook image
-      loadNotebookImage('assets/' + state.notebookTemplate);
+      // Initialize notebook template with proper spread / single calibration
+      selectNotebookTemplate(state.notebookTemplate);
 
       // Listen for text input
       textInput.addEventListener('input', () => {
@@ -1684,7 +1653,7 @@
       sketchpadCtx.lineWidth = 2.2;
       sketchpadCtx.lineCap = 'round';
       sketchpadCtx.lineJoin = 'round';
-      sketchpadCtx.strokeStyle = (state.inkColor === 'gel_blue') ? '#183366' : '#14151a';
+      sketchpadCtx.strokeStyle = (state.inkColor === 'blue') ? '#183366' : '#14151a';
 
       function getPos(e) {
         const rect = sketchpadCanvas.getBoundingClientRect();
@@ -1718,6 +1687,7 @@
         if (!isDrawingSketch) return;
         isDrawingSketch = false;
         state.diagram.sketchCanvas = sketchpadCanvas;
+        paginateText();
         renderCanvas();
       }
 
@@ -1735,24 +1705,18 @@
       if (!sketchpadCanvas || !sketchpadCtx) return;
       sketchpadCtx.clearRect(0, 0, sketchpadCanvas.width, sketchpadCanvas.height);
       state.diagram.sketchCanvas = null;
+      paginateText();
       renderCanvas();
       showToast('Đã xóa bảng vẽ tay');
     }
 
-    // Diagram Toggles & Presets
-    function toggleDiagram(enabled) {
-      state.diagram.enabled = enabled;
-      document.getElementById('diagramControls').style.display = enabled ? 'block' : 'none';
-      document.getElementById('diagramStatus').innerText = enabled ? 'Bật' : 'Tắt';
-      paginateText();
-      renderCanvas();
-      showToast(enabled ? 'Đã bật chế độ sơ đồ/bảng vẽ!' : 'Đã tắt sơ đồ');
-    }
-
+    // Set Diagram Preset with Auto-activation and Auto-redraw
     function setDiagramPreset(type) {
       state.diagram.type = type;
-      
-      const presets = ['table', 'mindmap', 'callout', 'sketch', 'custom'];
+      state.diagram.enabled = (type !== 'none');
+
+      // Update preset buttons styling
+      const presets = ['none', 'table', 'mindmap', 'callout', 'sketch', 'custom'];
       presets.forEach(p => {
         const btn = document.getElementById('btnPreset' + p.charAt(0).toUpperCase() + p.slice(1));
         if (btn) {
@@ -1768,51 +1732,92 @@
         if (panel) panel.style.display = (p === type) ? 'block' : 'none';
       });
 
+      // Update status badge
+      const badge = document.getElementById('diagramStatusBadge');
+      if (badge) {
+        if (type === 'none') {
+          badge.innerText = 'Đang tắt';
+          badge.style.background = '#475569';
+        } else {
+          badge.innerText = 'Đang bật';
+          badge.style.background = 'var(--accent-primary)';
+        }
+      }
+
+      // Show/hide position controls
+      const posControls = document.getElementById('diagPositionControls');
+      if (posControls) posControls.style.display = (type === 'none') ? 'none' : 'block';
+
       if (type === 'sketch') {
         setTimeout(initSketchpad, 60);
       }
 
+      readDiagramInputs();
       paginateText();
       renderCanvas();
-      const names = { table: 'Bảng kẻ tay', mindmap: 'Sơ đồ tư duy', callout: 'Khung ghi chú', sketch: 'Bảng tự vẽ tay', custom: 'Tải ảnh sơ đồ' };
-      showToast('Đã chọn: ' + (names[type] || type));
+
+      const names = {
+        none: 'Đã tắt sơ đồ',
+        table: 'Bảng kẻ tay',
+        mindmap: 'Sơ đồ tư duy',
+        callout: 'Khung ghi chú',
+        sketch: 'Bảng tự vẽ tay',
+        custom: 'Tải ảnh sơ đồ'
+      };
+      showToast(type === 'none' ? 'Đã tắt sơ đồ' : 'Đã bật: ' + (names[type] || type) + '!');
     }
 
-    function updateTableHeaders() {
-      state.diagram.col1Header = document.getElementById('tableCol1Input').value;
-      state.diagram.col2Header = document.getElementById('tableCol2Input').value;
+    // Live Instant Auto-redraw on every keystroke
+    function onDiagramChange() {
+      state.diagram.enabled = (state.diagram.type !== 'none');
+      readDiagramInputs();
+      paginateText();
       renderCanvas();
     }
 
-    function updateTableRows() {
-      state.diagram.tableRowsRaw = document.getElementById('tableRowsInput').value;
-      renderCanvas();
+    function readDiagramInputs() {
+      const d = state.diagram;
+      const c1 = document.getElementById('tableCol1Input');
+      if (c1) d.col1Header = c1.value;
+      const c2 = document.getElementById('tableCol2Input');
+      if (c2) d.col2Header = c2.value;
+      const tr = document.getElementById('tableRowsInput');
+      if (tr) d.tableRowsRaw = tr.value;
+
+      const mr = document.getElementById('mindmapRootInput');
+      if (mr) d.mindmapRoot = mr.value;
+      const mb = document.getElementById('mindmapBranchesInput');
+      if (mb) d.mindmapBranchesRaw = mb.value;
+
+      const ct = document.getElementById('calloutTitleInput');
+      if (ct) d.calloutTitle = ct.value;
+      const cc = document.getElementById('calloutContentInput');
+      if (cc) d.calloutContent = cc.value;
     }
 
-    function updateMindmap() {
-      state.diagram.mindmapRoot = document.getElementById('mindmapRootInput').value;
-      state.diagram.mindmapBranchesRaw = document.getElementById('mindmapBranchesInput').value;
-      renderCanvas();
-    }
-
-    function updateCallout() {
-      state.diagram.calloutTitle = document.getElementById('calloutTitleInput').value;
-      state.diagram.calloutContent = document.getElementById('calloutContentInput').value;
-      renderCanvas();
+    function setDiagramSpreadSide(side) {
+      state.diagram.spreadSide = side;
+      const btnL = document.getElementById('btnDiagSideLeft');
+      const btnR = document.getElementById('btnDiagSideRight');
+      if (btnL && btnR) {
+        if (side === 'left') {
+          btnL.classList.remove('btn-secondary'); btnL.classList.add('btn-primary');
+          btnR.classList.remove('btn-primary'); btnR.classList.add('btn-secondary');
+        } else {
+          btnR.classList.remove('btn-secondary'); btnR.classList.add('btn-primary');
+          btnL.classList.remove('btn-primary'); btnL.classList.add('btn-secondary');
+        }
+      }
+      onDiagramChange();
     }
 
     function updateDiagramThreshold(val) {
       state.diagram.customThreshold = parseInt(val);
-      document.getElementById('diagThresholdVal').innerText = val;
+      const badge = document.getElementById('diagThresholdVal');
+      if (badge) badge.innerText = val;
       if (state.diagram.customImage) {
         processCustomDiagramImage(state.diagram.customImage);
       }
-    }
-
-    function updateDiagramPage(val) {
-      state.diagram.page = parseInt(val);
-      paginateText();
-      renderCanvas();
     }
 
     function processCustomDiagramImage(img) {
@@ -1827,7 +1832,7 @@
       const thresh = state.diagram.customThreshold;
 
       let inkR = 20, inkG = 21, inkB = 26;
-      if (state.inkColor === 'gel_blue') {
+      if (state.inkColor === 'blue') {
         inkR = 24; inkG = 51; inkB = 102;
       }
 
@@ -1847,7 +1852,7 @@
 
       offCtx.putImageData(imgData, 0, 0);
       state.diagram.customProcessedCanvas = offCanvas;
-      renderCanvas();
+      onDiagramChange();
     }
 
     function handleDiagramUpload(file) {
@@ -1869,16 +1874,16 @@
 
     function updateDiagramStartLine(val) {
       state.diagram.startLine = parseInt(val);
-      document.getElementById('diagStartLineVal').innerText = `Dòng ${val + 1}`;
-      paginateText();
-      renderCanvas();
+      const badge = document.getElementById('diagStartLineVal');
+      if (badge) badge.innerText = `Dòng ${val + 1}`;
+      onDiagramChange();
     }
 
     function updateDiagramSpan(val) {
       state.diagram.lineSpan = parseInt(val);
-      document.getElementById('diagSpanVal').innerText = `${val} dòng`;
-      paginateText();
-      renderCanvas();
+      const badge = document.getElementById('diagSpanVal');
+      if (badge) badge.innerText = `${val} dòng`;
+      onDiagramChange();
     }
 
     // Line spacing mode (Viết liền dòng vs Viết cách dòng)
@@ -2477,7 +2482,9 @@
     function drawHanddrawnTable(ctx, boxX, startY, boxW, boxH, prng, d) {
       drawHandWobblyRect(ctx, boxX, startY, boxW, boxH, prng);
 
-      const rawLines = (d.tableRowsRaw || '').split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      // Support newline splitting across any platform
+      const rawText = d.tableRowsRaw || '';
+      const rawLines = rawText.split(/\r?\n|\\n/).map(l => l.trim()).filter(l => l.length > 0);
       const rows = rawLines.map(line => {
         const parts = line.split('|');
         return {
@@ -2495,11 +2502,11 @@
       const midX = boxX + boxW * 0.35;
       drawHandWobblyLine(ctx, midX, startY, midX, startY + boxH, prng);
 
-      ctx.font = 'bold 14px "' + state.font + '", sans-serif';
-      ctx.fillText(d.col1Header || '生詞 (Từ mới)', boxX + 12, startY + rowH * 0.68);
-      ctx.fillText(d.col2Header || '釋義與例句 (Giải nghĩa)', midX + 12, startY + rowH * 0.68);
+      ctx.font = 'bold 13.5px "' + state.font + '", sans-serif';
+      ctx.fillText(d.col1Header || '生詞 (Từ mới)', boxX + 10, startY + rowH * 0.68);
+      ctx.fillText(d.col2Header || '釋義與例句 (Giải nghĩa)', midX + 10, startY + rowH * 0.68);
 
-      ctx.font = '13.5px "' + state.font + '", sans-serif';
+      ctx.font = '13px "' + state.font + '", sans-serif';
       rows.forEach((r, idx) => {
         const curY = headerY + idx * rowH;
         if (idx > 0) {
@@ -2508,7 +2515,7 @@
         ctx.fillText(r.col1, boxX + 10, curY + rowH * 0.68);
         
         let text2 = r.col2;
-        const maxText2W = boxX + boxW - midX - 20;
+        const maxText2W = boxX + boxW - midX - 16;
         if (ctx.measureText(text2).width > maxText2W) {
           while (text2.length > 4 && ctx.measureText(text2 + '...').width > maxText2W) {
             text2 = text2.slice(0, -1);
@@ -2523,11 +2530,12 @@
       const cX = boxX + boxW * 0.5;
       const cY = startY + boxH * 0.5;
 
-      const branches = (d.mindmapBranchesRaw || '').split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const rawText = d.mindmapBranchesRaw || '';
+      const branches = rawText.split(/\r?\n|\\n/).map(l => l.trim()).filter(l => l.length > 0);
       const numBranches = Math.min(6, Math.max(1, branches.length));
 
-      drawHandWobblyCircle(ctx, cX, cY, 52, 24, prng);
-      ctx.font = 'bold 15px "' + state.font + '", sans-serif';
+      drawHandWobblyCircle(ctx, cX, cY, 52, 22, prng);
+      ctx.font = 'bold 14px "' + state.font + '", sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(d.mindmapRoot || '文言文要點', cX, cY + 5);
 
@@ -2540,7 +2548,7 @@
         { x: 0,            y: boxH * 0.38 }
       ];
 
-      ctx.font = '13.5px "' + state.font + '", sans-serif';
+      ctx.font = '12.5px "' + state.font + '", sans-serif';
 
       for (let i = 0; i < numBranches; i++) {
         const off = offsets[i];
@@ -2550,9 +2558,9 @@
         drawHandWobblyLine(ctx, cX + off.x * 0.28, cY + off.y * 0.28, targetX - off.x * 0.15, targetY - off.y * 0.15, prng);
 
         const label = branches[i];
-        const textW = Math.max(45, ctx.measureText(label).width * 0.55 + 10);
-        drawHandWobblyCircle(ctx, targetX, targetY, textW, 18, prng);
-        ctx.fillText(label, targetX, targetY + 5);
+        const textW = Math.max(42, ctx.measureText(label).width * 0.55 + 8);
+        drawHandWobblyCircle(ctx, targetX, targetY, textW, 16, prng);
+        ctx.fillText(label, targetX, targetY + 4);
       }
       ctx.textAlign = 'start';
     }
@@ -2561,16 +2569,17 @@
       drawHandWobblyRect(ctx, boxX, startY, boxW, boxH, prng);
       drawHandWobblyRect(ctx, boxX + 3, startY + 3, boxW - 6, boxH - 6, prng);
 
-      ctx.font = 'bold 14.5px "' + state.font + '", sans-serif';
-      ctx.fillText(d.calloutTitle || '★ 復習重點提示 (Ghi nhớ):', boxX + 16, startY + 24);
+      ctx.font = 'bold 14px "' + state.font + '", sans-serif';
+      ctx.fillText(d.calloutTitle || '★ 復習重點提示 (Ghi nhớ):', boxX + 14, startY + 22);
 
-      ctx.font = '13.5px "' + state.font + '", sans-serif';
-      const bodyLines = (d.calloutContent || '').split('\n').map(l => l.trim()).filter(l => l.length > 0);
-      let curY = startY + 48;
+      ctx.font = '13px "' + state.font + '", sans-serif';
+      const rawText = d.calloutContent || '';
+      const bodyLines = rawText.split(/\r?\n|\\n/).map(l => l.trim()).filter(l => l.length > 0);
+      let curY = startY + 46;
       for (let bl of bodyLines) {
-        if (curY > startY + boxH - 12) break;
-        ctx.fillText(bl, boxX + 16, curY);
-        curY += 22;
+        if (curY > startY + boxH - 10) break;
+        ctx.fillText(bl, boxX + 14, curY);
+        curY += 20;
       }
     }
 
