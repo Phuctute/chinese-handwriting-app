@@ -1181,25 +1181,70 @@
           </div>
         </div>
 
-        <!-- Baseline Offset (Line Alignment) -->
-        <div class="form-group">
-          <div class="form-label">
-            <span>Vị trí đặt chữ trên dòng kẻ</span>
-            <span class="value-badge" id="baselineVal">-3px</span>
+        <!-- Margin & Line Alignment Studio (Tối ưu căn lề & Dòng kẻ chuẩn) -->
+        <div style="background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 14px; border: 1px solid var(--border);">
+          <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 10px; color: var(--accent-primary); display: flex; align-items: center; justify-content: space-between;">
+            <span>📐 Căn Lề Trang Vở & Vị Trí Dòng Kẻ</span>
+            <button type="button" class="btn btn-secondary btn-sm" style="font-size: 10.5px; padding: 2px 7px;" onclick="resetMarginsToDefault()">🔄 Mặc định</button>
           </div>
-          <div class="range-wrap">
-            <input type="range" id="baselineSlider" min="-10" max="6" value="-3" oninput="updateBaseline(this.value)">
-          </div>
-        </div>
 
-        <!-- Left Margin Slider -->
-        <div class="form-group">
-          <div class="form-label">
-            <span>Lề trái (Vạch chỉ đỏ)</span>
-            <span class="value-badge" id="leftMarginVal">114px</span>
+          <!-- Baseline Offset (Chữ nằm sát dòng) -->
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-label">
+              <span>📏 Vị trí nét chữ trên dòng (Cao / Thấp)</span>
+              <span class="value-badge" id="baselineVal">0px</span>
+            </div>
+            <div class="range-wrap">
+              <input type="range" id="baselineSlider" min="-15" max="15" value="0" oninput="updateBaseline(this.value)">
+            </div>
+            <div style="font-size: 10.5px; color: var(--text-muted); margin-top: 3px;">Chữ nằm phẳng phiu, khít ngay trên vạch kẻ vở (0px = chuẩn tự nhiên)</div>
           </div>
-          <div class="range-wrap">
-            <input type="range" id="leftMarginSlider" min="100" max="140" value="114" oninput="updateLeftMargin(this.value)">
+
+          <!-- Top & Bottom Margin Sliders (2 columns) -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <div class="form-label">
+                <span>⬆️ Lề trên (Bỏ trống)</span>
+                <span class="value-badge" id="topMarginVal">0 dòng</span>
+              </div>
+              <div class="range-wrap">
+                <input type="range" id="topMarginSlider" min="0" max="8" value="0" oninput="updateTopMargin(this.value)">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <div class="form-label">
+                <span>⬇️ Lề dưới (Bỏ trống)</span>
+                <span class="value-badge" id="bottomMarginVal">0 dòng</span>
+              </div>
+              <div class="range-wrap">
+                <input type="range" id="bottomMarginSlider" min="0" max="8" value="0" oninput="updateBottomMargin(this.value)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Left & Right Margin Adjustments (2 columns) -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 0;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <div class="form-label">
+                <span>⬅️ Dịch lề trái</span>
+                <span class="value-badge" id="leftMarginVal">0px</span>
+              </div>
+              <div class="range-wrap">
+                <input type="range" id="leftMarginSlider" min="-30" max="40" step="2" value="0" oninput="updateLeftMarginOffset(this.value)">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <div class="form-label">
+                <span>➡️ Thu lề phải</span>
+                <span class="value-badge" id="rightMarginVal">0px</span>
+              </div>
+              <div class="range-wrap">
+                <input type="range" id="rightMarginSlider" min="-50" max="30" step="2" value="0" oninput="updateRightMarginOffset(this.value)">
+              </div>
+            </div>
+          </div>
+          <div style="font-size: 10.5px; color: var(--accent-primary); margin-top: 6px;">
+            🔒 Khóa an toàn: Chữ tự động gói dòng và dừng trước lề phải, tuyệt đối không bao giờ tràn ra ngoài trang!
           </div>
         </div>
       </div>
@@ -1240,15 +1285,15 @@
       </p>
 
       <div style="background: #fff; padding: 12px; border-radius: 8px; display: inline-block; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://phuc.tail810b03.ts.net/" width="200" height="200" alt="QR Code Mobile" style="display:block;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://phuctute.github.io/chinese-handwriting-app/" width="200" height="200" alt="QR Code Mobile" style="display:block;">
       </div>
 
       <div style="background: var(--bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border); word-break: break-all; font-family: monospace; font-size: 13px; color: var(--accent); margin-bottom: 12px;">
-        https://phuc.tail810b03.ts.net/
+        https://phuctute.github.io/chinese-handwriting-app/
       </div>
 
       <div style="display: flex; gap: 8px; justify-content: center;">
-        <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText('https://phuc.tail810b03.ts.net/'); showToast('Đã sao chép link truy cập!');">
+        <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText('https://phuctute.github.io/chinese-handwriting-app/'); showToast('Đã sao chép link truy cập!');">
           📋 Sao Chép Link
         </button>
         <button class="btn btn-primary btn-sm" onclick="closeMobileModal()">
@@ -1271,9 +1316,13 @@
       glyphVariation: true,
       autoTypo: true,
       inkColor: 'gel_black',
-      baselineOffset: -3,
-      leftMargin: 114,
-      rightMargin: 672,
+      baselineOffset: 0,
+      topMargin: 0,
+      bottomMargin: 0,
+      leftMarginOffset: 0,
+      rightMarginOffset: 0,
+      leftMargin: 102,
+      rightMargin: 700,
       seed: 42,
       currentPage: 0,
       totalPages: 1,
@@ -1309,97 +1358,139 @@
       // --- NHÓM 7 MẪU TRANG ĐÔI (DOUBLE SPREADS) ---
       'notebook_thanhnam_spread.jpg': {
         isSpread: true,
-        leftPage: { leftMargin: 45, rightMargin: 480, lines: [35, 53, 71, 90, 108, 127, 146, 166, 185, 205, 225, 245, 265, 286, 306, 327, 348, 369, 390, 411, 433, 454, 476, 494, 513, 533, 552, 571, 590, 610, 632, 650, 668, 686, 705, 723] },
-        rightPage: { leftMargin: 545, rightMargin: 975, lines: [35, 53, 71, 91, 111, 130, 148, 166, 184, 202, 221, 239, 257, 279, 297, 319, 337, 360, 380, 399, 420, 438, 457, 475, 495, 513, 534, 556, 577, 595, 615, 635, 655, 673, 692, 711, 730] },
-        defaultFontSize: 16, baselineOffset: -2
+        leftPage: {
+          leftMargin: 46, rightMargin: 468,
+          lines: [52, 71, 89, 108, 127, 146, 165, 185, 204, 224, 245, 265, 285, 306, 327, 348, 369, 390, 411, 433, 454, 476, 498, 520, 542, 565, 587, 610, 632, 655, 678, 701, 724]
+        },
+        rightPage: {
+          leftMargin: 566, rightMargin: 915,
+          lines: [50, 69, 87, 105, 124, 143, 161, 180, 200, 219, 239, 258, 278, 299, 319, 339, 360, 382, 401, 424, 444, 465, 486, 508, 530, 552, 573, 596, 618, 640, 663, 685, 708, 730]
+        },
+        defaultFontSize: 16, baselineOffset: 0
       },
       'notebook_thanhnam_spread_warm.jpg': {
         isSpread: true,
-        leftPage: { leftMargin: 45, rightMargin: 480, lines: [35, 53, 71, 90, 108, 127, 146, 166, 185, 205, 225, 245, 265, 286, 306, 327, 348, 369, 390, 411, 433, 454, 476, 494, 513, 533, 552, 571, 590, 610, 632, 650, 668, 686, 705, 723] },
-        rightPage: { leftMargin: 545, rightMargin: 975, lines: [35, 53, 71, 91, 111, 130, 148, 166, 184, 202, 221, 239, 257, 279, 297, 319, 337, 360, 380, 399, 420, 438, 457, 475, 495, 513, 534, 556, 577, 595, 615, 635, 655, 673, 692, 711, 730] },
-        defaultFontSize: 16, baselineOffset: -2
+        leftPage: {
+          leftMargin: 46, rightMargin: 468,
+          lines: [52, 71, 89, 108, 127, 146, 165, 185, 204, 224, 245, 265, 285, 306, 327, 348, 369, 390, 411, 433, 454, 476, 498, 520, 542, 565, 587, 610, 632, 655, 678, 701, 724]
+        },
+        rightPage: {
+          leftMargin: 566, rightMargin: 915,
+          lines: [50, 69, 87, 105, 124, 143, 161, 180, 200, 219, 239, 258, 278, 299, 319, 339, 360, 382, 401, 424, 444, 465, 486, 508, 530, 552, 573, 596, 618, 640, 663, 685, 708, 730]
+        },
+        defaultFontSize: 16, baselineOffset: 0
       },
       'notebook_hongha_spread.jpg': {
         isSpread: true,
-        leftPage: { leftMargin: 45, rightMargin: 480, lines: [36, 54, 72, 90, 108, 126, 144, 166, 188, 210, 228, 246, 265, 283, 303, 323, 342, 362, 382, 400, 418, 436, 454, 474, 495, 515, 533, 551, 571, 589, 607, 627, 645, 663, 681, 699, 717, 737] },
-        rightPage: { leftMargin: 545, rightMargin: 975, lines: [36, 57, 78, 97, 116, 137, 158, 176, 196, 214, 232, 252, 272, 292, 310, 331, 351, 369, 390, 408, 428, 447, 465, 484, 503, 522, 541, 561, 580, 598, 619, 639, 658, 678, 698, 717, 735] },
-        defaultFontSize: 16, baselineOffset: -2
+        leftPage: {
+          leftMargin: 45, rightMargin: 470,
+          lines: [54, 72, 90, 108, 126, 144, 166, 188, 210, 228, 246, 265, 283, 303, 323, 342, 362, 382, 400, 418, 436, 454, 474, 495, 515, 533, 551, 571, 589, 607, 627, 645, 663, 681, 699, 717]
+        },
+        rightPage: {
+          leftMargin: 560, rightMargin: 920,
+          lines: [57, 78, 97, 116, 137, 158, 176, 196, 214, 232, 252, 272, 292, 310, 331, 351, 369, 390, 408, 428, 447, 465, 484, 503, 522, 541, 561, 580, 598, 619, 639, 658, 678, 698, 717]
+        },
+        defaultFontSize: 16, baselineOffset: 0
       },
       'notebook_hongha_spread_warm.jpg': {
         isSpread: true,
-        leftPage: { leftMargin: 45, rightMargin: 480, lines: [36, 54, 72, 90, 108, 126, 144, 166, 188, 210, 228, 246, 265, 283, 303, 323, 342, 362, 382, 400, 418, 436, 454, 474, 495, 515, 533, 551, 571, 589, 607, 627, 645, 663, 681, 699, 717, 737] },
-        rightPage: { leftMargin: 545, rightMargin: 975, lines: [36, 57, 78, 97, 116, 137, 158, 176, 196, 214, 232, 252, 272, 292, 310, 331, 351, 369, 390, 408, 428, 447, 465, 484, 503, 522, 541, 561, 580, 598, 619, 639, 658, 678, 698, 717, 735] },
-        defaultFontSize: 16, baselineOffset: -2
+        leftPage: {
+          leftMargin: 45, rightMargin: 470,
+          lines: [54, 72, 90, 108, 126, 144, 166, 188, 210, 228, 246, 265, 283, 303, 323, 342, 362, 382, 400, 418, 436, 454, 474, 495, 515, 533, 551, 571, 589, 607, 627, 645, 663, 681, 699, 717]
+        },
+        rightPage: {
+          leftMargin: 560, rightMargin: 920,
+          lines: [57, 78, 97, 116, 137, 158, 176, 196, 214, 232, 252, 272, 292, 310, 331, 351, 369, 390, 408, 428, 447, 465, 484, 503, 522, 541, 561, 580, 598, 619, 639, 658, 678, 698, 717]
+        },
+        defaultFontSize: 16, baselineOffset: 0
       },
       'notebook_tianzige_spread.jpg': {
         isSpread: true,
-        leftPage: { leftMargin: 45, rightMargin: 480, lines: [35, 53, 71, 90, 108, 126, 144, 162, 183, 202, 221, 239, 257, 275, 294, 315, 333, 353, 371, 389, 408, 426, 446, 464, 483, 502, 520, 540, 563, 582, 600, 619, 638, 657, 675, 694, 714, 734] },
-        rightPage: { leftMargin: 545, rightMargin: 975, lines: [35, 53, 71, 90, 108, 126, 144, 162, 183, 202, 221, 239, 257, 275, 294, 315, 333, 353, 371, 389, 408, 426, 446, 464, 483, 502, 520, 540, 563, 582, 600, 619, 638, 657, 675, 694, 714, 734] },
-        defaultFontSize: 16, baselineOffset: -2
+        leftPage: {
+          leftMargin: 45, rightMargin: 470,
+          lines: [53, 71, 90, 108, 126, 144, 162, 183, 202, 221, 239, 257, 275, 294, 315, 333, 353, 371, 389, 408, 426, 446, 464, 483, 502, 520, 540, 563, 582, 600, 619, 638, 657, 675, 694, 714]
+        },
+        rightPage: {
+          leftMargin: 550, rightMargin: 925,
+          lines: [53, 71, 90, 108, 126, 144, 162, 183, 202, 221, 239, 257, 275, 294, 315, 333, 353, 371, 389, 408, 426, 446, 464, 483, 502, 520, 540, 563, 582, 600, 619, 638, 657, 675, 694, 714]
+        },
+        defaultFontSize: 16, baselineOffset: 0
       },
       'notebook_oli_spread.jpg': {
         isSpread: true,
-        leftPage: { leftMargin: 45, rightMargin: 480, lines: [35, 53, 72, 90, 108, 127, 145, 163, 181, 199, 220, 238, 256, 276, 296, 316, 336, 355, 376, 395, 414, 432, 450, 471, 489, 507, 525, 543, 561, 580, 600, 618, 638, 656, 678, 698, 717, 736] },
-        rightPage: { leftMargin: 545, rightMargin: 975, lines: [35, 53, 72, 90, 108, 127, 145, 163, 181, 199, 220, 238, 256, 276, 296, 316, 336, 355, 376, 395, 414, 432, 450, 471, 489, 507, 525, 543, 561, 580, 600, 618, 638, 656, 678, 698, 717, 736] },
-        defaultFontSize: 16, baselineOffset: -2
+        leftPage: {
+          leftMargin: 45, rightMargin: 470,
+          lines: [53, 72, 90, 108, 127, 145, 163, 181, 199, 220, 238, 256, 276, 296, 316, 336, 355, 376, 395, 414, 432, 450, 471, 489, 507, 525, 543, 561, 580, 600, 618, 638, 656, 678, 698, 717]
+        },
+        rightPage: {
+          leftMargin: 550, rightMargin: 925,
+          lines: [53, 72, 90, 108, 127, 145, 163, 181, 199, 220, 238, 256, 276, 296, 316, 336, 355, 376, 395, 414, 432, 450, 471, 489, 507, 525, 543, 561, 580, 600, 618, 638, 656, 678, 698, 717]
+        },
+        defaultFontSize: 16, baselineOffset: 0
       },
       'notebook_warm_spread.jpg': {
         isSpread: true,
-        leftPage: { leftMargin: 45, rightMargin: 480, lines: [35, 53, 72, 92, 110, 128, 148, 166, 185, 203, 221, 239, 258, 276, 294, 314, 333, 355, 376, 394, 412, 430, 448, 466, 484, 502, 520, 540, 561, 580, 600, 621, 640, 658, 678, 699, 717, 736] },
-        rightPage: { leftMargin: 545, rightMargin: 975, lines: [35, 53, 72, 92, 110, 128, 148, 166, 185, 203, 221, 239, 258, 276, 294, 314, 333, 355, 376, 394, 412, 430, 448, 466, 484, 502, 520, 540, 561, 580, 600, 621, 640, 658, 678, 699, 717, 736] },
-        defaultFontSize: 16, baselineOffset: -2
+        leftPage: {
+          leftMargin: 45, rightMargin: 470,
+          lines: [53, 72, 92, 110, 128, 148, 166, 185, 203, 221, 239, 258, 276, 294, 314, 333, 355, 376, 394, 412, 430, 448, 466, 484, 502, 520, 540, 561, 580, 600, 621, 640, 658, 678, 699, 717]
+        },
+        rightPage: {
+          leftMargin: 550, rightMargin: 925,
+          lines: [53, 72, 92, 110, 128, 148, 166, 185, 203, 221, 239, 258, 276, 294, 314, 333, 355, 376, 394, 412, 430, 448, 466, 484, 502, 520, 540, 561, 580, 600, 621, 640, 658, 678, 699, 717]
+        },
+        defaultFontSize: 16, baselineOffset: 0
       },
 
       // --- NHÓM 9 MẪU TRANG ĐƠN (SINGLE PAGES) ---
       'notebook_default.jpg': {
         isSpread: false,
-        leftMargin: 118, rightMargin: 725, baselineOffset: -3, defaultFontSize: 22,
-        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+        leftMargin: 102, rightMargin: 700, baselineOffset: 0, defaultFontSize: 22,
+        lines: [112, 136, 161, 187, 214, 240, 267, 295, 323, 351, 379, 408, 436, 464, 493, 521, 550, 579, 609, 639, 669, 700, 731, 761, 792, 823, 853, 884, 914]
       },
       'notebook_thanhnam_right.jpg': {
         isSpread: false,
-        leftMargin: 118, rightMargin: 725, baselineOffset: -3, defaultFontSize: 22,
-        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+        leftMargin: 102, rightMargin: 700, baselineOffset: 0, defaultFontSize: 22,
+        lines: [112, 136, 161, 187, 214, 240, 267, 295, 323, 351, 379, 408, 436, 464, 493, 521, 550, 579, 609, 639, 669, 700, 731, 761, 792, 823, 853, 884, 914]
       },
       'notebook_thanhnam_left.jpg': {
         isSpread: false,
-        leftMargin: 70, rightMargin: 680, baselineOffset: -3, defaultFontSize: 22,
-        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+        leftMargin: 65, rightMargin: 660, baselineOffset: 0, defaultFontSize: 22,
+        lines: [112, 136, 161, 187, 214, 240, 267, 295, 323, 351, 379, 408, 436, 464, 493, 521, 550, 579, 609, 639, 669, 700, 731, 761, 792, 823, 853, 884, 914]
       },
       'notebook_thanhnam_warm.jpg': {
         isSpread: false,
-        leftMargin: 118, rightMargin: 725, baselineOffset: -3, defaultFontSize: 22,
-        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+        leftMargin: 102, rightMargin: 700, baselineOffset: 0, defaultFontSize: 22,
+        lines: [112, 136, 161, 187, 214, 240, 267, 295, 323, 351, 379, 408, 436, 464, 493, 521, 550, 579, 609, 639, 669, 700, 731, 761, 792, 823, 853, 884, 914]
       },
       'notebook_hongha_1.jpg': {
         isSpread: false,
-        leftMargin: 135, rightMargin: 735, baselineOffset: -3, defaultFontSize: 22,
-        lines: [108, 136, 164, 191, 218, 245, 272, 299, 326, 353, 380, 407, 434, 461, 488, 515, 542, 569, 596, 623, 650, 677, 704, 731, 758, 785, 812, 839, 866, 893, 920, 947, 974].slice(1)
+        leftMargin: 125, rightMargin: 720, baselineOffset: 0, defaultFontSize: 22,
+        lines: [108, 136, 164, 193, 222, 251, 281, 311, 342, 373, 404, 435, 467, 498, 530, 562, 594, 627, 660, 694, 728, 762, 796, 830, 864, 898, 932]
       },
       'notebook_hongha_2.jpg': {
         isSpread: false,
-        leftMargin: 135, rightMargin: 735, baselineOffset: -3, defaultFontSize: 22,
-        lines: [108, 136, 164, 191, 218, 245, 272, 299, 326, 353, 380, 407, 434, 461, 488, 515, 542, 569, 596, 623, 650, 677, 704, 731, 758, 785, 812, 839, 866, 893, 920, 947, 974].slice(1)
+        leftMargin: 125, rightMargin: 720, baselineOffset: 0, defaultFontSize: 22,
+        lines: [99, 127, 155, 183, 211, 240, 270, 299, 329, 359, 386, 421, 452, 484, 515, 547, 591, 612, 645, 679, 714, 748, 783, 817, 852, 887, 921]
       },
       'notebook_hongha_warm.jpg': {
         isSpread: false,
-        leftMargin: 135, rightMargin: 735, baselineOffset: -3, defaultFontSize: 22,
-        lines: [108, 136, 164, 191, 218, 245, 272, 299, 326, 353, 380, 407, 434, 461, 488, 515, 542, 569, 596, 623, 650, 677, 704, 731, 758, 785, 812, 839, 866, 893, 920, 947, 974].slice(1)
+        leftMargin: 125, rightMargin: 720, baselineOffset: 0, defaultFontSize: 22,
+        lines: [108, 136, 164, 193, 222, 251, 281, 311, 342, 373, 404, 435, 467, 498, 530, 562, 594, 627, 660, 694, 728, 762, 796, 830, 864, 898, 932]
       },
       'notebook_tianzige.jpg': {
         isSpread: false,
-        leftMargin: 80, rightMargin: 700, baselineOffset: -4, defaultFontSize: 22,
-        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+        leftMargin: 85, rightMargin: 690, baselineOffset: 0, defaultFontSize: 22,
+        lines: [124, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914]
       },
       'notebook_oli.jpg': {
         isSpread: false,
-        leftMargin: 100, rightMargin: 700, baselineOffset: -4, defaultFontSize: 22,
-        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+        leftMargin: 85, rightMargin: 690, baselineOffset: 0, defaultFontSize: 22,
+        lines: [124, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914]
       },
       'notebook_warm.jpg': {
         isSpread: false,
-        leftMargin: 118, rightMargin: 725, baselineOffset: -3, defaultFontSize: 22,
-        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+        leftMargin: 102, rightMargin: 700, baselineOffset: 0, defaultFontSize: 22,
+        lines: [112, 136, 161, 187, 214, 240, 267, 295, 323, 351, 379, 408, 436, 464, 493, 521, 550, 579, 609, 639, 669, 700, 731, 761, 792, 823, 853, 884, 914]
       }
     };
 
@@ -1544,30 +1635,30 @@
         if (diagSpreadGroup) diagSpreadGroup.style.display = 'block';
         if (badge) { badge.innerText = 'Trang Đôi'; badge.style.background = 'var(--accent-primary)'; }
         BASELINES = cfg.leftPage.lines;
-        state.leftMargin = cfg.leftPage.leftMargin;
-        state.rightMargin = cfg.leftPage.rightMargin;
-        state.baselineOffset = cfg.baselineOffset || -2;
         state.fontSize = cfg.defaultFontSize || 16;
       } else {
         if (spreadGroup) spreadGroup.style.display = 'none';
         if (diagSpreadGroup) diagSpreadGroup.style.display = 'none';
         if (badge) { badge.innerText = 'Trang Đơn'; badge.style.background = '#475569'; }
         BASELINES = cfg.lines;
-        state.leftMargin = cfg.leftMargin;
-        state.rightMargin = cfg.rightMargin;
-        state.baselineOffset = cfg.baselineOffset || -3;
         state.fontSize = cfg.defaultFontSize || 22;
       }
 
-      // Update UI sliders
+      state.baselineOffset = cfg.baselineOffset !== undefined ? cfg.baselineOffset : 0;
+
+      // Update UI sliders and badges
       const fontSlider = document.getElementById('fontSizeSlider');
       if (fontSlider) { fontSlider.value = state.fontSize; document.getElementById('fontSizeVal').innerText = state.fontSize + 'px'; }
-      const lmSlider = document.getElementById('leftMarginSlider');
-      if (lmSlider) { lmSlider.value = state.leftMargin; document.getElementById('leftMarginVal').innerText = state.leftMargin + 'px'; }
-      const rmSlider = document.getElementById('rightMarginSlider');
-      if (rmSlider) { rmSlider.value = state.rightMargin; document.getElementById('rightMarginVal').innerText = state.rightMargin + 'px'; }
       const blSlider = document.getElementById('baselineSlider');
-      if (blSlider) { blSlider.value = state.baselineOffset; document.getElementById('baselineVal').innerText = state.baselineOffset + 'px'; }
+      if (blSlider) { blSlider.value = state.baselineOffset; document.getElementById('baselineVal').innerText = `${state.baselineOffset > 0 ? '+' : ''}${state.baselineOffset}px`; }
+      const tmSlider = document.getElementById('topMarginSlider');
+      if (tmSlider) { tmSlider.value = state.topMargin; document.getElementById('topMarginVal').innerText = `${state.topMargin} dòng`; }
+      const bmSlider = document.getElementById('bottomMarginSlider');
+      if (bmSlider) { bmSlider.value = state.bottomMargin; document.getElementById('bottomMarginVal').innerText = `${state.bottomMargin} dòng`; }
+      const lmSlider = document.getElementById('leftMarginSlider');
+      if (lmSlider) { lmSlider.value = state.leftMarginOffset; document.getElementById('leftMarginVal').innerText = `${state.leftMarginOffset > 0 ? '+' : ''}${state.leftMarginOffset}px`; }
+      const rmSlider = document.getElementById('rightMarginSlider');
+      if (rmSlider) { rmSlider.value = state.rightMarginOffset; document.getElementById('rightMarginVal').innerText = `${state.rightMarginOffset > 0 ? '+' : ''}${state.rightMarginOffset}px`; }
 
       loadNotebookImage('assets/' + filename);
       showToast('Đã đổi mẫu: ' + (cfg.isSpread ? 'Trang Đôi Mở Rộng' : 'Trang Đơn') + '!');
@@ -1983,92 +2074,94 @@
     }
 
     function updateBaseline(val) {
-      state.baselineOffset = parseInt(val);
-      document.getElementById('baselineVal').innerText = `${val}px`;
+      state.baselineOffset = parseInt(val) || 0;
+      const badge = document.getElementById('baselineVal');
+      if (badge) badge.innerText = `${state.baselineOffset > 0 ? '+' : ''}${state.baselineOffset}px`;
       renderCanvas();
     }
 
-    function updateLeftMargin(val) {
-      state.leftMargin = parseInt(val);
-      document.getElementById('leftMarginVal').innerText = `${val}px`;
+    function updateTopMargin(val) {
+      state.topMargin = Math.max(0, parseInt(val) || 0);
+      const badge = document.getElementById('topMarginVal');
+      if (badge) badge.innerText = `${state.topMargin} dòng`;
       paginateText();
       renderCanvas();
     }
 
-    function setInkColor(type, elem) {
-      state.inkColor = type;
-      document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
-      elem.classList.add('active');
+    function updateBottomMargin(val) {
+      state.bottomMargin = Math.max(0, parseInt(val) || 0);
+      const badge = document.getElementById('bottomMarginVal');
+      if (badge) badge.innerText = `${state.bottomMargin} dòng`;
+      paginateText();
       renderCanvas();
     }
 
-    async function triggerUpdate() {
-      state.font = document.getElementById('fontSelect').value;
-      state.glyphVariation = document.getElementById('glyphVariationCheck').checked;
-      state.autoTypo = document.getElementById('autoTypoCheck').checked;
-      if (document.fonts) {
-        try {
-          await document.fonts.load(`${state.fontSize}px "${state.font}"`);
-        } catch(e) {}
-      }
+    function updateLeftMarginOffset(val) {
+      state.leftMarginOffset = parseInt(val) || 0;
+      const badge = document.getElementById('leftMarginVal');
+      if (badge) badge.innerText = `${state.leftMarginOffset > 0 ? '+' : ''}${state.leftMarginOffset}px`;
+      paginateText();
       renderCanvas();
     }
 
-    const AVAILABLE_FONTS = [
-      { id: 'JasonHandwriting3', name: 'Hơi ngoáy, viết nhanh (Khuyên dùng)' },
-      { id: 'JasonHandwriting4', name: 'Nét nghiêng tự do, viết lướt' },
-      { id: 'JasonHandwriting5', name: 'Ngoáy nhiều, phóng khoáng, hơi ẩu' },
-      { id: 'JasonHandwriting2', name: 'Nét bút mảnh mai, thanh thoát' },
-      { id: 'JasonHandwriting1', name: 'Chữ nắn nót, bút bi học sinh' },
-      { id: 'JasonHandwriting6', name: 'Bút gel đậm nét, xô lệch' },
-      { id: 'JasonHandwriting7', name: 'Nét dày dặn, nét móc rõ ràng' },
-      { id: 'Klee One', name: 'Bút chì / bút bi mềm' }
-    ];
-
-    async function shuffleRandomVariation() {
-      // Find current font index and cycle to next font style
-      let currentIdx = AVAILABLE_FONTS.findIndex(f => f.id === state.font);
-      if (currentIdx === -1) currentIdx = 0;
-      const nextIdx = (currentIdx + 1) % AVAILABLE_FONTS.length;
-      const nextFont = AVAILABLE_FONTS[nextIdx];
-
-      state.font = nextFont.id;
-      state.seed = Math.floor(Math.random() * 1000000);
-
-      // Sync select dropdown in settings tab
-      const sel = document.getElementById('fontSelect');
-      if (sel) sel.value = state.font;
-
-      // Ensure font is ready in browser before rendering
-      if (document.fonts) {
-        try {
-          await document.fonts.load(`${state.fontSize}px "${state.font}"`);
-        } catch(e) {}
-      }
-
+    function updateRightMarginOffset(val) {
+      state.rightMarginOffset = parseInt(val) || 0;
+      const badge = document.getElementById('rightMarginVal');
+      if (badge) badge.innerText = `${state.rightMarginOffset > 0 ? '+' : ''}${state.rightMarginOffset}px`;
+      paginateText();
       renderCanvas();
-      showToast(`🎲 Đã đổi dáng chữ sang: ${nextFont.name}`);
     }
 
-    // Text Pagination with Diagram Avoidance & Typo Parsing
+    function resetMarginsToDefault() {
+      const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
+      state.baselineOffset = cfg.baselineOffset !== undefined ? cfg.baselineOffset : 0;
+      state.topMargin = 0;
+      state.bottomMargin = 0;
+      state.leftMarginOffset = 0;
+      state.rightMarginOffset = 0;
+
+      const bl = document.getElementById('baselineSlider');
+      if (bl) { bl.value = state.baselineOffset; document.getElementById('baselineVal').innerText = `${state.baselineOffset > 0 ? '+' : ''}${state.baselineOffset}px`; }
+      const tm = document.getElementById('topMarginSlider');
+      if (tm) { tm.value = 0; document.getElementById('topMarginVal').innerText = '0 dòng'; }
+      const bm = document.getElementById('bottomMarginSlider');
+      if (bm) { bm.value = 0; document.getElementById('bottomMarginVal').innerText = '0 dòng'; }
+      const lm = document.getElementById('leftMarginSlider');
+      if (lm) { lm.value = 0; document.getElementById('leftMarginVal').innerText = '0px'; }
+      const rm = document.getElementById('rightMarginSlider');
+      if (rm) { rm.value = 0; document.getElementById('rightMarginVal').innerText = '0px'; }
+
+      paginateText();
+      renderCanvas();
+      showToast('Đã khôi phục căn lề & dòng kẻ về chuẩn mặc định!');
+    }
+
+    // Text Pagination with Dynamic Margin Awareness & Guaranteed Page Bounds
     function paginateText() {
       const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
       const isSpread = !!cfg.isSpread;
 
+      const leftOff = state.leftMarginOffset || 0;
+      const rightOff = state.rightMarginOffset || 0;
+
       let maxW, linesPerPage;
       if (isSpread) {
-        maxW = cfg.leftPage.rightMargin - cfg.leftPage.leftMargin;
-        linesPerPage = cfg.leftPage.lines.length;
+        const effLeft = cfg.leftPage.leftMargin + leftOff;
+        const effRight = cfg.leftPage.rightMargin + rightOff;
+        maxW = Math.max(80, (effRight - effLeft) - 18); // 18px safety buffer
+        linesPerPage = getActivePageLines(cfg.leftPage.lines).length;
       } else {
-        maxW = state.rightMargin - state.leftMargin;
-        linesPerPage = BASELINES.length;
+        const effLeft = (cfg.leftMargin || 102) + leftOff;
+        const effRight = (cfg.rightMargin || 700) + rightOff;
+        maxW = Math.max(80, (effRight - effLeft) - 18); // 18px safety buffer
+        linesPerPage = getActivePageLines(cfg.lines || BASELINES).length;
       }
 
       const lines = [];
       const punctuationNoStart = new Set('，。、；：！？）》」』”’');
 
       const rawText = state.text || '';
-      const paragraphs = rawText.split('\n');
+      const paragraphs = rawText.split(/\r?\n/);
 
       let charCounterGlobal = 0;
 
@@ -2106,20 +2199,15 @@
         }
 
         let currentChars = [];
-        let curW = isSpread ? 26 : 38;
+        let curW = isSpread ? 24 : 36;
         let isStart = true;
 
         for (let tok of tokens) {
           const ch = tok.char;
-          let charW = state.fontSize * 0.95;
-          if ('，。、；：'.includes(ch)) {
-            charW = state.fontSize * 0.75;
-          } else if ('「」『』()'.includes(ch)) {
-            charW = state.fontSize * 0.65;
-          }
+          const charW = getCharAdvanceWidth(ch, state.fontSize);
 
           if (curW + charW > maxW) {
-            if (punctuationNoStart.has(ch) && currentChars.length > 0) {
+            if (punctuationNoStart.has(ch) && currentChars.length > 0 && (curW + charW <= maxW + 10)) {
               currentChars.push(tok);
               lines.push({ isStart: isStart, chars: currentChars });
               currentChars = [];
@@ -2257,45 +2345,54 @@
       }
     }
 
-    // Core Canvas Rendering Engine
-    function renderLineSet(ctx, pageLines, baselines, leftMargin, rightMargin, baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, fontSize, fontToUse, isSpread) {
+    // Core Canvas Line Rendering Engine with Hard Boundary Clamp
+    function renderLineSet(ctx, pageLines, allBaselines, leftMargin, rightMargin, baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, fontSize, fontToUse, isSpread) {
       ctx.textBaseline = 'alphabetic';
+
+      // Slice allBaselines according to user Top & Bottom margin
+      const baselines = getActivePageLines(allBaselines);
+      const maxSafeX = rightMargin - 4; // HARD CLAMP: Text will never cross this boundary
 
       for (let lineIdx = 0; lineIdx < pageLines.length; lineIdx++) {
         if (lineIdx >= baselines.length) break;
 
         const lineData = pageLines[lineIdx];
-        if (lineData.isDiagramPlaceholder) continue;
+        if (lineData.isDiagramPlaceholder || lineData.isSkipLine) continue;
 
         const baseY = baselines[lineIdx] + baselineOffset;
         const chars = lineData.chars;
         const isParagraphStart = lineData.isStart;
 
-        let curX = leftMargin + (isParagraphStart ? (isSpread ? 26 : 38) : 0);
-        curX += (prng() - 0.5) * 3 * mFactor;
+        let curX = leftMargin + (isParagraphStart ? (isSpread ? 24 : 36) : 0);
+        curX += (prng() - 0.5) * 2.5 * mFactor;
 
-        const driftAmp = (prng() - 0.5) * 2.8 * mFactor;
-        const slope = (prng() - 0.5) * 1.2 * mFactor;
+        const driftAmp = (prng() - 0.5) * 2.0 * mFactor;
+        const slope = (prng() - 0.5) * 0.8 * mFactor;
 
         for (let item of chars) {
           const ch = item.char;
           const isCrossed = item.isCrossedOut;
 
+          // HARD BOUNDARY CLAMP: Never draw any glyph past maxSafeX!
+          if (curX + fontSize * 0.70 > maxSafeX) {
+            break;
+          }
+
           const progress = Math.min(1.0, Math.max(0.0, (curX - leftMargin) / (rightMargin - leftMargin)));
           const drift = Math.sin(progress * Math.PI) * driftAmp + (progress - 0.5) * slope;
 
-          const jX = (prng() - 0.5) * 1.6 * mFactor;
-          const jY = (prng() - 0.5) * 2.2 * mFactor;
-          const angle = (prng() - 0.5) * 0.12 * mFactor;
+          const jX = (prng() - 0.5) * 1.4 * mFactor;
+          const jY = (prng() - 0.5) * 1.8 * mFactor;
+          const angle = (prng() - 0.5) * 0.10 * mFactor;
 
-          let scaleX = 1.0 + (prng() - 0.5) * 0.07 * mFactor;
-          let scaleY = 1.0 + (prng() - 0.5) * 0.07 * mFactor;
-          let shearX = (prng() - 0.5) * 0.06 * mFactor;
+          let scaleX = 1.0 + (prng() - 0.5) * 0.06 * mFactor;
+          let scaleY = 1.0 + (prng() - 0.5) * 0.06 * mFactor;
+          let shearX = (prng() - 0.5) * 0.05 * mFactor;
 
           const r = Math.round(baseR + (prng() - 0.5) * 6);
           const g = Math.round(baseG + (prng() - 0.5) * 6);
           const b = Math.round(baseB + (prng() - 0.5) * 8);
-          const alpha = 0.88 + prng() * 0.10;
+          const alpha = 0.90 + prng() * 0.08;
 
           ctx.save();
           ctx.translate(curX + jX, baseY + jY + drift);
@@ -2306,8 +2403,8 @@
           ctx.font = `${fontSize}px "${fontToUse}", "JasonHandwriting3", cursive`;
           ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
 
-          ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.22)`;
-          ctx.shadowBlur = 0.4;
+          ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.20)`;
+          ctx.shadowBlur = 0.3;
 
           ctx.fillText(ch, 0, 0);
           ctx.restore();
@@ -2318,11 +2415,13 @@
 
           let step = fontSize * 0.95;
           if ('，。、；：'.includes(ch)) {
-            step = fontSize * 0.75 + (prng() - 0.5) * 1.8 * spJitter;
-          } else if ('「」『』()'.includes(ch)) {
-            step = fontSize * 0.65 + (prng() - 0.5) * 1.4 * spJitter;
+            step = fontSize * 0.70 + (prng() - 0.5) * 1.5 * spJitter;
+          } else if ('「」『』()（）《》'.includes(ch)) {
+            step = fontSize * 0.65 + (prng() - 0.5) * 1.2 * spJitter;
+          } else if (/^[a-zA-Z0-9\s]$/.test(ch)) {
+            step = fontSize * 0.58 + (prng() - 0.5) * 1.0 * spJitter;
           } else {
-            step += (prng() - 0.5) * 2.8 * spJitter;
+            step += (prng() - 0.5) * 2.2 * spJitter;
           }
           curX += Math.max(10, step);
         }
@@ -2345,6 +2444,10 @@
 
       const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
       const isSpread = !!cfg.isSpread;
+      const leftOff = state.leftMarginOffset || 0;
+      const rightOff = state.rightMarginOffset || 0;
+      const blOffset = (cfg.baselineOffset || 0) + (state.baselineOffset || 0);
+
       const mFactor = state.messiness / 100.0;
       const spJitter = state.spacingJitter / 100.0;
       const prng = mulberry32(state.seed + state.currentPage * 7919);
@@ -2357,47 +2460,53 @@
       }
 
       if (isSpread) {
-        // --- RENDER DOUBLE SPREAD ---
+        // Double spread
+        const leftM_L = cfg.leftPage.leftMargin + leftOff;
+        const rightM_L = cfg.leftPage.rightMargin + rightOff;
+        const leftM_R = cfg.rightPage.leftMargin + leftOff;
+        const rightM_R = cfg.rightPage.rightMargin + rightOff;
+
         if (state.spreadWriteMode === 'both') {
           const leftSubpage = state.allPagesLines[state.currentPage * 2] || [];
           const rightSubpage = state.allPagesLines[state.currentPage * 2 + 1] || [];
 
-          // Draw diagram if placed on this spread
           if (state.diagram.enabled && state.currentPage === state.diagram.page) {
-            const sideCfg = (state.diagram.spreadSide === 'right') ? cfg.rightPage : cfg.leftPage;
+            const sideCfg = (state.diagram.spreadSide === 'right') ? 
+              { lines: cfg.rightPage.lines, leftMargin: leftM_R, rightMargin: rightM_R } : 
+              { lines: cfg.leftPage.lines, leftMargin: leftM_L, rightMargin: rightM_L };
             drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, sideCfg);
           }
 
-          // Render Left Page
-          renderLineSet(ctx, leftSubpage, cfg.leftPage.lines, cfg.leftPage.leftMargin, cfg.leftPage.rightMargin, state.baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, true);
-
-          // Render Right Page
-          renderLineSet(ctx, rightSubpage, cfg.rightPage.lines, cfg.rightPage.leftMargin, cfg.rightPage.rightMargin, state.baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, true);
+          renderLineSet(ctx, leftSubpage, cfg.leftPage.lines, leftM_L, rightM_L, blOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, true);
+          renderLineSet(ctx, rightSubpage, cfg.rightPage.lines, leftM_R, rightM_R, blOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, true);
 
         } else if (state.spreadWriteMode === 'left') {
           const subpage = state.allPagesLines[state.currentPage] || [];
           if (state.diagram.enabled && state.currentPage === state.diagram.page) {
-            drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, cfg.leftPage);
+            drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, { lines: cfg.leftPage.lines, leftMargin: leftM_L, rightMargin: rightM_L });
           }
-          renderLineSet(ctx, subpage, cfg.leftPage.lines, cfg.leftPage.leftMargin, cfg.leftPage.rightMargin, state.baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, true);
+          renderLineSet(ctx, subpage, cfg.leftPage.lines, leftM_L, rightM_L, blOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, true);
 
         } else if (state.spreadWriteMode === 'right') {
           const subpage = state.allPagesLines[state.currentPage] || [];
           if (state.diagram.enabled && state.currentPage === state.diagram.page) {
-            drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, cfg.rightPage);
+            drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, { lines: cfg.rightPage.lines, leftMargin: leftM_R, rightMargin: rightM_R });
           }
-          renderLineSet(ctx, subpage, cfg.rightPage.lines, cfg.rightPage.leftMargin, cfg.rightPage.rightMargin, state.baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, true);
+          renderLineSet(ctx, subpage, cfg.rightPage.lines, leftM_R, rightM_R, blOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, true);
         }
 
       } else {
-        // --- RENDER SINGLE PAGE ---
+        // Single page
+        const leftM = (cfg.leftMargin || 102) + leftOff;
+        const rightM = (cfg.rightMargin || 700) + rightOff;
+        const lines = cfg.lines || BASELINES;
         const pageLines = state.allPagesLines[state.currentPage] || [];
 
         if (state.diagram.enabled && state.currentPage === state.diagram.page) {
-          drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, null);
+          drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, { lines: lines, leftMargin: leftM, rightMargin: rightM });
         }
 
-        renderLineSet(ctx, pageLines, BASELINES, state.leftMargin, state.rightMargin, state.baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, false);
+        renderLineSet(ctx, pageLines, lines, leftM, rightM, blOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, false);
       }
     }
 
@@ -2442,9 +2551,10 @@
     // Draw Hand-drawn Diagram / Table on Canvas
     function drawDiagramOnCanvas(ctx, prng, inkColor, activePageCfg) {
       const d = state.diagram;
-      const baselines = activePageCfg ? activePageCfg.lines : BASELINES;
-      const leftM = activePageCfg ? activePageCfg.leftMargin : state.leftMargin;
-      const rightM = activePageCfg ? activePageCfg.rightMargin : state.rightMargin;
+      const allLines = activePageCfg ? activePageCfg.lines : (TEMPLATES_CONFIG[state.notebookTemplate]?.lines || BASELINES);
+      const baselines = getActivePageLines(allLines);
+      const leftM = activePageCfg ? activePageCfg.leftMargin : (state.leftMargin + (state.leftMarginOffset || 0));
+      const rightM = activePageCfg ? activePageCfg.rightMargin : (state.rightMargin + (state.rightMarginOffset || 0));
 
       const dStart = Math.max(0, Math.min(baselines.length - 2, d.startLine));
       const dSpan = Math.max(2, Math.min(baselines.length - dStart, d.lineSpan));
