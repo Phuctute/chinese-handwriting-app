@@ -916,6 +916,16 @@
               </div>
             </div>
 
+            <div id="diagSpreadSideGroup" class="form-group" style="margin-bottom: 10px;">
+              <div class="form-label">
+                <span>Vị trí đặt trên Trang Đôi:</span>
+                <select id="diagSpreadSideSelect" class="form-select" style="padding: 6px 10px; font-size: 12px;" onchange="updateDiagramSpreadSide(this.value)">
+                  <option value="left" selected>👈 Nửa trang bên trái</option>
+                  <option value="right">👉 Nửa trang bên phải</option>
+                </select>
+              </div>
+            </div>
+
             <div class="form-group" style="margin-bottom: 0;">
               <div class="form-label">
                 <span>Đặt trên trang số</span>
@@ -974,49 +984,125 @@
       <div id="settings-tab" class="tab-content">
         <!-- Notebook Template Selection -->
         <div class="form-group">
-          <div class="form-label">Mẫu Trang Vở Thực Tế</div>
-          <div class="template-grid">
-            <div class="template-card active" onclick="selectNotebookTemplate('notebook_thanhnam_right.jpg', this)">
+          <div class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>Mẫu Trang Vở Thực Tế (16 Mẫu)</span>
+            <span class="value-badge" id="activeTemplateBadge">Trang Đôi</span>
+          </div>
+
+          <!-- Category Filter Pills -->
+          <div style="display:flex; gap:6px; margin-bottom:10px;">
+            <button type="button" class="btn btn-secondary btn-sm" id="filterAll" style="flex:1; font-size:11.5px; padding:4px 8px;" onclick="filterTemplates('all', this)">
+              🔘 Tất Cả (16)
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" id="filterSpread" style="flex:1.2; font-size:11.5px; padding:4px 8px;" onclick="filterTemplates('spread', this)">
+              📖 Trang Đôi (7)
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" id="filterSingle" style="flex:1.1; font-size:11.5px; padding:4px 8px;" onclick="filterTemplates('single', this)">
+              📄 Trang Đơn (9)
+            </button>
+          </div>
+
+          <!-- Spread Mode Selector (Visible when a double-page spread is active) -->
+          <div id="spreadControlsGroup" style="background: var(--bg-hover); padding: 10px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--accent-primary);">
+            <div class="form-label" style="margin-bottom: 6px; font-size: 12px;">
+              <span>📖 Chế độ viết trên Trang Đôi:</span>
+              <span class="value-badge" id="spreadModeBadge">Cả 2 trang</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;">
+              <button type="button" class="btn btn-primary btn-sm" id="btnSpreadBoth" onclick="setSpreadWriteMode('both')">📖 Cả 2 trang</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="btnSpreadLeft" onclick="setSpreadWriteMode('left')">👈 Chỉ trang trái</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="btnSpreadRight" onclick="setSpreadWriteMode('right')">👉 Chỉ trang phải</button>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">
+              💡 Tự động chép Trang 1 sang Trang Trái và Trang 2 sang Trang Phải với dòng kẻ chuẩn xác 100%!
+            </div>
+          </div>
+
+          <div class="template-grid" id="templateGrid">
+            <!-- 7 MẪU TRANG ĐÔI (SPREADS) -->
+            <div class="template-card active" data-kind="spread" onclick="selectNotebookTemplate('notebook_thanhnam_spread.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:var(--accent-primary); color:#fff; padding:1px 5px; border-radius:4px; font-weight:600;">TRANG ĐÔI</div>
+              <img src="assets/notebook_thanhnam_spread.jpg" class="template-thumb">
+              <span class="template-name">📚 Thành Nam (Mở Đôi Chuẩn - Ảnh Thật)</span>
+            </div>
+            <div class="template-card" data-kind="spread" onclick="selectNotebookTemplate('notebook_thanhnam_spread_warm.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:var(--accent-primary); color:#fff; padding:1px 5px; border-radius:4px; font-weight:600;">TRANG ĐÔI</div>
+              <img src="assets/notebook_thanhnam_spread_warm.jpg" class="template-thumb">
+              <span class="template-name">🕯️ Thành Nam (Mở Đôi Đèn Bàn Ấm)</span>
+            </div>
+            <div class="template-card" data-kind="spread" onclick="selectNotebookTemplate('notebook_hongha_spread.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:var(--accent-primary); color:#fff; padding:1px 5px; border-radius:4px; font-weight:600;">TRANG ĐÔI</div>
+              <img src="assets/notebook_hongha_spread.jpg" class="template-thumb">
+              <span class="template-name">📓 Vở Hồng Hà (Mở Đôi 2 Trang Có Header)</span>
+            </div>
+            <div class="template-card" data-kind="spread" onclick="selectNotebookTemplate('notebook_hongha_spread_warm.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:var(--accent-primary); color:#fff; padding:1px 5px; border-radius:4px; font-weight:600;">TRANG ĐÔI</div>
+              <img src="assets/notebook_hongha_spread_warm.jpg" class="template-thumb">
+              <span class="template-name">☕ Vở Hồng Hà (Mở Đôi Tone Vintage Ấm)</span>
+            </div>
+            <div class="template-card" data-kind="spread" onclick="selectNotebookTemplate('notebook_tianzige_spread.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:var(--accent-primary); color:#fff; padding:1px 5px; border-radius:4px; font-weight:600;">TRANG ĐÔI</div>
+              <img src="assets/notebook_tianzige_spread.jpg" class="template-thumb">
+              <span class="template-name">🏮 Điền Tự Cách (田字格 Mở Đôi Luyện Chữ)</span>
+            </div>
+            <div class="template-card" data-kind="spread" onclick="selectNotebookTemplate('notebook_oli_spread.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:var(--accent-primary); color:#fff; padding:1px 5px; border-radius:4px; font-weight:600;">TRANG ĐÔI</div>
+              <img src="assets/notebook_oli_spread.jpg" class="template-thumb">
+              <span class="template-name">📐 Vở 4 Ô Ly Học Sinh (Mở Đôi)</span>
+            </div>
+            <div class="template-card" data-kind="spread" onclick="selectNotebookTemplate('notebook_warm_spread.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:var(--accent-primary); color:#fff; padding:1px 5px; border-radius:4px; font-weight:600;">TRANG ĐÔI</div>
+              <img src="assets/notebook_warm_spread.jpg" class="template-thumb">
+              <span class="template-name">✨ Kẻ Ngang Studio (Mở Đôi Bàn Gỗ)</span>
+            </div>
+
+            <!-- 9 MẪU TRANG ĐƠN (SINGLE PAGES) -->
+            <div class="template-card" data-kind="single" onclick="selectNotebookTemplate('notebook_thanhnam_right.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:#475569; color:#fff; padding:1px 5px; border-radius:4px;">TRANG ĐƠN</div>
               <img src="assets/notebook_thanhnam_right.jpg" class="template-thumb">
               <span class="template-name">📔 Kẻ Ngang Thành Nam (Trang Phải)</span>
             </div>
-            <div class="template-card" onclick="selectNotebookTemplate('notebook_thanhnam_left.jpg', this)">
+            <div class="template-card" data-kind="single" onclick="selectNotebookTemplate('notebook_thanhnam_left.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:#475569; color:#fff; padding:1px 5px; border-radius:4px;">TRANG ĐƠN</div>
               <img src="assets/notebook_thanhnam_left.jpg" class="template-thumb">
               <span class="template-name">📖 Kẻ Ngang Thành Nam (Trang Trái)</span>
             </div>
-            <div class="template-card" onclick="selectNotebookTemplate('notebook_thanhnam_spread.jpg', this)">
-              <img src="assets/notebook_thanhnam_spread.jpg" class="template-thumb">
-              <span class="template-name">📚 Thành Nam (Mở Đôi 2 Trang)</span>
-            </div>
-            <div class="template-card" onclick="selectNotebookTemplate('notebook_thanhnam_warm.jpg', this)">
+            <div class="template-card" data-kind="single" onclick="selectNotebookTemplate('notebook_thanhnam_warm.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:#475569; color:#fff; padding:1px 5px; border-radius:4px;">TRANG ĐƠN</div>
               <img src="assets/notebook_thanhnam_warm.jpg" class="template-thumb">
               <span class="template-name">🕯️ Thành Nam (Tone Đèn Bàn Ấm)</span>
             </div>
-            <div class="template-card" onclick="selectNotebookTemplate('notebook_hongha_1.jpg', this)">
+            <div class="template-card" data-kind="single" onclick="selectNotebookTemplate('notebook_hongha_1.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:#475569; color:#fff; padding:1px 5px; border-radius:4px;">TRANG ĐƠN</div>
               <img src="assets/notebook_hongha_1.jpg" class="template-thumb">
               <span class="template-name">📓 Vở Hồng Hà (Có Header Thứ/Ngày)</span>
             </div>
-            <div class="template-card" onclick="selectNotebookTemplate('notebook_hongha_2.jpg', this)">
+            <div class="template-card" data-kind="single" onclick="selectNotebookTemplate('notebook_hongha_2.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:#475569; color:#fff; padding:1px 5px; border-radius:4px;">TRANG ĐƠN</div>
               <img src="assets/notebook_hongha_2.jpg" class="template-thumb">
               <span class="template-name">📝 Vở Hồng Hà (Trang Chuẩn)</span>
             </div>
-            <div class="template-card" onclick="selectNotebookTemplate('notebook_hongha_warm.jpg', this)">
+            <div class="template-card" data-kind="single" onclick="selectNotebookTemplate('notebook_hongha_warm.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:#475569; color:#fff; padding:1px 5px; border-radius:4px;">TRANG ĐƠN</div>
               <img src="assets/notebook_hongha_warm.jpg" class="template-thumb">
               <span class="template-name">☕ Vở Hồng Hà (Tone Vintage Ấm)</span>
             </div>
-            <div class="template-card" onclick="selectNotebookTemplate('notebook_tianzige.jpg', this)">
+            <div class="template-card" data-kind="single" onclick="selectNotebookTemplate('notebook_tianzige.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:#475569; color:#fff; padding:1px 5px; border-radius:4px;">TRANG ĐƠN</div>
               <img src="assets/notebook_tianzige.jpg" class="template-thumb">
               <span class="template-name">🏮 Vở Điền Tự Cách (田字格 Luyện Chữ)</span>
             </div>
-            <div class="template-card" onclick="selectNotebookTemplate('notebook_oli.jpg', this)">
+            <div class="template-card" data-kind="single" onclick="selectNotebookTemplate('notebook_oli.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:#475569; color:#fff; padding:1px 5px; border-radius:4px;">TRANG ĐƠN</div>
               <img src="assets/notebook_oli.jpg" class="template-thumb">
               <span class="template-name">📐 Vở 4 Ô Ly Học Sinh</span>
             </div>
-            <div class="template-card" onclick="selectNotebookTemplate('notebook_warm.jpg', this)">
+            <div class="template-card" data-kind="single" onclick="selectNotebookTemplate('notebook_warm.jpg', this)">
+              <div style="position:absolute; top:4px; right:4px; font-size:9.5px; background:#475569; color:#fff; padding:1px 5px; border-radius:4px;">TRANG ĐƠN</div>
               <img src="assets/notebook_warm.jpg" class="template-thumb">
               <span class="template-name">✨ Kẻ Ngang Studio Đèn Ấm</span>
             </div>
-            <div class="template-card" onclick="document.getElementById('customBgInput').click()">
+            <div class="template-card" data-kind="all" onclick="document.getElementById('customBgInput').click()">
               <div style="height:60px; display:flex; align-items:center; justify-content:center; font-size:24px;">📤</div>
               <span class="template-name">Tải Ảnh Vở Khác Của Bạn</span>
             </div>
@@ -1223,7 +1309,8 @@
       totalPages: 1,
       allPagesLines: [],
       notebookImg: null,
-      notebookTemplate: 'notebook_default.jpg',
+      notebookTemplate: 'notebook_thanhnam_spread.jpg',
+      spreadWriteMode: 'both', // 'both', 'left', 'right'
       customBgFilename: null,
       skipLine: false,
       diagram: {
@@ -1241,60 +1328,112 @@
         calloutContent: "「此人一一為具言所聞，皆嘆惋。」── 桃花源中人聽聞外界亂世，感念自身能得此寧靜天地，深感慶幸與哀憐。",
         customImage: null,
         customThreshold: 185,
+        spreadSide: 'left', // 'left' or 'right' on spread
         customProcessedCanvas: null,
         sketchCanvas: null
       }
     };
 
-    // Calibrated line coordinates & margin profiles for all 10 notebook templates
+    // Calibrated line coordinates & margin profiles for all 16 notebook templates
     const TEMPLATES_CONFIG = {
+      // --- NHÓM 7 MẪU TRANG ĐÔI (DOUBLE SPREADS) ---
+      'notebook_thanhnam_spread.jpg': {
+        isSpread: true,
+        leftPage: { leftMargin: 45, rightMargin: 480, lines: [35, 53, 71, 90, 108, 127, 146, 166, 185, 205, 225, 245, 265, 286, 306, 327, 348, 369, 390, 411, 433, 454, 476, 494, 513, 533, 552, 571, 590, 610, 632, 650, 668, 686, 705, 723] },
+        rightPage: { leftMargin: 545, rightMargin: 975, lines: [35, 53, 71, 91, 111, 130, 148, 166, 184, 202, 221, 239, 257, 279, 297, 319, 337, 360, 380, 399, 420, 438, 457, 475, 495, 513, 534, 556, 577, 595, 615, 635, 655, 673, 692, 711, 730] },
+        defaultFontSize: 16, baselineOffset: -2
+      },
+      'notebook_thanhnam_spread_warm.jpg': {
+        isSpread: true,
+        leftPage: { leftMargin: 45, rightMargin: 480, lines: [35, 53, 71, 90, 108, 127, 146, 166, 185, 205, 225, 245, 265, 286, 306, 327, 348, 369, 390, 411, 433, 454, 476, 494, 513, 533, 552, 571, 590, 610, 632, 650, 668, 686, 705, 723] },
+        rightPage: { leftMargin: 545, rightMargin: 975, lines: [35, 53, 71, 91, 111, 130, 148, 166, 184, 202, 221, 239, 257, 279, 297, 319, 337, 360, 380, 399, 420, 438, 457, 475, 495, 513, 534, 556, 577, 595, 615, 635, 655, 673, 692, 711, 730] },
+        defaultFontSize: 16, baselineOffset: -2
+      },
+      'notebook_hongha_spread.jpg': {
+        isSpread: true,
+        leftPage: { leftMargin: 45, rightMargin: 480, lines: [36, 54, 72, 90, 108, 126, 144, 166, 188, 210, 228, 246, 265, 283, 303, 323, 342, 362, 382, 400, 418, 436, 454, 474, 495, 515, 533, 551, 571, 589, 607, 627, 645, 663, 681, 699, 717, 737] },
+        rightPage: { leftMargin: 545, rightMargin: 975, lines: [36, 57, 78, 97, 116, 137, 158, 176, 196, 214, 232, 252, 272, 292, 310, 331, 351, 369, 390, 408, 428, 447, 465, 484, 503, 522, 541, 561, 580, 598, 619, 639, 658, 678, 698, 717, 735] },
+        defaultFontSize: 16, baselineOffset: -2
+      },
+      'notebook_hongha_spread_warm.jpg': {
+        isSpread: true,
+        leftPage: { leftMargin: 45, rightMargin: 480, lines: [36, 54, 72, 90, 108, 126, 144, 166, 188, 210, 228, 246, 265, 283, 303, 323, 342, 362, 382, 400, 418, 436, 454, 474, 495, 515, 533, 551, 571, 589, 607, 627, 645, 663, 681, 699, 717, 737] },
+        rightPage: { leftMargin: 545, rightMargin: 975, lines: [36, 57, 78, 97, 116, 137, 158, 176, 196, 214, 232, 252, 272, 292, 310, 331, 351, 369, 390, 408, 428, 447, 465, 484, 503, 522, 541, 561, 580, 598, 619, 639, 658, 678, 698, 717, 735] },
+        defaultFontSize: 16, baselineOffset: -2
+      },
+      'notebook_tianzige_spread.jpg': {
+        isSpread: true,
+        leftPage: { leftMargin: 45, rightMargin: 480, lines: [35, 53, 71, 90, 108, 126, 144, 162, 183, 202, 221, 239, 257, 275, 294, 315, 333, 353, 371, 389, 408, 426, 446, 464, 483, 502, 520, 540, 563, 582, 600, 619, 638, 657, 675, 694, 714, 734] },
+        rightPage: { leftMargin: 545, rightMargin: 975, lines: [35, 53, 71, 90, 108, 126, 144, 162, 183, 202, 221, 239, 257, 275, 294, 315, 333, 353, 371, 389, 408, 426, 446, 464, 483, 502, 520, 540, 563, 582, 600, 619, 638, 657, 675, 694, 714, 734] },
+        defaultFontSize: 16, baselineOffset: -2
+      },
+      'notebook_oli_spread.jpg': {
+        isSpread: true,
+        leftPage: { leftMargin: 45, rightMargin: 480, lines: [35, 53, 72, 90, 108, 127, 145, 163, 181, 199, 220, 238, 256, 276, 296, 316, 336, 355, 376, 395, 414, 432, 450, 471, 489, 507, 525, 543, 561, 580, 600, 618, 638, 656, 678, 698, 717, 736] },
+        rightPage: { leftMargin: 545, rightMargin: 975, lines: [35, 53, 72, 90, 108, 127, 145, 163, 181, 199, 220, 238, 256, 276, 296, 316, 336, 355, 376, 395, 414, 432, 450, 471, 489, 507, 525, 543, 561, 580, 600, 618, 638, 656, 678, 698, 717, 736] },
+        defaultFontSize: 16, baselineOffset: -2
+      },
+      'notebook_warm_spread.jpg': {
+        isSpread: true,
+        leftPage: { leftMargin: 45, rightMargin: 480, lines: [35, 53, 72, 92, 110, 128, 148, 166, 185, 203, 221, 239, 258, 276, 294, 314, 333, 355, 376, 394, 412, 430, 448, 466, 484, 502, 520, 540, 561, 580, 600, 621, 640, 658, 678, 699, 717, 736] },
+        rightPage: { leftMargin: 545, rightMargin: 975, lines: [35, 53, 72, 92, 110, 128, 148, 166, 185, 203, 221, 239, 258, 276, 294, 314, 333, 355, 376, 394, 412, 430, 448, 466, 484, 502, 520, 540, 561, 580, 600, 621, 640, 658, 678, 699, 717, 736] },
+        defaultFontSize: 16, baselineOffset: -2
+      },
+
+      // --- NHÓM 9 MẪU TRANG ĐƠN (SINGLE PAGES) ---
       'notebook_default.jpg': {
-        leftMargin: 118, rightMargin: 725, baselineOffset: -3,
+        isSpread: false,
+        leftMargin: 118, rightMargin: 725, baselineOffset: -3, defaultFontSize: 22,
         lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
       },
       'notebook_thanhnam_right.jpg': {
-        leftMargin: 118, rightMargin: 725, baselineOffset: -3,
+        isSpread: false,
+        leftMargin: 118, rightMargin: 725, baselineOffset: -3, defaultFontSize: 22,
         lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
       },
       'notebook_thanhnam_left.jpg': {
-        leftMargin: 70, rightMargin: 680, baselineOffset: -3,
+        isSpread: false,
+        leftMargin: 70, rightMargin: 680, baselineOffset: -3, defaultFontSize: 22,
         lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
       },
-      'notebook_thanhnam_spread.jpg': {
-        leftMargin: 550, rightMargin: 960, baselineOffset: -3,
-        lines: [61, 87, 109, 129, 153, 173, 193, 213, 232, 251, 273, 296, 317, 338, 359, 380, 401, 423, 445, 467, 489, 509, 530, 556, 579, 602, 625, 646, 665, 689, 709]
-      },
       'notebook_thanhnam_warm.jpg': {
-        leftMargin: 118, rightMargin: 725, baselineOffset: -3,
+        isSpread: false,
+        leftMargin: 118, rightMargin: 725, baselineOffset: -3, defaultFontSize: 22,
         lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
       },
       'notebook_hongha_1.jpg': {
-        leftMargin: 135, rightMargin: 735, baselineOffset: -3,
+        isSpread: false,
+        leftMargin: 135, rightMargin: 735, baselineOffset: -3, defaultFontSize: 22,
         lines: [108, 136, 164, 191, 218, 245, 272, 299, 326, 353, 380, 407, 434, 461, 488, 515, 542, 569, 596, 623, 650, 677, 704, 731, 758, 785, 812, 839, 866, 893, 920, 947, 974].slice(1)
       },
       'notebook_hongha_2.jpg': {
-        leftMargin: 135, rightMargin: 735, baselineOffset: -3,
+        isSpread: false,
+        leftMargin: 135, rightMargin: 735, baselineOffset: -3, defaultFontSize: 22,
         lines: [108, 136, 164, 191, 218, 245, 272, 299, 326, 353, 380, 407, 434, 461, 488, 515, 542, 569, 596, 623, 650, 677, 704, 731, 758, 785, 812, 839, 866, 893, 920, 947, 974].slice(1)
       },
       'notebook_hongha_warm.jpg': {
-        leftMargin: 135, rightMargin: 735, baselineOffset: -3,
+        isSpread: false,
+        leftMargin: 135, rightMargin: 735, baselineOffset: -3, defaultFontSize: 22,
         lines: [108, 136, 164, 191, 218, 245, 272, 299, 326, 353, 380, 407, 434, 461, 488, 515, 542, 569, 596, 623, 650, 677, 704, 731, 758, 785, 812, 839, 866, 893, 920, 947, 974].slice(1)
       },
       'notebook_tianzige.jpg': {
-        leftMargin: 80, rightMargin: 700, baselineOffset: -4,
+        isSpread: false,
+        leftMargin: 80, rightMargin: 700, baselineOffset: -4, defaultFontSize: 22,
         lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
       },
       'notebook_oli.jpg': {
-        leftMargin: 100, rightMargin: 700, baselineOffset: -4,
+        isSpread: false,
+        leftMargin: 100, rightMargin: 700, baselineOffset: -4, defaultFontSize: 22,
         lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
       },
       'notebook_warm.jpg': {
-        leftMargin: 118, rightMargin: 725, baselineOffset: -3,
+        isSpread: false,
+        leftMargin: 118, rightMargin: 725, baselineOffset: -3, defaultFontSize: 22,
         lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
       }
     };
 
-    let BASELINES = TEMPLATES_CONFIG['notebook_default.jpg'].lines;
+    let BASELINES = TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'].leftPage.lines;
 
     // Companion fonts for glyph variation (All 100% verified complete Big5 glyph coverage)
     const COMPANION_FONTS = [
@@ -1416,22 +1555,44 @@
     // Select notebook template
     function selectNotebookTemplate(filename, elem) {
       state.notebookTemplate = filename;
-      document.querySelectorAll('.template-card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('#templateGrid .template-card').forEach(c => c.classList.remove('active'));
       if (elem) {
         elem.classList.add('active');
       } else {
-        const cards = document.querySelectorAll('.template-card');
+        const cards = document.querySelectorAll('#templateGrid .template-card');
         cards.forEach(c => {
-          if (c.innerHTML.includes(filename)) c.classList.add('active');
+          if (c.onclick && c.onclick.toString().includes(filename)) c.classList.add('active');
         });
       }
-      const cfg = TEMPLATES_CONFIG[filename] || TEMPLATES_CONFIG['notebook_default.jpg'];
-      BASELINES = cfg.lines;
-      state.leftMargin = cfg.leftMargin;
-      state.rightMargin = cfg.rightMargin;
-      state.baselineOffset = cfg.baselineOffset;
 
-      // Update UI sliders if present
+      const cfg = TEMPLATES_CONFIG[filename] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
+      const spreadGroup = document.getElementById('spreadControlsGroup');
+      const diagSpreadGroup = document.getElementById('diagSpreadSideGroup');
+      const badge = document.getElementById('activeTemplateBadge');
+
+      if (cfg.isSpread) {
+        if (spreadGroup) spreadGroup.style.display = 'block';
+        if (diagSpreadGroup) diagSpreadGroup.style.display = 'block';
+        if (badge) { badge.innerText = 'Trang Đôi'; badge.style.background = 'var(--accent-primary)'; }
+        BASELINES = cfg.leftPage.lines;
+        state.leftMargin = cfg.leftPage.leftMargin;
+        state.rightMargin = cfg.leftPage.rightMargin;
+        state.baselineOffset = cfg.baselineOffset || -2;
+        state.fontSize = cfg.defaultFontSize || 16;
+      } else {
+        if (spreadGroup) spreadGroup.style.display = 'none';
+        if (diagSpreadGroup) diagSpreadGroup.style.display = 'none';
+        if (badge) { badge.innerText = 'Trang Đơn'; badge.style.background = '#475569'; }
+        BASELINES = cfg.lines;
+        state.leftMargin = cfg.leftMargin;
+        state.rightMargin = cfg.rightMargin;
+        state.baselineOffset = cfg.baselineOffset || -3;
+        state.fontSize = cfg.defaultFontSize || 22;
+      }
+
+      // Update UI sliders
+      const fontSlider = document.getElementById('fontSizeSlider');
+      if (fontSlider) { fontSlider.value = state.fontSize; document.getElementById('fontSizeVal').innerText = state.fontSize + 'px'; }
       const lmSlider = document.getElementById('leftMarginSlider');
       if (lmSlider) { lmSlider.value = state.leftMargin; document.getElementById('leftMarginVal').innerText = state.leftMargin + 'px'; }
       const rmSlider = document.getElementById('rightMarginSlider');
@@ -1440,7 +1601,57 @@
       if (blSlider) { blSlider.value = state.baselineOffset; document.getElementById('baselineVal').innerText = state.baselineOffset + 'px'; }
 
       loadNotebookImage('assets/' + filename);
-      showToast('Đã đổi mẫu trang vở!');
+      showToast('Đã đổi mẫu: ' + (cfg.isSpread ? 'Trang Đôi Mở Rộng' : 'Trang Đơn') + '!');
+    }
+
+    function filterTemplates(kind, elem) {
+      document.querySelectorAll('#filterAll, #filterSpread, #filterSingle').forEach(b => {
+        b.classList.remove('btn-primary');
+        b.classList.add('btn-secondary');
+      });
+      if (elem) {
+        elem.classList.remove('btn-secondary');
+        elem.classList.add('btn-primary');
+      }
+
+      const cards = document.querySelectorAll('#templateGrid .template-card');
+      cards.forEach(c => {
+        const cKind = c.getAttribute('data-kind');
+        if (kind === 'all' || cKind === kind || cKind === 'all') {
+          c.style.display = 'flex';
+        } else {
+          c.style.display = 'none';
+        }
+      });
+    }
+
+    function setSpreadWriteMode(mode) {
+      state.spreadWriteMode = mode;
+      ['Both', 'Left', 'Right'].forEach(m => {
+        const btn = document.getElementById('btnSpread' + m);
+        if (btn) {
+          if (m.toLowerCase() === mode) {
+            btn.classList.remove('btn-secondary');
+            btn.classList.add('btn-primary');
+          } else {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-secondary');
+          }
+        }
+      });
+      const badge = document.getElementById('spreadModeBadge');
+      if (badge) {
+        badge.innerText = mode === 'both' ? 'Cả 2 trang' : (mode === 'left' ? 'Chỉ trang trái' : 'Chỉ trang phải');
+      }
+      paginateText();
+      renderCanvas();
+      showToast('Đã chọn chế độ: ' + (mode === 'both' ? 'Cả 2 trang (Trái & Phải)' : (mode === 'left' ? 'Chỉ trang trái' : 'Chỉ trang phải')));
+    }
+
+    function updateDiagramSpreadSide(side) {
+      state.diagram.spreadSide = side;
+      paginateText();
+      renderCanvas();
     }
 
     // Insert typo syntax ~~...~~
@@ -1836,7 +2047,18 @@
 
     // Text Pagination with Diagram Avoidance & Typo Parsing
     function paginateText() {
-      const maxW = state.rightMargin - state.leftMargin;
+      const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
+      const isSpread = !!cfg.isSpread;
+
+      let maxW, linesPerPage;
+      if (isSpread) {
+        maxW = cfg.leftPage.rightMargin - cfg.leftPage.leftMargin;
+        linesPerPage = cfg.leftPage.lines.length;
+      } else {
+        maxW = state.rightMargin - state.leftMargin;
+        linesPerPage = BASELINES.length;
+      }
+
       const lines = [];
       const punctuationNoStart = new Set('，。、；：！？）》」』”’');
 
@@ -1879,7 +2101,7 @@
         }
 
         let currentChars = [];
-        let curW = 38; // Paragraph indent
+        let curW = isSpread ? 26 : 38;
         let isStart = true;
 
         for (let tok of tokens) {
@@ -1915,17 +2137,28 @@
         }
       }
 
-      // Slot-based page grouping with deterministic non-overlapping diagram reservations
-      const linesPerPage = BASELINES.length;
       state.allPagesLines = [];
       const unplaced = [...lines];
-      let pIdx = 0;
+      let subpageIdx = 0;
 
-      while (unplaced.length > 0 || (state.diagram.enabled && state.diagram.page === pIdx && state.allPagesLines.length === 0)) {
+      while (unplaced.length > 0 || (state.diagram.enabled && subpageIdx === 0 && state.allPagesLines.length === 0)) {
         const slots = new Array(linesPerPage).fill(null);
         
-        // If diagram is enabled on this page, strictly lock its slots FIRST
-        if (state.diagram.enabled && state.diagram.page === pIdx) {
+        let hasDiagramOnThisSubpage = false;
+        if (state.diagram.enabled) {
+          if (isSpread) {
+            if (state.spreadWriteMode === 'both') {
+              const targetSubpage = (state.diagram.page * 2) + (state.diagram.spreadSide === 'right' ? 1 : 0);
+              hasDiagramOnThisSubpage = (subpageIdx === targetSubpage);
+            } else {
+              hasDiagramOnThisSubpage = (subpageIdx === state.diagram.page);
+            }
+          } else {
+            hasDiagramOnThisSubpage = (subpageIdx === state.diagram.page);
+          }
+        }
+
+        if (hasDiagramOnThisSubpage) {
           const dStart = Math.max(0, Math.min(linesPerPage - 2, state.diagram.startLine));
           const dSpan = Math.max(2, Math.min(linesPerPage - dStart, state.diagram.lineSpan));
           for (let s = dStart; s < dStart + dSpan; s++) {
@@ -1933,7 +2166,6 @@
           }
         }
 
-        // Fill remaining slots with text lines
         let sIdx = 0;
         while (sIdx < linesPerPage) {
           if (slots[sIdx] !== null) {
@@ -1943,7 +2175,6 @@
           if (unplaced.length > 0) {
             slots[sIdx] = unplaced.shift();
             if (state.skipLine) {
-              // Skip next available non-diagram line
               let nextSlot = sIdx + 1;
               while (nextSlot < linesPerPage && slots[nextSlot] !== null) {
                 nextSlot++;
@@ -1959,21 +2190,25 @@
           sIdx++;
         }
 
-        // Clean trailing null slots for this page
         while (slots.length > 0 && slots[slots.length - 1] === null) {
           slots.pop();
         }
 
         state.allPagesLines.push(slots);
-        pIdx++;
-        if (pIdx > 50) break; // safeguard
+        subpageIdx++;
+        if (subpageIdx > 60) break;
       }
 
       if (state.allPagesLines.length === 0) {
         state.allPagesLines.push([]);
       }
 
-      state.totalPages = state.allPagesLines.length;
+      if (isSpread && state.spreadWriteMode === 'both') {
+        state.totalPages = Math.max(1, Math.ceil(state.allPagesLines.length / 2));
+      } else {
+        state.totalPages = state.allPagesLines.length;
+      }
+
       if (state.currentPage >= state.totalPages) {
         state.currentPage = state.totalPages - 1;
       }
@@ -1981,7 +2216,24 @@
     }
 
     function updatePaginationUI() {
-      pageIndicator.innerText = `Trang ${state.currentPage + 1} / ${state.totalPages}`;
+      const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
+      const pageInfo = document.getElementById('pageInfo');
+      if (!pageInfo) return;
+
+      if (cfg && cfg.isSpread && state.spreadWriteMode === 'both') {
+        const curSpread = state.currentPage + 1;
+        const pageL = state.currentPage * 2 + 1;
+        const pageR = state.currentPage * 2 + 2;
+        pageInfo.innerText = `📖 Trang Đôi ${curSpread} / ${state.totalPages} (Gồm Trang ${pageL} & ${pageR})`;
+      } else if (cfg && cfg.isSpread) {
+        const sideText = state.spreadWriteMode === 'left' ? 'Trang Trái' : 'Trang Phải';
+        pageInfo.innerText = `📖 Trang Đôi ${state.currentPage + 1} / ${state.totalPages} (${sideText})`;
+      } else {
+        pageInfo.innerText = `Trang ${state.currentPage + 1} / ${state.totalPages}`;
+      }
+
+      document.getElementById('prevPageBtn').disabled = (state.currentPage <= 0);
+      document.getElementById('nextPageBtn').disabled = (state.currentPage >= state.totalPages - 1);
     }
 
     function prevPage() {
@@ -2001,6 +2253,77 @@
     }
 
     // Core Canvas Rendering Engine
+    function renderLineSet(ctx, pageLines, baselines, leftMargin, rightMargin, baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, fontSize, fontToUse, isSpread) {
+      ctx.textBaseline = 'alphabetic';
+
+      for (let lineIdx = 0; lineIdx < pageLines.length; lineIdx++) {
+        if (lineIdx >= baselines.length) break;
+
+        const lineData = pageLines[lineIdx];
+        if (lineData.isDiagramPlaceholder) continue;
+
+        const baseY = baselines[lineIdx] + baselineOffset;
+        const chars = lineData.chars;
+        const isParagraphStart = lineData.isStart;
+
+        let curX = leftMargin + (isParagraphStart ? (isSpread ? 26 : 38) : 0);
+        curX += (prng() - 0.5) * 3 * mFactor;
+
+        const driftAmp = (prng() - 0.5) * 2.8 * mFactor;
+        const slope = (prng() - 0.5) * 1.2 * mFactor;
+
+        for (let item of chars) {
+          const ch = item.char;
+          const isCrossed = item.isCrossedOut;
+
+          const progress = Math.min(1.0, Math.max(0.0, (curX - leftMargin) / (rightMargin - leftMargin)));
+          const drift = Math.sin(progress * Math.PI) * driftAmp + (progress - 0.5) * slope;
+
+          const jX = (prng() - 0.5) * 1.6 * mFactor;
+          const jY = (prng() - 0.5) * 2.2 * mFactor;
+          const angle = (prng() - 0.5) * 0.12 * mFactor;
+
+          let scaleX = 1.0 + (prng() - 0.5) * 0.07 * mFactor;
+          let scaleY = 1.0 + (prng() - 0.5) * 0.07 * mFactor;
+          let shearX = (prng() - 0.5) * 0.06 * mFactor;
+
+          const r = Math.round(baseR + (prng() - 0.5) * 6);
+          const g = Math.round(baseG + (prng() - 0.5) * 6);
+          const b = Math.round(baseB + (prng() - 0.5) * 8);
+          const alpha = 0.88 + prng() * 0.10;
+
+          ctx.save();
+          ctx.translate(curX + jX, baseY + jY + drift);
+          ctx.rotate(angle);
+          ctx.transform(1, 0, shearX, 1, 0, 0);
+          ctx.scale(scaleX, scaleY);
+
+          ctx.font = `${fontSize}px "${fontToUse}", "JasonHandwriting3", cursive`;
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+
+          ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.22)`;
+          ctx.shadowBlur = 0.4;
+
+          ctx.fillText(ch, 0, 0);
+          ctx.restore();
+
+          if (isCrossed) {
+            drawCrossedOutScribble(ctx, curX, baseY + jY + drift, fontSize * scaleX, fontSize * scaleY, `rgba(${r}, ${g}, ${b}, 0.95)`, prng);
+          }
+
+          let step = fontSize * 0.95;
+          if ('，。、；：'.includes(ch)) {
+            step = fontSize * 0.75 + (prng() - 0.5) * 1.8 * spJitter;
+          } else if ('「」『』()'.includes(ch)) {
+            step = fontSize * 0.65 + (prng() - 0.5) * 1.4 * spJitter;
+          } else {
+            step += (prng() - 0.5) * 2.8 * spJitter;
+          }
+          curX += Math.max(10, step);
+        }
+      }
+    }
+
     function renderCanvas() {
       if (!state.notebookImg || !state.notebookImg.complete) return;
 
@@ -2015,12 +2338,12 @@
       // 2. Set ink blend mode to Multiply
       ctx.globalCompositeOperation = 'multiply';
 
-      const pageLines = state.allPagesLines[state.currentPage] || [];
+      const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
+      const isSpread = !!cfg.isSpread;
       const mFactor = state.messiness / 100.0;
       const spJitter = state.spacingJitter / 100.0;
       const prng = mulberry32(state.seed + state.currentPage * 7919);
 
-      // Base ink color setup
       let baseR = 20, baseG = 22, baseB = 28;
       if (state.inkColor === 'blue') {
         baseR = 22; baseG = 52; baseB = 105;
@@ -2028,103 +2351,51 @@
         baseR = 8; baseG = 8; baseB = 12;
       }
 
-      // 3. Draw Diagram if enabled on current page
-      if (state.diagram.enabled && state.currentPage === state.diagram.page) {
-        drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`);
-      }
+      if (isSpread) {
+        // --- RENDER DOUBLE SPREAD ---
+        if (state.spreadWriteMode === 'both') {
+          const leftSubpage = state.allPagesLines[state.currentPage * 2] || [];
+          const rightSubpage = state.allPagesLines[state.currentPage * 2 + 1] || [];
 
-      // Track character occurrences for dynamic glyph variation
-      const charOccurrences = {};
-
-      ctx.textBaseline = 'alphabetic';
-
-      for (let lineIdx = 0; lineIdx < pageLines.length; lineIdx++) {
-        if (lineIdx >= BASELINES.length) break;
-
-        const lineData = pageLines[lineIdx];
-        if (lineData.isDiagramPlaceholder) continue;
-
-        const baseY = BASELINES[lineIdx] + state.baselineOffset;
-        const chars = lineData.chars;
-        const isParagraphStart = lineData.isStart;
-
-        let curX = state.leftMargin + (isParagraphStart ? 38 : 0);
-        curX += (prng() - 0.5) * 4 * mFactor;
-
-        // Subtle hand drift across line
-        const driftAmp = (prng() - 0.5) * 3.5 * mFactor;
-        const slope = (prng() - 0.5) * 1.5 * mFactor;
-
-        for (let item of chars) {
-          const ch = item.char;
-          const isCrossed = item.isCrossedOut;
-
-          // Track repetition
-          charOccurrences[ch] = (charOccurrences[ch] || 0) + 1;
-          const occ = charOccurrences[ch];
-
-          const progress = Math.min(1.0, Math.max(0.0, (curX - state.leftMargin) / (state.rightMargin - state.leftMargin)));
-          const drift = Math.sin(progress * Math.PI) * driftAmp + (progress - 0.5) * slope;
-
-          // Jitter variations
-          const jX = (prng() - 0.5) * 1.8 * mFactor;
-          const jY = (prng() - 0.5) * 2.8 * mFactor;
-          const angle = (prng() - 0.5) * 0.14 * mFactor;
-
-          // Harmonious organic variations (same hand, same pen, natural human variation)
-          let scaleX = 1.0 + (prng() - 0.5) * 0.08 * mFactor;
-          let scaleY = 1.0 + (prng() - 0.5) * 0.08 * mFactor;
-          let shearX = (prng() - 0.5) * 0.07 * mFactor; // Hand slant
-
-          // Use the single unified handwriting font for 100% style synchronization
-          const fontToUse = state.font;
-
-          // Ink pressure variation (bút bi gel đen thực tế)
-          const r = Math.round(baseR + (prng() - 0.5) * 6);
-          const g = Math.round(baseG + (prng() - 0.5) * 6);
-          const b = Math.round(baseB + (prng() - 0.5) * 8);
-          const alpha = 0.88 + prng() * 0.10;
-
-          ctx.save();
-          ctx.translate(curX + jX, baseY + jY + drift);
-          ctx.rotate(angle);
-          ctx.transform(1, 0, shearX, 1, 0, 0);
-          ctx.scale(scaleX, scaleY);
-
-          ctx.font = `${state.fontSize}px "${fontToUse}", "JasonHandwriting3", cursive`;
-          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-
-          // Gel pen micro-bleed / shadow
-          ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.22)`;
-          ctx.shadowBlur = 0.4;
-
-          ctx.fillText(ch, 0, 0);
-
-          ctx.restore();
-
-          // Render crossed-out typo scribble if marked
-          if (isCrossed) {
-            drawCrossedOutScribble(ctx, curX, baseY + jY + drift, state.fontSize * scaleX, state.fontSize * scaleY, `rgba(${r}, ${g}, ${b}, 0.95)`, prng);
+          // Draw diagram if placed on this spread
+          if (state.diagram.enabled && state.currentPage === state.diagram.page) {
+            const sideCfg = (state.diagram.spreadSide === 'right') ? cfg.rightPage : cfg.leftPage;
+            drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, sideCfg);
           }
 
-          // Advance horizontal position with organic spacing jitter
-          let step = state.fontSize * 0.95;
-          if ('，。、；：'.includes(ch)) {
-            step = state.fontSize * 0.75 + (prng() - 0.5) * 2.0 * spJitter;
-          } else if ('「」『』()'.includes(ch)) {
-            step = state.fontSize * 0.65 + (prng() - 0.5) * 1.5 * spJitter;
-          } else {
-            // Irregular character spacing: some tight, some loose
-            step += (prng() - 0.5) * 3.2 * spJitter;
+          // Render Left Page
+          renderLineSet(ctx, leftSubpage, cfg.leftPage.lines, cfg.leftPage.leftMargin, cfg.leftPage.rightMargin, state.baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, true);
+
+          // Render Right Page
+          renderLineSet(ctx, rightSubpage, cfg.rightPage.lines, cfg.rightPage.leftMargin, cfg.rightPage.rightMargin, state.baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, true);
+
+        } else if (state.spreadWriteMode === 'left') {
+          const subpage = state.allPagesLines[state.currentPage] || [];
+          if (state.diagram.enabled && state.currentPage === state.diagram.page) {
+            drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, cfg.leftPage);
           }
-          curX += Math.max(12, step);
+          renderLineSet(ctx, subpage, cfg.leftPage.lines, cfg.leftPage.leftMargin, cfg.leftPage.rightMargin, state.baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, true);
+
+        } else if (state.spreadWriteMode === 'right') {
+          const subpage = state.allPagesLines[state.currentPage] || [];
+          if (state.diagram.enabled && state.currentPage === state.diagram.page) {
+            drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, cfg.rightPage);
+          }
+          renderLineSet(ctx, subpage, cfg.rightPage.lines, cfg.rightPage.leftMargin, cfg.rightPage.rightMargin, state.baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, true);
         }
-      }
 
-      ctx.globalCompositeOperation = 'source-over';
+      } else {
+        // --- RENDER SINGLE PAGE ---
+        const pageLines = state.allPagesLines[state.currentPage] || [];
+
+        if (state.diagram.enabled && state.currentPage === state.diagram.page) {
+          drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, null);
+        }
+
+        renderLineSet(ctx, pageLines, BASELINES, state.leftMargin, state.rightMargin, state.baselineOffset, prng, baseR, baseG, baseB, mFactor, spJitter, state.fontSize, state.font, false);
+      }
     }
 
-    // Draw Realistic Crossed-out Gel Pen Scribble
     function drawCrossedOutScribble(ctx, x, y, width, height, inkColor, prng) {
       ctx.save();
       ctx.strokeStyle = inkColor;
@@ -2164,20 +2435,22 @@
     }
 
     // Draw Hand-drawn Diagram / Table on Canvas
-    function drawDiagramOnCanvas(ctx, prng, inkColor) {
+    function drawDiagramOnCanvas(ctx, prng, inkColor, activePageCfg) {
       const d = state.diagram;
-      const dStart = Math.max(0, Math.min(BASELINES.length - 2, d.startLine));
-      const dSpan = Math.max(2, Math.min(BASELINES.length - dStart, d.lineSpan));
+      const baselines = activePageCfg ? activePageCfg.lines : BASELINES;
+      const leftM = activePageCfg ? activePageCfg.leftMargin : state.leftMargin;
+      const rightM = activePageCfg ? activePageCfg.rightMargin : state.rightMargin;
+
+      const dStart = Math.max(0, Math.min(baselines.length - 2, d.startLine));
+      const dSpan = Math.max(2, Math.min(baselines.length - dStart, d.lineSpan));
       const lastLineIdx = dStart + dSpan - 1;
 
       // Mathematical zero-overlap bounds:
-      // startY is BASELINES[dStart] - 16 (comfortably 6px below BASELINES[dStart - 1] + 4)
-      // endY is BASELINES[lastLineIdx] - 2 (comfortably 6px above BASELINES[lastLineIdx + 1] - 22)
-      const startY = BASELINES[dStart] - 16;
-      const endY = BASELINES[lastLineIdx] - 2;
-      const boxW = state.rightMargin - state.leftMargin - 16;
-      const boxX = state.leftMargin + 8;
-      const boxH = Math.max(60, endY - startY);
+      const startY = baselines[dStart] - 14;
+      const endY = baselines[lastLineIdx] - 2;
+      const boxW = rightM - leftM - 12;
+      const boxX = leftM + 6;
+      const boxH = Math.max(50, endY - startY);
 
       ctx.save();
       ctx.strokeStyle = inkColor;
