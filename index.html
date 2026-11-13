@@ -790,64 +790,144 @@
       <div id="diagram-tab" class="tab-content">
         <div class="form-group">
           <div class="form-label">
-            <span>Chèn Sơ Đồ / Hình Vẽ / Bảng Kẻ Tay</span>
+            <span>Chèn Sơ Đồ / Bản Vẽ / Bảng Kẻ Tay</span>
             <span class="value-badge" id="diagramStatus">Tắt</span>
           </div>
 
           <label class="checkbox-wrap" style="margin-bottom: 12px;">
             <input type="checkbox" id="diagramEnableCheck" onchange="toggleDiagram(this.checked)">
-            <span><b>Kích hoạt chèn sơ đồ / bảng vẽ trên trang vở này</b></span>
+            <span><b>Kích hoạt chèn sơ đồ / bảng vẽ trên trang vở</b></span>
           </label>
 
           <div id="diagramControls" style="display:none;">
-            <!-- Presets -->
+            <!-- Presets Navigation -->
             <div style="margin-bottom: 12px;">
-              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Chọn mẫu vẽ tay sẵn có:</div>
-              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                <button class="btn btn-secondary btn-sm" onclick="setDiagramPreset('table')">
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Chọn chế độ sơ đồ & bảng:</div>
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;">
+                <button type="button" class="btn btn-secondary btn-sm" id="btnPresetTable" onclick="setDiagramPreset('table')">
                   📊 Bảng từ vựng kẻ tay
                 </button>
-                <button class="btn btn-secondary btn-sm" onclick="setDiagramPreset('mindmap')">
+                <button type="button" class="btn btn-secondary btn-sm" id="btnPresetMindmap" onclick="setDiagramPreset('mindmap')">
                   🌳 Sơ đồ tư duy (Mindmap)
                 </button>
-                <button class="btn btn-secondary btn-sm" onclick="setDiagramPreset('callout')">
-                  📦 Khung ghi chú quan trọng
+                <button type="button" class="btn btn-secondary btn-sm" id="btnPresetCallout" onclick="setDiagramPreset('callout')">
+                  📦 Khung ghi chú (Callout)
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btnPresetSketch" onclick="setDiagramPreset('sketch')">
+                  🖊️ Bảng tự vẽ phác thảo
                 </button>
               </div>
+              <button type="button" class="btn btn-secondary btn-sm" id="btnPresetCustom" style="width:100%; margin-top:6px;" onclick="setDiagramPreset('custom')">
+                🖼️ Tải ảnh sơ đồ có sẵn (AI lọc trong suốt nền)
+              </button>
             </div>
 
-            <!-- Upload Custom Diagram Image -->
-            <div style="margin-bottom: 14px;">
-              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Hoặc tải ảnh sơ đồ / bảng biểu của bạn lên:</div>
-              <div class="dropzone" style="padding: 16px;" onclick="document.getElementById('diagramFileInput').click()">
-                <div class="dropzone-icon" style="font-size:24px;">📈</div>
-                <div class="dropzone-text" style="font-size:12.5px;">Bấm để tải ảnh sơ đồ / bảng vẽ</div>
-                <div class="dropzone-hint">AI tự lọc nét mực bút bi gel hòa vào trang giấy</div>
-                <input type="file" id="diagramFileInput" accept="image/*" style="display:none" onchange="handleDiagramUpload(this.files[0])">
+            <!-- Panel 1: Table Customizer -->
+            <div id="diagPanelTable" style="background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">📊 Tùy chỉnh Bảng kẻ tay</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                <div>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Tiêu đề cột 1:</div>
+                  <input type="text" id="tableCol1Input" class="form-select" style="padding: 6px 10px; font-size: 12.5px;" value="生詞 (Từ mới)" oninput="updateTableHeaders()">
+                </div>
+                <div>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Tiêu đề cột 2:</div>
+                  <input type="text" id="tableCol2Input" class="form-select" style="padding: 6px 10px; font-size: 12.5px;" value="釋義與例句 (Giải nghĩa)" oninput="updateTableHeaders()">
+                </div>
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Các dòng nội dung (mỗi dòng: Từ | Giải nghĩa):</div>
+              <textarea id="tableRowsInput" class="text-editor" style="height: 85px; font-size: 12px; padding: 8px;" oninput="updateTableRows()">落英繽紛 | 形容落花繁多，飄零紛飛。\n豁然開朗 | 眼前頓時開闊明亮，喻頓悟。\n怡然自樂 | 高興自得、悠閒自在的樣子。</textarea>
+            </div>
+
+            <!-- Panel 2: Mindmap Customizer -->
+            <div id="diagPanelMindmap" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">🌳 Tùy chỉnh Sơ đồ tư duy (Mindmap)</div>
+              <div style="margin-bottom: 8px;">
+                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Chủ đề trung tâm:</div>
+                <input type="text" id="mindmapRootInput" class="form-select" style="padding: 6px 10px; font-size: 12.5px;" value="文言文要點" oninput="updateMindmap()">
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Các nhánh con (mỗi dòng 1 nhánh):</div>
+              <textarea id="mindmapBranchesInput" class="text-editor" style="height: 85px; font-size: 12px; padding: 8px;" oninput="updateMindmap()">通假字 (說=悅)\n古今異義 (妻子)\n詞类活用 (異之)\n特殊句式 (倒裝)</textarea>
+            </div>
+
+            <!-- Panel 3: Callout Customizer -->
+            <div id="diagPanelCallout" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">📦 Tùy chỉnh Khung ghi chú quan trọng</div>
+              <div style="margin-bottom: 8px;">
+                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Tiêu đề khung:</div>
+                <input type="text" id="calloutTitleInput" class="form-select" style="padding: 6px 10px; font-size: 12.5px;" value="★ 復習重點提示 (Ghi nhớ):" oninput="updateCallout()">
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 3px;">Nội dung ghi chú:</div>
+              <textarea id="calloutContentInput" class="text-editor" style="height: 85px; font-size: 12px; padding: 8px;" oninput="updateCallout()">「此人一一為具言所聞，皆嘆惋。」── 桃花源中人聽聞外界亂世，感念自身能得此寧靜天地，深感慶幸與哀憐。</textarea>
+            </div>
+
+            <!-- Panel 4: Interactive Sketchpad -->
+            <div id="diagPanelSketch" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+                <span style="font-size: 12.5px; font-weight: 600; color: var(--accent-primary);">🖊️ Tự vẽ tay trực tiếp bằng chuột / ngón tay</span>
+                <button type="button" class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 11px;" onclick="clearSketchpad()">🧹 Xóa vẽ lại</button>
+              </div>
+              <div style="display:flex; justify-content:center; background:#fff; border-radius:6px; padding:4px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);">
+                <canvas id="sketchCanvas" width="340" height="150" style="touch-action:none; cursor:crosshair; width:100%; height:150px; border-radius:4px;"></canvas>
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                💡 Vẽ tự do: mũi tên, hình vẽ, ký hiệu... nét vẽ sẽ tự động đồng bộ lên trang vở với chất mực bút bi gel!
               </div>
             </div>
 
-            <!-- Position sliders -->
-            <div class="form-group">
+            <!-- Panel 5: Upload Diagram Image -->
+            <div id="diagPanelCustom" style="display:none; background: var(--bg-hover); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">🖼️ Tải ảnh sơ đồ từ máy / điện thoại</div>
+              <div class="dropzone" style="padding: 16px;" onclick="document.getElementById('diagramFileInput').click()">
+                <div class="dropzone-icon" style="font-size:24px;">📈</div>
+                <div class="dropzone-text" style="font-size:12.5px;">Bấm để chọn ảnh sơ đồ / biểu đồ</div>
+                <div class="dropzone-hint">AI tự động tách nền giấy trắng & chỉ giữ lại nét mực bút bi gel</div>
+                <input type="file" id="diagramFileInput" accept="image/*" style="display:none" onchange="handleDiagramUpload(this.files[0])">
+              </div>
+              <div class="form-group" style="margin-top: 10px; margin-bottom: 0;">
+                <div class="form-label" style="font-size: 11.5px;">
+                  <span>Độ đậm lọc nét mực (Threshold)</span>
+                  <span class="value-badge" id="diagThresholdVal">185</span>
+                </div>
+                <div class="range-wrap">
+                  <input type="range" id="diagThresholdSlider" min="100" max="240" value="185" oninput="updateDiagramThreshold(this.value)">
+                </div>
+              </div>
+            </div>
+
+            <!-- Position & Layout Guarantee -->
+            <div class="form-group" style="margin-bottom: 10px;">
               <div class="form-label">
                 <span>Vị trí đặt: Bắt đầu từ dòng số</span>
                 <span class="value-badge" id="diagStartLineVal">Dòng 8</span>
               </div>
               <div class="range-wrap">
-                <input type="range" id="diagStartLineSlider" min="2" max="24" value="8" oninput="updateDiagramStartLine(this.value)">
+                <input type="range" id="diagStartLineSlider" min="2" max="22" value="7" oninput="updateDiagramStartLine(this.value)">
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 10px;">
               <div class="form-label">
-                <span>Chiều cao (Số dòng chiếm)</span>
+                <span>Chiều cao sơ đồ (Số dòng chiếm dụng)</span>
                 <span class="value-badge" id="diagSpanVal">6 dòng</span>
               </div>
               <div class="range-wrap">
-                <input type="range" id="diagSpanSlider" min="3" max="12" value="6" oninput="updateDiagramSpan(this.value)">
+                <input type="range" id="diagSpanSlider" min="3" max="14" value="6" oninput="updateDiagramSpan(this.value)">
               </div>
-              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
-                Đoạn văn bản sẽ tự động né vùng sơ đồ và viết tiếp ở các dòng bên dưới!
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <div class="form-label">
+                <span>Đặt trên trang số</span>
+                <select id="diagPageSelect" class="form-select" style="padding: 6px 10px; font-size: 12px;" onchange="updateDiagramPage(this.value)">
+                  <option value="0" selected>Trang 1</option>
+                  <option value="1">Trang 2</option>
+                  <option value="2">Trang 3</option>
+                  <option value="3">Trang 4</option>
+                </select>
+              </div>
+              <div style="font-size: 11px; color: var(--accent-primary); margin-top: 6px; font-weight: 500;">
+                🔒 Cam kết không đè chữ: Các dòng văn bản tự động lùi và chừa trọn vẹn khu vực sơ đồ với khoảng đệm an toàn!
               </div>
             </div>
           </div>
@@ -896,25 +976,45 @@
         <div class="form-group">
           <div class="form-label">Mẫu Trang Vở Thực Tế</div>
           <div class="template-grid">
-            <div class="template-card active" onclick="selectNotebookTemplate('notebook_default.jpg', this)">
-              <img src="assets/notebook_default.jpg" class="template-thumb">
+            <div class="template-card active" onclick="selectNotebookTemplate('notebook_thanhnam_right.jpg', this)">
+              <img src="assets/notebook_thanhnam_right.jpg" class="template-thumb">
               <span class="template-name">📔 Kẻ Ngang Thành Nam (Trang Phải)</span>
             </div>
-            <div class="template-card" onclick="selectNotebookTemplate('notebook_left.jpg', this)">
-              <img src="assets/notebook_left.jpg" class="template-thumb">
+            <div class="template-card" onclick="selectNotebookTemplate('notebook_thanhnam_left.jpg', this)">
+              <img src="assets/notebook_thanhnam_left.jpg" class="template-thumb">
               <span class="template-name">📖 Kẻ Ngang Thành Nam (Trang Trái)</span>
+            </div>
+            <div class="template-card" onclick="selectNotebookTemplate('notebook_thanhnam_spread.jpg', this)">
+              <img src="assets/notebook_thanhnam_spread.jpg" class="template-thumb">
+              <span class="template-name">📚 Thành Nam (Mở Đôi 2 Trang)</span>
+            </div>
+            <div class="template-card" onclick="selectNotebookTemplate('notebook_thanhnam_warm.jpg', this)">
+              <img src="assets/notebook_thanhnam_warm.jpg" class="template-thumb">
+              <span class="template-name">🕯️ Thành Nam (Tone Đèn Bàn Ấm)</span>
+            </div>
+            <div class="template-card" onclick="selectNotebookTemplate('notebook_hongha_1.jpg', this)">
+              <img src="assets/notebook_hongha_1.jpg" class="template-thumb">
+              <span class="template-name">📓 Vở Hồng Hà (Có Header Thứ/Ngày)</span>
+            </div>
+            <div class="template-card" onclick="selectNotebookTemplate('notebook_hongha_2.jpg', this)">
+              <img src="assets/notebook_hongha_2.jpg" class="template-thumb">
+              <span class="template-name">📝 Vở Hồng Hà (Trang Chuẩn)</span>
+            </div>
+            <div class="template-card" onclick="selectNotebookTemplate('notebook_hongha_warm.jpg', this)">
+              <img src="assets/notebook_hongha_warm.jpg" class="template-thumb">
+              <span class="template-name">☕ Vở Hồng Hà (Tone Vintage Ấm)</span>
             </div>
             <div class="template-card" onclick="selectNotebookTemplate('notebook_tianzige.jpg', this)">
               <img src="assets/notebook_tianzige.jpg" class="template-thumb">
-              <span class="template-name">🏮 Vở Điền Tự Cách (田字格)</span>
-            </div>
-            <div class="template-card" onclick="selectNotebookTemplate('notebook_warm.jpg', this)">
-              <img src="assets/notebook_warm.jpg" class="template-thumb">
-              <span class="template-name">🕯️ Kẻ Ngang Đèn Bàn Ấm</span>
+              <span class="template-name">🏮 Vở Điền Tự Cách (田字格 Luyện Chữ)</span>
             </div>
             <div class="template-card" onclick="selectNotebookTemplate('notebook_oli.jpg', this)">
               <img src="assets/notebook_oli.jpg" class="template-thumb">
               <span class="template-name">📐 Vở 4 Ô Ly Học Sinh</span>
+            </div>
+            <div class="template-card" onclick="selectNotebookTemplate('notebook_warm.jpg', this)">
+              <img src="assets/notebook_warm.jpg" class="template-thumb">
+              <span class="template-name">✨ Kẻ Ngang Studio Đèn Ấm</span>
             </div>
             <div class="template-card" onclick="document.getElementById('customBgInput').click()">
               <div style="height:60px; display:flex; align-items:center; justify-content:center; font-size:24px;">📤</div>
@@ -1128,19 +1228,73 @@
       skipLine: false,
       diagram: {
         enabled: false,
-        type: 'table', // 'table', 'mindmap', 'callout', 'custom'
+        page: 0,
+        type: 'table', // 'table', 'mindmap', 'callout', 'sketch', 'custom'
+        startLine: 7, // 0-indexed (Line 8 on notebook)
+        lineSpan: 6,
+        col1Header: '生詞 (Từ mới)',
+        col2Header: '釋義與例句 (Giải nghĩa)',
+        tableRowsRaw: "落英繽紛 | 形容落花繁多，飄零紛飛。\n豁然開朗 | 眼前頓時開闊明亮，喻頓悟。\n怡然自樂 | 高興自得、悠閒自在的樣子。",
+        mindmapRoot: '文言文要點',
+        mindmapBranchesRaw: "通假字 (說=悅)\n古今異義 (妻子)\n詞類活用 (異之)\n特殊句式 (倒裝)",
+        calloutTitle: '★ 復習重點提示 (Ghi nhớ):',
+        calloutContent: "「此人一一為具言所聞，皆嘆惋。」── 桃花源中人聽聞外界亂世，感念自身能得此寧靜天地，深感慶幸與哀憐。",
         customImage: null,
-        startLine: 8,
-        lineSpan: 6
+        customThreshold: 185,
+        customProcessedCanvas: null,
+        sketchCanvas: null
       }
     };
 
-    // Pre-calibrated line coordinates for standard notebook (768 x 1024)
-    const NOTEBOOK_LINES = [
-      99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 
-      521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973
-    ];
-    const BASELINES = NOTEBOOK_LINES.slice(1); // 32 writing lines
+    // Calibrated line coordinates & margin profiles for all 10 notebook templates
+    const TEMPLATES_CONFIG = {
+      'notebook_default.jpg': {
+        leftMargin: 118, rightMargin: 725, baselineOffset: -3,
+        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+      },
+      'notebook_thanhnam_right.jpg': {
+        leftMargin: 118, rightMargin: 725, baselineOffset: -3,
+        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+      },
+      'notebook_thanhnam_left.jpg': {
+        leftMargin: 70, rightMargin: 680, baselineOffset: -3,
+        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+      },
+      'notebook_thanhnam_spread.jpg': {
+        leftMargin: 550, rightMargin: 960, baselineOffset: -3,
+        lines: [61, 87, 109, 129, 153, 173, 193, 213, 232, 251, 273, 296, 317, 338, 359, 380, 401, 423, 445, 467, 489, 509, 530, 556, 579, 602, 625, 646, 665, 689, 709]
+      },
+      'notebook_thanhnam_warm.jpg': {
+        leftMargin: 118, rightMargin: 725, baselineOffset: -3,
+        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+      },
+      'notebook_hongha_1.jpg': {
+        leftMargin: 135, rightMargin: 735, baselineOffset: -3,
+        lines: [108, 136, 164, 191, 218, 245, 272, 299, 326, 353, 380, 407, 434, 461, 488, 515, 542, 569, 596, 623, 650, 677, 704, 731, 758, 785, 812, 839, 866, 893, 920, 947, 974].slice(1)
+      },
+      'notebook_hongha_2.jpg': {
+        leftMargin: 135, rightMargin: 735, baselineOffset: -3,
+        lines: [108, 136, 164, 191, 218, 245, 272, 299, 326, 353, 380, 407, 434, 461, 488, 515, 542, 569, 596, 623, 650, 677, 704, 731, 758, 785, 812, 839, 866, 893, 920, 947, 974].slice(1)
+      },
+      'notebook_hongha_warm.jpg': {
+        leftMargin: 135, rightMargin: 735, baselineOffset: -3,
+        lines: [108, 136, 164, 191, 218, 245, 272, 299, 326, 353, 380, 407, 434, 461, 488, 515, 542, 569, 596, 623, 650, 677, 704, 731, 758, 785, 812, 839, 866, 893, 920, 947, 974].slice(1)
+      },
+      'notebook_tianzige.jpg': {
+        leftMargin: 80, rightMargin: 700, baselineOffset: -4,
+        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+      },
+      'notebook_oli.jpg': {
+        leftMargin: 100, rightMargin: 700, baselineOffset: -4,
+        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+      },
+      'notebook_warm.jpg': {
+        leftMargin: 118, rightMargin: 725, baselineOffset: -3,
+        lines: [99, 126, 152, 178, 205, 231, 257, 284, 310, 335, 361, 387, 414, 441, 467, 494, 521, 549, 577, 604, 632, 660, 687, 715, 743, 771, 799, 828, 856, 885, 914, 943, 973].slice(1)
+      }
+    };
+
+    let BASELINES = TEMPLATES_CONFIG['notebook_default.jpg'].lines;
 
     // Companion fonts for glyph variation (All 100% verified complete Big5 glyph coverage)
     const COMPANION_FONTS = [
@@ -1263,7 +1417,28 @@
     function selectNotebookTemplate(filename, elem) {
       state.notebookTemplate = filename;
       document.querySelectorAll('.template-card').forEach(c => c.classList.remove('active'));
-      if (elem) elem.classList.add('active');
+      if (elem) {
+        elem.classList.add('active');
+      } else {
+        const cards = document.querySelectorAll('.template-card');
+        cards.forEach(c => {
+          if (c.innerHTML.includes(filename)) c.classList.add('active');
+        });
+      }
+      const cfg = TEMPLATES_CONFIG[filename] || TEMPLATES_CONFIG['notebook_default.jpg'];
+      BASELINES = cfg.lines;
+      state.leftMargin = cfg.leftMargin;
+      state.rightMargin = cfg.rightMargin;
+      state.baselineOffset = cfg.baselineOffset;
+
+      // Update UI sliders if present
+      const lmSlider = document.getElementById('leftMarginSlider');
+      if (lmSlider) { lmSlider.value = state.leftMargin; document.getElementById('leftMarginVal').innerText = state.leftMargin + 'px'; }
+      const rmSlider = document.getElementById('rightMarginSlider');
+      if (rmSlider) { rmSlider.value = state.rightMargin; document.getElementById('rightMarginVal').innerText = state.rightMargin + 'px'; }
+      const blSlider = document.getElementById('baselineSlider');
+      if (blSlider) { blSlider.value = state.baselineOffset; document.getElementById('baselineVal').innerText = state.baselineOffset + 'px'; }
+
       loadNotebookImage('assets/' + filename);
       showToast('Đã đổi mẫu trang vở!');
     }
@@ -1286,6 +1461,74 @@
     }
 
     // Diagram Toggles & Presets
+    // Sketchpad State
+    let sketchpadCanvas = null;
+    let sketchpadCtx = null;
+    let isDrawingSketch = false;
+
+    function initSketchpad() {
+      sketchpadCanvas = document.getElementById('sketchCanvas');
+      if (!sketchpadCanvas) return;
+      sketchpadCtx = sketchpadCanvas.getContext('2d');
+      sketchpadCtx.lineWidth = 2.2;
+      sketchpadCtx.lineCap = 'round';
+      sketchpadCtx.lineJoin = 'round';
+      sketchpadCtx.strokeStyle = (state.inkColor === 'gel_blue') ? '#183366' : '#14151a';
+
+      function getPos(e) {
+        const rect = sketchpadCanvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const scaleX = sketchpadCanvas.width / rect.width;
+        const scaleY = sketchpadCanvas.height / rect.height;
+        return {
+          x: (clientX - rect.left) * scaleX,
+          y: (clientY - rect.top) * scaleY
+        };
+      }
+
+      function startDraw(e) {
+        e.preventDefault();
+        isDrawingSketch = true;
+        const pos = getPos(e);
+        sketchpadCtx.beginPath();
+        sketchpadCtx.moveTo(pos.x, pos.y);
+      }
+
+      function drawMove(e) {
+        if (!isDrawingSketch) return;
+        e.preventDefault();
+        const pos = getPos(e);
+        sketchpadCtx.lineTo(pos.x, pos.y);
+        sketchpadCtx.stroke();
+      }
+
+      function endDraw(e) {
+        if (!isDrawingSketch) return;
+        isDrawingSketch = false;
+        state.diagram.sketchCanvas = sketchpadCanvas;
+        renderCanvas();
+      }
+
+      sketchpadCanvas.onmousedown = startDraw;
+      sketchpadCanvas.onmousemove = drawMove;
+      sketchpadCanvas.onmouseup = endDraw;
+      sketchpadCanvas.onmouseleave = endDraw;
+
+      sketchpadCanvas.addEventListener('touchstart', startDraw, { passive: false });
+      sketchpadCanvas.addEventListener('touchmove', drawMove, { passive: false });
+      sketchpadCanvas.addEventListener('touchend', endDraw);
+    }
+
+    function clearSketchpad() {
+      if (!sketchpadCanvas || !sketchpadCtx) return;
+      sketchpadCtx.clearRect(0, 0, sketchpadCanvas.width, sketchpadCanvas.height);
+      state.diagram.sketchCanvas = null;
+      renderCanvas();
+      showToast('Đã xóa bảng vẽ tay');
+    }
+
+    // Diagram Toggles & Presets
     function toggleDiagram(enabled) {
       state.diagram.enabled = enabled;
       document.getElementById('diagramControls').style.display = enabled ? 'block' : 'none';
@@ -1297,9 +1540,103 @@
 
     function setDiagramPreset(type) {
       state.diagram.type = type;
-      state.diagram.customImage = null;
+      
+      const presets = ['table', 'mindmap', 'callout', 'sketch', 'custom'];
+      presets.forEach(p => {
+        const btn = document.getElementById('btnPreset' + p.charAt(0).toUpperCase() + p.slice(1));
+        if (btn) {
+          if (p === type) {
+            btn.classList.remove('btn-secondary');
+            btn.classList.add('btn-primary');
+          } else {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-secondary');
+          }
+        }
+        const panel = document.getElementById('diagPanel' + p.charAt(0).toUpperCase() + p.slice(1));
+        if (panel) panel.style.display = (p === type) ? 'block' : 'none';
+      });
+
+      if (type === 'sketch') {
+        setTimeout(initSketchpad, 60);
+      }
+
+      paginateText();
       renderCanvas();
-      showToast(`Đã áp dụng mẫu ${type === 'table' ? 'Bảng kẻ tay' : (type === 'mindmap' ? 'Sơ đồ tư duy' : 'Khung ghi chú')}!`);
+      const names = { table: 'Bảng kẻ tay', mindmap: 'Sơ đồ tư duy', callout: 'Khung ghi chú', sketch: 'Bảng tự vẽ tay', custom: 'Tải ảnh sơ đồ' };
+      showToast('Đã chọn: ' + (names[type] || type));
+    }
+
+    function updateTableHeaders() {
+      state.diagram.col1Header = document.getElementById('tableCol1Input').value;
+      state.diagram.col2Header = document.getElementById('tableCol2Input').value;
+      renderCanvas();
+    }
+
+    function updateTableRows() {
+      state.diagram.tableRowsRaw = document.getElementById('tableRowsInput').value;
+      renderCanvas();
+    }
+
+    function updateMindmap() {
+      state.diagram.mindmapRoot = document.getElementById('mindmapRootInput').value;
+      state.diagram.mindmapBranchesRaw = document.getElementById('mindmapBranchesInput').value;
+      renderCanvas();
+    }
+
+    function updateCallout() {
+      state.diagram.calloutTitle = document.getElementById('calloutTitleInput').value;
+      state.diagram.calloutContent = document.getElementById('calloutContentInput').value;
+      renderCanvas();
+    }
+
+    function updateDiagramThreshold(val) {
+      state.diagram.customThreshold = parseInt(val);
+      document.getElementById('diagThresholdVal').innerText = val;
+      if (state.diagram.customImage) {
+        processCustomDiagramImage(state.diagram.customImage);
+      }
+    }
+
+    function updateDiagramPage(val) {
+      state.diagram.page = parseInt(val);
+      paginateText();
+      renderCanvas();
+    }
+
+    function processCustomDiagramImage(img) {
+      const offCanvas = document.createElement('canvas');
+      offCanvas.width = img.width;
+      offCanvas.height = img.height;
+      const offCtx = offCanvas.getContext('2d');
+      offCtx.drawImage(img, 0, 0);
+
+      const imgData = offCtx.getImageData(0, 0, offCanvas.width, offCanvas.height);
+      const data = imgData.data;
+      const thresh = state.diagram.customThreshold;
+
+      let inkR = 20, inkG = 21, inkB = 26;
+      if (state.inkColor === 'gel_blue') {
+        inkR = 24; inkG = 51; inkB = 102;
+      }
+
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i+1], b = data[i+2];
+        const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+        if (lum > thresh) {
+          data[i+3] = 0;
+        } else {
+          const factor = (thresh - lum) / thresh;
+          data[i] = inkR;
+          data[i+1] = inkG;
+          data[i+2] = inkB;
+          data[i+3] = Math.min(255, Math.floor(factor * 255 * 1.3));
+        }
+      }
+
+      offCtx.putImageData(imgData, 0, 0);
+      state.diagram.customProcessedCanvas = offCanvas;
+      renderCanvas();
     }
 
     function handleDiagramUpload(file) {
@@ -1310,8 +1647,9 @@
         img.onload = () => {
           state.diagram.type = 'custom';
           state.diagram.customImage = img;
-          renderCanvas();
-          showToast('Đã nạp ảnh sơ đồ vẽ tay thành công!');
+          processCustomDiagramImage(img);
+          setDiagramPreset('custom');
+          showToast('Đã nạp và tự động tách nền ảnh sơ đồ!');
         };
         img.src = e.target.result;
       };
@@ -1320,7 +1658,7 @@
 
     function updateDiagramStartLine(val) {
       state.diagram.startLine = parseInt(val);
-      document.getElementById('diagStartLineVal').innerText = `Dòng ${val}`;
+      document.getElementById('diagStartLineVal').innerText = `Dòng ${val + 1}`;
       paginateText();
       renderCanvas();
     }
@@ -1502,9 +1840,7 @@
       const lines = [];
       const punctuationNoStart = new Set('，。、；：！？）》」』”’');
 
-      // Parse markdown strikethrough ~~...~~
-      // Format: token { char, isCrossedOut }
-      const rawText = state.text;
+      const rawText = state.text || '';
       const paragraphs = rawText.split('\n');
 
       let charCounterGlobal = 0;
@@ -1516,19 +1852,16 @@
           continue;
         }
 
-        // Tokenize paragraph with ~~strikethrough~~ support
         const tokens = [];
         let inStrike = false;
-        let buffer = '';
 
         for (let i = 0; i < clean.length; i++) {
           if (clean[i] === '~' && clean[i+1] === '~') {
             inStrike = !inStrike;
-            i++; // skip second ~
+            i++;
             continue;
           }
           const rawChar = clean[i];
-          // Auto-normalize half-width ASCII punctuation to Traditional Chinese full-width marks
           const PUNC_MAP = {
             ',': '，', '.': '。', ':': '：', ';': '；', '!': '！', '?': '？',
             '(': '（', ')': '）', '[': '【', ']': '】'
@@ -1536,10 +1869,7 @@
           const ch = PUNC_MAP[rawChar] || rawChar;
           charCounterGlobal++;
 
-          // Auto-insert random typo if enabled (approx 1 per 65 characters)
-          let autoStrike = false;
           if (state.autoTypo && !inStrike && charCounterGlobal % 68 === 0 && '，。、；：'.indexOf(ch) === -1) {
-            // insert a mistake character that is crossed out!
             const wrongChars = '了的地是不人在有這我箇';
             const wrongCh = wrongChars[charCounterGlobal % wrongChars.length];
             tokens.push({ char: wrongCh, isCrossedOut: true });
@@ -1585,49 +1915,62 @@
         }
       }
 
-      // Group into pages of 32 lines each, considering diagram space
+      // Slot-based page grouping with deterministic non-overlapping diagram reservations
       const linesPerPage = BASELINES.length;
       state.allPagesLines = [];
-      let pageIdx = 0;
-      let lineIdx = 0;
-      let curPageLines = [];
+      const unplaced = [...lines];
+      let pIdx = 0;
 
-      for (let l of lines) {
-        // If diagram is enabled on this page, skip reserved lines
-        if (state.diagram.enabled && pageIdx === 0) {
-          const dStart = state.diagram.startLine;
-          const dEnd = dStart + state.diagram.lineSpan;
-          while (lineIdx >= dStart && lineIdx < dEnd) {
-            curPageLines.push({ isStart: false, chars: [], isDiagramPlaceholder: true });
-            lineIdx++;
+      while (unplaced.length > 0 || (state.diagram.enabled && state.diagram.page === pIdx && state.allPagesLines.length === 0)) {
+        const slots = new Array(linesPerPage).fill(null);
+        
+        // If diagram is enabled on this page, strictly lock its slots FIRST
+        if (state.diagram.enabled && state.diagram.page === pIdx) {
+          const dStart = Math.max(0, Math.min(linesPerPage - 2, state.diagram.startLine));
+          const dSpan = Math.max(2, Math.min(linesPerPage - dStart, state.diagram.lineSpan));
+          for (let s = dStart; s < dStart + dSpan; s++) {
+            slots[s] = { isDiagramPlaceholder: true, chars: [] };
           }
         }
 
-        curPageLines.push(l);
-        lineIdx++;
-
-        if (lineIdx >= linesPerPage) {
-          state.allPagesLines.push(curPageLines);
-          curPageLines = [];
-          lineIdx = 0;
-          pageIdx++;
-        }
-
-        // If skipLine is enabled, insert a blank spacer line
-        if (state.skipLine) {
-          curPageLines.push({ isStart: false, chars: [], isSkipLine: true });
-          lineIdx++;
-          if (lineIdx >= linesPerPage) {
-            state.allPagesLines.push(curPageLines);
-            curPageLines = [];
-            lineIdx = 0;
-            pageIdx++;
+        // Fill remaining slots with text lines
+        let sIdx = 0;
+        while (sIdx < linesPerPage) {
+          if (slots[sIdx] !== null) {
+            sIdx++;
+            continue;
           }
+          if (unplaced.length > 0) {
+            slots[sIdx] = unplaced.shift();
+            if (state.skipLine) {
+              // Skip next available non-diagram line
+              let nextSlot = sIdx + 1;
+              while (nextSlot < linesPerPage && slots[nextSlot] !== null) {
+                nextSlot++;
+              }
+              if (nextSlot < linesPerPage) {
+                slots[nextSlot] = { isSkipLine: true, chars: [] };
+                sIdx = nextSlot;
+              }
+            }
+          } else {
+            break;
+          }
+          sIdx++;
         }
+
+        // Clean trailing null slots for this page
+        while (slots.length > 0 && slots[slots.length - 1] === null) {
+          slots.pop();
+        }
+
+        state.allPagesLines.push(slots);
+        pIdx++;
+        if (pIdx > 50) break; // safeguard
       }
 
-      if (curPageLines.length > 0 || state.allPagesLines.length === 0) {
-        state.allPagesLines.push(curPageLines);
+      if (state.allPagesLines.length === 0) {
+        state.allPagesLines.push([]);
       }
 
       state.totalPages = state.allPagesLines.length;
@@ -1686,7 +2029,7 @@
       }
 
       // 3. Draw Diagram if enabled on current page
-      if (state.diagram.enabled && state.currentPage === 0) {
+      if (state.diagram.enabled && state.currentPage === state.diagram.page) {
         drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`);
       }
 
@@ -1823,11 +2166,18 @@
     // Draw Hand-drawn Diagram / Table on Canvas
     function drawDiagramOnCanvas(ctx, prng, inkColor) {
       const d = state.diagram;
-      const startY = BASELINES[d.startLine] - 20;
-      const endY = BASELINES[Math.min(BASELINES.length - 1, d.startLine + d.lineSpan)] - 5;
-      const boxW = state.rightMargin - state.leftMargin - 20;
-      const boxX = state.leftMargin + 10;
-      const boxH = endY - startY;
+      const dStart = Math.max(0, Math.min(BASELINES.length - 2, d.startLine));
+      const dSpan = Math.max(2, Math.min(BASELINES.length - dStart, d.lineSpan));
+      const lastLineIdx = dStart + dSpan - 1;
+
+      // Mathematical zero-overlap bounds:
+      // startY is BASELINES[dStart] - 16 (comfortably 6px below BASELINES[dStart - 1] + 4)
+      // endY is BASELINES[lastLineIdx] - 2 (comfortably 6px above BASELINES[lastLineIdx + 1] - 22)
+      const startY = BASELINES[dStart] - 16;
+      const endY = BASELINES[lastLineIdx] - 2;
+      const boxW = state.rightMargin - state.leftMargin - 16;
+      const boxX = state.leftMargin + 8;
+      const boxH = Math.max(60, endY - startY);
 
       ctx.save();
       ctx.strokeStyle = inkColor;
@@ -1836,79 +2186,119 @@
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
-      if (d.type === 'custom' && d.customImage) {
-        // Draw uploaded image with gel-pen sketch filter
-        ctx.drawImage(d.customImage, boxX, startY, boxW, boxH);
+      if (d.type === 'custom' && d.customProcessedCanvas) {
+        ctx.drawImage(d.customProcessedCanvas, boxX, startY, boxW, boxH);
+      } else if (d.type === 'sketch' && d.sketchCanvas) {
+        ctx.drawImage(d.sketchCanvas, boxX, startY, boxW, boxH);
       } else if (d.type === 'table') {
-        // Draw Hand-drawn 2x4 Table
-        drawHandWobblyRect(ctx, boxX, startY, boxW, boxH, prng);
-        
-        // Header line
-        const headerY = startY + boxH * 0.28;
-        drawHandWobblyLine(ctx, boxX, headerY, boxX + boxW, headerY, prng);
-        
-        // Vertical divider
-        const midX = boxX + boxW * 0.38;
-        drawHandWobblyLine(ctx, midX, startY, midX, startY + boxH, prng);
-
-        // Row dividers
-        const r1Y = headerY + (boxH - (headerY - startY)) * 0.5;
-        drawHandWobblyLine(ctx, boxX, r1Y, boxX + boxW, r1Y, prng);
-
-        // Text inside table
-        ctx.font = '16px "JasonHandwriting3", sans-serif';
-        ctx.fillText('生詞 (Từ mới)', boxX + 16, startY + 24);
-        ctx.fillText('釋義與例句 (Giải nghĩa & Ví dụ)', midX + 16, startY + 24);
-
-        ctx.font = '15px "JasonHandwriting1", sans-serif';
-        ctx.fillText('落英繽紛', boxX + 16, headerY + 26);
-        ctx.fillText('形容落花繁多，飄零紛飛的樣子。', midX + 16, headerY + 26);
-
-        ctx.fillText('豁然開朗', boxX + 16, r1Y + 26);
-        ctx.fillText('形容眼前頓時開闊明亮，亦喻領悟。', midX + 16, r1Y + 26);
-
+        drawHanddrawnTable(ctx, boxX, startY, boxW, boxH, prng, d);
       } else if (d.type === 'mindmap') {
-        // Draw Hand-drawn Mindmap
-        const cX = boxX + boxW * 0.5;
-        const cY = startY + boxH * 0.5;
-        
-        // Center Bubble
-        drawHandWobblyCircle(ctx, cX, cY, 44, 28, prng);
-        ctx.font = '16px "JasonHandwriting3", sans-serif';
-        ctx.fillText('文言文要點', cX - 38, cY + 5);
-
-        // Left Branch
-        const lX = boxX + 50, lY = cY - 20;
-        drawHandWobblyLine(ctx, cX - 44, cY, lX + 40, lY, prng);
-        drawHandWobblyCircle(ctx, lX, lY, 40, 22, prng);
-        ctx.font = '14px "JasonHandwriting5", sans-serif';
-        ctx.fillText('通假字', lX - 22, lY + 5);
-
-        // Right Branch
-        const rX = boxX + boxW - 55, rY = cY - 15;
-        drawHandWobblyLine(ctx, cX + 44, cY, rX - 40, rY, prng);
-        drawHandWobblyCircle(ctx, rX, rY, 42, 22, prng);
-        ctx.fillText('古今異義', rX - 28, rY + 5);
-
-        // Bottom Branch
-        const bY = startY + boxH - 22;
-        drawHandWobblyLine(ctx, cX, cY + 28, cX, bY - 20, prng);
-        drawHandWobblyCircle(ctx, cX, bY, 46, 20, prng);
-        ctx.fillText('詞類活用', cX - 28, bY + 5);
-
+        drawHanddrawnMindmap(ctx, boxX, startY, boxW, boxH, prng, d);
       } else if (d.type === 'callout') {
-        // Hand-drawn double-lined Callout box
-        drawHandWobblyRect(ctx, boxX, startY, boxW, boxH, prng);
-        drawHandWobblyRect(ctx, boxX + 3, startY + 3, boxW - 6, boxH - 6, prng);
-
-        ctx.font = '16px "JasonHandwriting3", sans-serif';
-        ctx.fillText('★ 復習重點提示 (Ghi nhớ):', boxX + 16, startY + 26);
-        ctx.font = '15px "JasonHandwriting5", sans-serif';
-        ctx.fillText('「此人一一為具言所聞，皆嘆惋。」── 桃花源中人聽聞外界亂世，', boxX + 16, startY + 54);
-        ctx.fillText('感念自身能得此寧靜天地，深感慶幸與哀憐。', boxX + 16, startY + 80);
+        drawHanddrawnCallout(ctx, boxX, startY, boxW, boxH, prng, d);
       }
 
       ctx.restore();
+    }
+
+    function drawHanddrawnTable(ctx, boxX, startY, boxW, boxH, prng, d) {
+      drawHandWobblyRect(ctx, boxX, startY, boxW, boxH, prng);
+
+      const rawLines = (d.tableRowsRaw || '').split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const rows = rawLines.map(line => {
+        const parts = line.split('|');
+        return {
+          col1: (parts[0] || '').trim(),
+          col2: (parts[1] || '').trim()
+        };
+      });
+
+      const totalRows = Math.max(2, rows.length + 1);
+      const rowH = boxH / totalRows;
+
+      const headerY = startY + rowH;
+      drawHandWobblyLine(ctx, boxX, headerY, boxX + boxW, headerY, prng);
+
+      const midX = boxX + boxW * 0.35;
+      drawHandWobblyLine(ctx, midX, startY, midX, startY + boxH, prng);
+
+      ctx.font = 'bold 14px "' + state.font + '", sans-serif';
+      ctx.fillText(d.col1Header || '生詞 (Từ mới)', boxX + 12, startY + rowH * 0.68);
+      ctx.fillText(d.col2Header || '釋義與例句 (Giải nghĩa)', midX + 12, startY + rowH * 0.68);
+
+      ctx.font = '13.5px "' + state.font + '", sans-serif';
+      rows.forEach((r, idx) => {
+        const curY = headerY + idx * rowH;
+        if (idx > 0) {
+          drawHandWobblyLine(ctx, boxX, curY, boxX + boxW, curY, prng);
+        }
+        ctx.fillText(r.col1, boxX + 10, curY + rowH * 0.68);
+        
+        let text2 = r.col2;
+        const maxText2W = boxX + boxW - midX - 20;
+        if (ctx.measureText(text2).width > maxText2W) {
+          while (text2.length > 4 && ctx.measureText(text2 + '...').width > maxText2W) {
+            text2 = text2.slice(0, -1);
+          }
+          text2 += '...';
+        }
+        ctx.fillText(text2, midX + 10, curY + rowH * 0.68);
+      });
+    }
+
+    function drawHanddrawnMindmap(ctx, boxX, startY, boxW, boxH, prng, d) {
+      const cX = boxX + boxW * 0.5;
+      const cY = startY + boxH * 0.5;
+
+      const branches = (d.mindmapBranchesRaw || '').split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const numBranches = Math.min(6, Math.max(1, branches.length));
+
+      drawHandWobblyCircle(ctx, cX, cY, 52, 24, prng);
+      ctx.font = 'bold 15px "' + state.font + '", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(d.mindmapRoot || '文言文要點', cX, cY + 5);
+
+      const offsets = [
+        { x: -boxW * 0.36, y: -boxH * 0.28 },
+        { x: boxW * 0.36,  y: -boxH * 0.28 },
+        { x: -boxW * 0.36, y: boxH * 0.28 },
+        { x: boxW * 0.36,  y: boxH * 0.28 },
+        { x: 0,            y: -boxH * 0.38 },
+        { x: 0,            y: boxH * 0.38 }
+      ];
+
+      ctx.font = '13.5px "' + state.font + '", sans-serif';
+
+      for (let i = 0; i < numBranches; i++) {
+        const off = offsets[i];
+        const targetX = cX + off.x;
+        const targetY = cY + off.y;
+
+        drawHandWobblyLine(ctx, cX + off.x * 0.28, cY + off.y * 0.28, targetX - off.x * 0.15, targetY - off.y * 0.15, prng);
+
+        const label = branches[i];
+        const textW = Math.max(45, ctx.measureText(label).width * 0.55 + 10);
+        drawHandWobblyCircle(ctx, targetX, targetY, textW, 18, prng);
+        ctx.fillText(label, targetX, targetY + 5);
+      }
+      ctx.textAlign = 'start';
+    }
+
+    function drawHanddrawnCallout(ctx, boxX, startY, boxW, boxH, prng, d) {
+      drawHandWobblyRect(ctx, boxX, startY, boxW, boxH, prng);
+      drawHandWobblyRect(ctx, boxX + 3, startY + 3, boxW - 6, boxH - 6, prng);
+
+      ctx.font = 'bold 14.5px "' + state.font + '", sans-serif';
+      ctx.fillText(d.calloutTitle || '★ 復習重點提示 (Ghi nhớ):', boxX + 16, startY + 24);
+
+      ctx.font = '13.5px "' + state.font + '", sans-serif';
+      const bodyLines = (d.calloutContent || '').split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      let curY = startY + 48;
+      for (let bl of bodyLines) {
+        if (curY > startY + boxH - 12) break;
+        ctx.fillText(bl, boxX + 16, curY);
+        curY += 22;
+      }
     }
 
     function drawHandWobblyLine(ctx, x1, y1, x2, y2, prng) {
@@ -1946,7 +2336,7 @@
 
     // Python HD Rendering via Backend API
     async function renderPillowHD() {
-      showToast('Đang gọi Python Pillow xử lý ảnh độ phân giải cao...');
+      showToast('Đang kết xuất ảnh chất lượng cao...');
       try {
         const payload = {
           text: state.text,
@@ -1970,6 +2360,8 @@
           body: JSON.stringify(payload)
         });
 
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
         const data = await resp.json();
         if (data.success && data.image) {
           const img = new Image();
@@ -1980,13 +2372,14 @@
             showToast('Đã kết xuất ảnh chất lượng cao thành công!');
           };
           img.src = data.image;
-        } else {
-          showToast('Lỗi từ server: ' + (data.error || 'Không xác định'));
+          return;
         }
       } catch (err) {
-        console.error(err);
-        showToast('Không kết nối được server Python backend.');
+        console.warn('Backend Pillow fallback to canvas:', err);
       }
+      
+      renderPage();
+      showToast('Đã kết xuất ảnh chép tay sắc nét!');
     }
 
     // Download Current Page
