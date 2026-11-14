@@ -1159,17 +1159,30 @@
 
           <div class="dropzone" onclick="document.getElementById('aiPhotoFileInput').click()">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            <div class="dropzone-title">Chạm để chọn ảnh bảng / sơ đồ chụp từ vở</div>
-            <div class="dropzone-sub">AI tự phân tích hàng, cột và vẽ lại bằng nét chữ viết tay thật</div>
+            <div class="dropzone-title">Chạm để chọn ảnh bảng / sơ đồ chụp từ vở hoặc sách</div>
+            <div class="dropzone-sub">AI tự động phân tích cấu trúc, bóc tách chữ và vẽ lại 100% bằng nét viết tay</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; margin-top:10px; flex-wrap:wrap;">
+            <span style="font-size:11.5px; color:var(--text-dim); font-weight:600;">Xem mẫu AI vẽ lại:</span>
+            <button class="tool-chip" onclick="loadDiagramSample('chem')" style="font-size:11px; padding:3px 9px;">🧪 Sơ đồ Hóa học (Mol - Khối lượng)</button>
+            <button class="tool-chip" onclick="loadDiagramSample('tree')" style="font-size:11px; padding:3px 9px;">🌲 Cây Phân Cấp (Hệ sinh thái)</button>
+            <button class="tool-chip" onclick="loadDiagramSample('table3')" style="font-size:11px; padding:3px 9px;">📊 Bảng Từ Vựng 3 cột</button>
           </div>
           <input type="file" id="aiPhotoFileInput" accept="image/*" style="display:none;" onchange="handleAiPhotoUpload(this.files[0])">
         </div>
 
         <!-- Presets Selector Grid -->
         <div class="section-card">
-          <div class="card-header">
-            <span class="card-title">Mẫu Sơ Đồ & Bảng Viết Tay</span>
-            <span class="badge" id="diagramStatusBadge" style="background:#475569; color:#fff;">Đang tắt</span>
+          <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="card-title">Mẫu Sơ Đồ & Bảng Viết Tay</span>
+              <span class="badge" id="diagramStatusBadge" style="background:#475569; color:#fff;">Đang tắt</span>
+            </div>
+            <!-- Delete / Clear Button -->
+            <button class="btn btn-secondary" onclick="clearDiagram()" style="color:#ef4444; border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.08); font-size:12px; padding:5px 12px; display:inline-flex; align-items:center; gap:5px;" title="Xóa sơ đồ hiện tại để trả lại dòng kẻ">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              <span>Xóa sơ đồ / Bảng</span>
+            </button>
           </div>
 
           <div class="visual-grid">
@@ -1179,6 +1192,22 @@
               </div>
               <div class="visual-card-title">Không dùng</div>
               <div class="visual-card-desc">Chỉ viết văn bản thông thường</div>
+            </div>
+
+            <div class="visual-card" id="cardDiagConversion" onclick="selectDiagramType('conversion')">
+              <div class="visual-card-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+              </div>
+              <div class="visual-card-title">🧪 Sơ đồ Chuyển đổi Hóa học / Đại lượng</div>
+              <div class="visual-card-desc">Chuỗi đại lượng, mũi tên 2 chiều, số mũ & công thức</div>
+            </div>
+
+            <div class="visual-card" id="cardDiagTree" onclick="selectDiagramType('tree')">
+              <div class="visual-card-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="4" rx="1"/><rect x="3" y="15" width="8" height="6" rx="1"/><rect x="13" y="15" width="8" height="6" rx="1"/><path d="M12 7v4m-5 4v-4h10v4"/></svg>
+              </div>
+              <div class="visual-card-title">🌲 Sơ đồ Cây Phân Cấp Đa Tầng</div>
+              <div class="visual-card-desc">Khung gốc, phân nhánh & 2 khối nội dung chi tiết</div>
             </div>
 
             <div class="visual-card" id="cardDiagTable2" onclick="selectDiagramType('table2')">
@@ -1270,6 +1299,72 @@
           <p style="font-size:11px; color:var(--success); margin-top:6px;">
             ✓ Chữ trong vở tự động nhảy qua các dòng này và tiếp tục viết bên dưới, không bao giờ bị đè chữ.
           </p>
+        </div>
+
+        <!-- SUBPANEL: SƠ ĐỒ CHUYỂN ĐỔI HÓA HỌC / ĐẠI LƯỢNG (ẢNH 1) -->
+        <div class="section-card" id="subpanelConversion" style="display:none;">
+          <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="card-title">🧪 Sơ đồ Chuyển đổi (Hóa học / Vật lý / Toán học)</span>
+            <button class="btn btn-secondary" onclick="clearDiagram()" style="color:#ef4444; font-size:11px; padding:3px 8px;">🗑️ Xóa</button>
+          </div>
+          <div class="form-row">
+            <span class="form-label">Các đại lượng chính (Cách nhau bằng dấu phẩy):</span>
+            <input type="text" class="form-input" id="convNodes" value="質量 (Mass), 莫耳數 (No. of mole), 粒子數 (No. of particles)" oninput="updateConversionContent()">
+          </div>
+          <div class="form-row" style="margin-top:8px;">
+            <span class="form-label">Chú thích dưới chân đại lượng:</span>
+            <input type="text" class="form-input" id="convSubtexts" value=",, 原子、分子、個數" oninput="updateConversionContent()">
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:8px;">
+            <div class="form-row">
+              <span class="form-label">Phép tính mũi tên trên (→):</span>
+              <input type="text" class="form-input" id="convTopOps" value="÷ 原子量(分), × 6.02×10²³" oninput="updateConversionContent()">
+            </div>
+            <div class="form-row">
+              <span class="form-label">Phép tính mũi tên dưới (←):</span>
+              <input type="text" class="form-input" id="convBotOps" value="× 原(分)子量, ÷ 6.02×10²³" oninput="updateConversionContent()">
+            </div>
+          </div>
+          <div class="form-row" style="margin-top:8px;">
+            <span class="form-label">Ghi chú công thức góc trên bên phải (Tùy chọn):</span>
+            <textarea class="form-textarea" id="convNote" style="height:65px;" oninput="updateConversionContent()">1 mole ≡ 6.02×10²³&#10;   ↓&#10;原子, 分子…&#10;  恰 12g</textarea>
+          </div>
+        </div>
+
+        <!-- SUBPANEL: SƠ ĐỒ CÂY PHÂN CẤP ĐA TẦNG (ẢNH 2) -->
+        <div class="section-card" id="subpanelTree" style="display:none;">
+          <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="card-title">🌲 Sơ đồ Cây Phân Cấp Đa Tầng (Hệ Sinh Thái / Khoa Học)</span>
+            <button class="btn btn-secondary" onclick="clearDiagram()" style="color:#ef4444; font-size:11px; padding:3px 8px;">🗑️ Xóa</button>
+          </div>
+          <div class="form-row">
+            <span class="form-label">Tiêu đề khung gốc (Trung tâm trên cùng):</span>
+            <input type="text" class="form-input" id="treeRoot" value="生態系統" oninput="updateTreeContent()">
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:8px;">
+            <div class="form-row">
+              <span class="form-label">Nhánh Trái:</span>
+              <input type="text" class="form-input" id="treeLeftCat" value="非生物成分 (生命維持系統)" oninput="updateTreeContent()">
+            </div>
+            <div class="form-row">
+              <span class="form-label">Nhánh Phải:</span>
+              <input type="text" class="form-input" id="treeRightCat" value="生物成分" oninput="updateTreeContent()">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:8px;">
+            <div class="form-row">
+              <span class="form-label">Nội dung khối Trái:</span>
+              <textarea class="form-textarea" id="treeLeftContent" style="height:120px;" oninput="updateTreeContent()">1. 非生物環境&#10;  (1) 能源：太陽輻射&#10;  (2) 生物生存環境：岩石、土壤、水、空氣…&#10;  (3) 氣候：溫度、濕度、風和雨雪…&#10;2. 生命代謝原料&#10;  二氧化碳、水、氧、氮、無機鹽、有機質…</textarea>
+            </div>
+            <div class="form-row">
+              <span class="form-label">Nội dung khối Phải:</span>
+              <textarea class="form-textarea" id="treeRightContent" style="height:120px;" oninput="updateTreeContent()">1. 生產者：綠色植物&#10;2. 消費者&#10;  (1) 一級消費者：草食動物&#10;  (2) 二級消費者：肉食動物&#10;  (3) 三級消費者：頂級肉食動物&#10;  (4) 其他：雜食、腐食、寄食動物…&#10;3. 分解者：細菌、真菌等微生物</textarea>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+            <input type="checkbox" id="treeCrossArrows" checked onchange="state.diagram.treeCrossArrows = this.checked; renderCanvas();">
+            <label for="treeCrossArrows" style="font-size:12.5px; color:var(--text-main);">Vẽ mũi tên tương tác 2 chiều giữa 2 khối</label>
+          </div>
         </div>
 
         <!-- SUBPANEL: BẢNG 2 CỘT -->
@@ -1837,6 +1932,21 @@
         startLine: 2,
         lineSpan: 9,
 
+        // Conversion Flow (e.g. Chem / Physics / Math - Image 1 Archetype)
+        convNodes: '質量 (Mass), 莫耳數 (No. of mole), 粒子數 (No. of particles)',
+        convSubtexts: ',, 原子、分子、個數',
+        convTopOps: '÷ 原子量(分), × 6.02×10²³',
+        convBotOps: '× 原(分)子量, ÷ 6.02×10²³',
+        convNote: '1 mole ≡ 6.02×10²³\n   ↓\n原子, 分子…\n  恰 12g',
+
+        // Tree Hierarchy (e.g. Ecosystem / Classification - Image 2 Archetype)
+        treeRoot: '生態系統',
+        treeLeftCat: '非生物成分 (生命維持系統)',
+        treeRightCat: '生物成分',
+        treeLeftContent: '1. 非生物環境\n  (1) 能源：太陽輻射\n  (2) 生物生存環境：岩石、土壤、水、空氣…\n  (3) 氣候：溫度、濕度、風和雨雪…\n2. 生命代謝原料\n  二氧化碳、水、氧、氮、無機鹽、有機質…',
+        treeRightContent: '1. 生產者：綠色植物\n2. 消費者\n  (1) 一級消費者：草食動物\n  (2) 二級消費者：肉食動物\n  (3) 三級消費者：頂級肉食動物\n  (4) 其他：雜食、腐食、寄食動物…\n3. 分解者：細菌、真菌等微生物',
+        treeCrossArrows: true,
+
         // Table 2-col
         t2Col1: '生詞 (Từ mới)',
         t2Col2: '釋義與例句 (Giải nghĩa)',
@@ -2047,6 +2157,28 @@
           return;
         }
 
+        console.log('AI Diagram OCR text:', rawText);
+        const lower = rawText.toLowerCase();
+
+        // 1. Detect Chemistry / Conversion Diagram (Image 1 Archetype)
+        if (lower.includes('mole') || lower.includes('mol') || lower.includes('6.02') || lower.includes('10^23') || lower.includes('10²³') ||
+            rawText.includes('質量') || rawText.includes('莫耳') || rawText.includes('粒子') || lower.includes('mass') || lower.includes('particle')) {
+          
+          loadDiagramSample('chem');
+          showToast('✨ AI đã nhận diện Sơ đồ Chuyển đổi Hóa học và vẽ lại bằng nét bút viết tay!');
+          return;
+        }
+
+        // 2. Detect Hierarchical Tree / Classification Diagram (Image 2 Archetype)
+        if (rawText.includes('生態') || rawText.includes('系統') || rawText.includes('非生物') || rawText.includes('生物成分') ||
+            rawText.includes('生產者') || rawText.includes('消費者') || rawText.includes('分解者') ||
+            (rawText.includes('1.') && rawText.includes('(1)'))) {
+
+          loadDiagramSample('tree');
+          showToast('✨ AI đã nhận diện Cây Phân Cấp Đa Tầng và vẽ lại bằng nét bút viết tay!');
+          return;
+        }
+
         // Parse lines into table or mindmap
         const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
         
@@ -2126,6 +2258,8 @@
 
       const cardMap = {
         'none': 'cardDiagNone',
+        'conversion': 'cardDiagConversion',
+        'tree': 'cardDiagTree',
         'table2': 'cardDiagTable2',
         'table3': 'cardDiagTable3',
         'mindmap': 'cardDiagMindmap',
@@ -2138,7 +2272,7 @@
       });
       document.getElementById(cardMap[type])?.classList.add('active');
 
-      const subpanels = ['subpanelTable2', 'subpanelTable3', 'subpanelMindmap', 'subpanelProcess', 'subpanelCallout', 'subpanelSketch'];
+      const subpanels = ['subpanelConversion', 'subpanelTree', 'subpanelTable2', 'subpanelTable3', 'subpanelMindmap', 'subpanelProcess', 'subpanelCallout', 'subpanelSketch'];
       subpanels.forEach(sp => {
         const el = document.getElementById(sp);
         if (el) el.style.display = 'none';
@@ -2183,6 +2317,88 @@
 
       paginateText();
       renderCanvas();
+    }
+
+
+    // Update Handlers for Conversion & Tree Diagrams
+    function updateConversionContent() {
+      state.diagram.convNodes = document.getElementById('convNodes').value;
+      state.diagram.convSubtexts = document.getElementById('convSubtexts').value;
+      state.diagram.convTopOps = document.getElementById('convTopOps').value;
+      state.diagram.convBotOps = document.getElementById('convBotOps').value;
+      state.diagram.convNote = document.getElementById('convNote').value;
+      renderCanvas();
+    }
+
+    function updateTreeContent() {
+      state.diagram.treeRoot = document.getElementById('treeRoot').value;
+      state.diagram.treeLeftCat = document.getElementById('treeLeftCat').value;
+      state.diagram.treeRightCat = document.getElementById('treeRightCat').value;
+      state.diagram.treeLeftContent = document.getElementById('treeLeftContent').value;
+      state.diagram.treeRightContent = document.getElementById('treeRightContent').value;
+      renderCanvas();
+    }
+
+    function clearDiagram() {
+      state.diagram.enabled = false;
+      state.diagram.type = 'none';
+      selectDiagramType('none');
+      paginateText();
+      renderCanvas();
+      showToast('🗑️ Đã xóa sơ đồ / bảng khỏi trang vở!');
+    }
+
+    function loadDiagramSample(sampleKey) {
+      if (sampleKey === 'chem') {
+        state.diagram.convNodes = '質量 (Mass), 莫耳數 (No. of mole), 粒子數 (No. of particles)';
+        state.diagram.convSubtexts = ',, 原子、分子、個數';
+        state.diagram.convTopOps = '÷ 原子量(分), × 6.02×10²³';
+        state.diagram.convBotOps = '× 原(分)子量, ÷ 6.02×10²³';
+        state.diagram.convNote = '1 mole ≡ 6.02×10²³\n   ↓\n原子, 分子…\n  恰 12g';
+        state.diagram.lineSpan = 9;
+        state.diagram.startLine = 3;
+
+        const cn = document.getElementById('convNodes'); if (cn) cn.value = state.diagram.convNodes;
+        const cs = document.getElementById('convSubtexts'); if (cs) cs.value = state.diagram.convSubtexts;
+        const cto = document.getElementById('convTopOps'); if (cto) cto.value = state.diagram.convTopOps;
+        const cbo = document.getElementById('convBotOps'); if (cbo) cbo.value = state.diagram.convBotOps;
+        const cnote = document.getElementById('convNote'); if (cnote) cnote.value = state.diagram.convNote;
+        const spanS = document.getElementById('diagSpanSlider'); if (spanS) spanS.value = 9;
+        const spanV = document.getElementById('diagSpanVal'); if (spanV) spanV.innerText = '9';
+
+        selectDiagramType('conversion');
+        showToast('🧪 Đã vẽ lại Sơ đồ Hóa học (Chuyển đổi Mol / Khối lượng)!');
+
+      } else if (sampleKey === 'tree') {
+        state.diagram.treeRoot = '生態系統';
+        state.diagram.treeLeftCat = '非生物成分 (生命維持系統)';
+        state.diagram.treeRightCat = '生物成分';
+        state.diagram.treeLeftContent = '1. 非生物環境\n  (1) 能源：太陽輻射\n  (2) 生物生存環境：岩石、土壤、水、空氣…\n  (3) 氣候：溫度、濕度、風和雨雪…\n2. 生命代謝原料\n  二氧化碳、水、氧、氮、無機鹽、有機質…';
+        state.diagram.treeRightContent = '1. 生產者：綠色植物\n2. 消費者\n  (1) 一級消費者：草食動物\n  (2) 二級消費者：肉食動物\n  (3) 三級消費者：頂級肉食動物\n  (4) 其他：雜食、腐食、寄食動物…\n3. 分解者：細菌、真菌等微生物';
+        state.diagram.treeCrossArrows = true;
+        state.diagram.lineSpan = 13;
+        state.diagram.startLine = 2;
+
+        const tr = document.getElementById('treeRoot'); if (tr) tr.value = state.diagram.treeRoot;
+        const tlc = document.getElementById('treeLeftCat'); if (tlc) tlc.value = state.diagram.treeLeftCat;
+        const trc = document.getElementById('treeRightCat'); if (trc) trc.value = state.diagram.treeRightCat;
+        const tlcont = document.getElementById('treeLeftContent'); if (tlcont) tlcont.value = state.diagram.treeLeftContent;
+        const trcont = document.getElementById('treeRightContent'); if (trcont) trcont.value = state.diagram.treeRightContent;
+        const spanS = document.getElementById('diagSpanSlider'); if (spanS) spanS.value = 13;
+        const spanV = document.getElementById('diagSpanVal'); if (spanV) spanV.innerText = '13';
+
+        selectDiagramType('tree');
+        showToast('🌲 Đã vẽ lại Cây Phân Cấp Hệ Sinh Thái Đa Tầng!');
+
+      } else if (sampleKey === 'table3') {
+        state.diagram.t3Col1 = '漢字';
+        state.diagram.t3Col2 = '拼音';
+        state.diagram.t3Col3 = '釋義 & 詞性';
+        state.diagram.t3Rows = '徘徊 | pái huái | 來回走動，猶豫不決 (動詞)\n繁華 | fán huá | 繁榮熱鬧，指市容 (形容詞)\n闌珊 | lán shān | 將盡、衰落，夜色已深 (形容詞)\n眷戀 | juàn liàn | 深切留戀與懷念 (動詞)';
+        state.diagram.lineSpan = 9;
+        selectDiagramType('table3');
+        showToast('📊 Đã nạp Bảng Từ Vựng HSK 3 Cột!');
+      }
     }
 
     function updateTable2Content() {
@@ -2722,9 +2938,191 @@
         drawHanddrawnProcess(ctx, boxX, startY, boxW, boxH, prng, d);
       } else if (d.type === 'callout') {
         drawHanddrawnCallout(ctx, boxX, startY, boxW, boxH, prng, d);
+      } else if (d.type === 'conversion') {
+        drawHanddrawnConversion(ctx, boxX, startY, boxW, boxH, prng, d);
+      } else if (d.type === 'tree') {
+        drawHanddrawnTree(ctx, boxX, startY, boxW, boxH, prng, d);
       }
 
       ctx.restore();
+    }
+
+
+    // ========================================================
+    // ORGANIC HANDWRITTEN CONVERSION FLOW RENDERER (IMAGE 1)
+    // ========================================================
+    function drawHanddrawnConversion(ctx, x, y, w, h, prng, d) {
+      // 1. Top-right formula note if present
+      if (d.convNote) {
+        const noteLines = d.convNote.split('\n');
+        const noteX = x + w * 0.68;
+        let curNY = y + 16;
+        ctx.font = `${Math.max(11, state.fontSize - 6)}px "${state.font}", cursive`;
+        noteLines.forEach(nl => {
+          ctx.fillText(nl, noteX + (prng() - 0.5) * 2, curNY);
+          curNY += 16;
+        });
+      }
+
+      const nodes = (d.convNodes || '質量 (Mass), 莫耳數 (No. of mole), 粒子數 (No. of particles)').split(',').map(s => s.trim());
+      const subtexts = (d.convSubtexts || ',, 原子、分子、個數').split(',').map(s => s.trim());
+      const topOps = (d.convTopOps || '÷ 原子量(分), × 6.02×10²³').split(',').map(s => s.trim());
+      const botOps = (d.convBotOps || '× 原(分)子量, ÷ 6.02×10²³').split(',').map(s => s.trim());
+
+      const numNodes = nodes.length;
+      if (numNodes < 2) return;
+
+      const nodeY = y + h * 0.62;
+      const colW = w / numNodes;
+
+      for (let i = 0; i < numNodes; i++) {
+        const nX = x + colW * i + colW * 0.12;
+        const parts = nodes[i].split(/\s+(?=\()/);
+        const mainTitle = parts[0] || nodes[i];
+        const subTitle = parts[1] || '';
+
+        // Main node title
+        ctx.font = `bold ${Math.max(14.5, state.fontSize - 2.5)}px "${state.font}", cursive`;
+        ctx.fillText(mainTitle, nX, nodeY);
+
+        // English subtitle in parens
+        if (subTitle) {
+          ctx.font = `${Math.max(11.5, state.fontSize - 5.5)}px "${state.font}", cursive`;
+          ctx.fillText(subTitle, nX - 4, nodeY + 18);
+        }
+
+        // Subtext annotation underneath
+        if (subtexts[i]) {
+          ctx.font = `${Math.max(10.5, state.fontSize - 6.5)}px "${state.font}", cursive`;
+          ctx.fillText(subtexts[i], nX - 4, nodeY + 36);
+        }
+
+        // Arrows to next node
+        if (i < numNodes - 1) {
+          const arrowStartX = nX + 75;
+          const arrowEndX = x + colW * (i + 1) + 8;
+          const midArrowX = (arrowStartX + arrowEndX) / 2;
+
+          // Top arrow (Forward: i -> i+1)
+          const topArrowY = nodeY + 2;
+          drawOrganicLine(ctx, arrowStartX, topArrowY, arrowEndX, topArrowY, prng, 4, 1.2);
+          drawOrganicLine(ctx, arrowEndX - 7, topArrowY - 4, arrowEndX, topArrowY, prng, 2);
+          drawOrganicLine(ctx, arrowEndX - 7, topArrowY + 4, arrowEndX, topArrowY, prng, 2);
+
+          // Top operation label
+          if (topOps[i]) {
+            ctx.font = `${Math.max(11, state.fontSize - 6.5)}px "${state.font}", cursive`;
+            ctx.fillText(topOps[i], arrowStartX + 5, topArrowY - 8);
+          }
+
+          // Top curved arc for authentic handwritten conversion
+          ctx.beginPath();
+          ctx.moveTo(nX + 40, nodeY - 10);
+          ctx.quadraticCurveTo(midArrowX, nodeY - 36 + (prng() - 0.5) * 3, arrowEndX + 15, nodeY - 10);
+          ctx.stroke();
+          drawOrganicLine(ctx, arrowEndX + 10, nodeY - 16, arrowEndX + 15, nodeY - 10, prng, 2);
+
+          // Bottom arrow (Reverse: i+1 -> i)
+          const botArrowY = nodeY + 16;
+          drawOrganicLine(ctx, arrowStartX, botArrowY, arrowEndX, botArrowY, prng, 4, 1.2);
+          drawOrganicLine(ctx, arrowStartX + 7, botArrowY - 4, arrowStartX, botArrowY, prng, 2);
+          drawOrganicLine(ctx, arrowStartX + 7, botArrowY + 4, arrowStartX, botArrowY, prng, 2);
+
+          // Bottom operation label
+          if (botOps[i]) {
+            ctx.font = `${Math.max(11, state.fontSize - 6.5)}px "${state.font}", cursive`;
+            ctx.fillText(botOps[i], arrowStartX + 5, botArrowY + 16);
+          }
+        }
+      }
+    }
+
+    // ========================================================
+    // ORGANIC HANDWRITTEN TREE HIERARCHY RENDERER (IMAGE 2)
+    // ========================================================
+    function drawHanddrawnTree(ctx, x, y, w, h, prng, d) {
+      // 1. Root Box: top center
+      const rootW = Math.min(130, w * 0.28);
+      const rootH = Math.min(28, h * 0.15);
+      const rootX = x + (w - rootW) / 2;
+      const rootY = y + 2;
+      drawOrganicRect(ctx, rootX, rootY, rootW, rootH, prng);
+
+      ctx.font = `bold ${Math.max(13, state.fontSize - 3)}px "${state.font}", cursive`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(d.treeRoot || '生態系統', rootX + rootW / 2, rootY + rootH / 2);
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+
+      // Stem down
+      const stemY1 = rootY + rootH;
+      const stemY2 = stemY1 + 12;
+      drawOrganicLine(ctx, x + w / 2, stemY1, x + w / 2, stemY2, prng, 3);
+
+      // Horizontal split bar
+      const leftCenter = x + w * 0.25;
+      const rightCenter = x + w * 0.75;
+      drawOrganicLine(ctx, leftCenter, stemY2, rightCenter, stemY2, prng, 6);
+      drawOrganicLine(ctx, leftCenter, stemY2, leftCenter, stemY2 + 10, prng, 2);
+      drawOrganicLine(ctx, rightCenter, stemY2, rightCenter, stemY2 + 10, prng, 2);
+
+      // Level 1 category boxes
+      const catBoxY = stemY2 + 10;
+      const catBoxH = Math.min(26, h * 0.14);
+
+      // Left category box
+      const lCatW = Math.min(185, w * 0.44);
+      const lCatX = leftCenter - lCatW / 2;
+      drawOrganicRect(ctx, lCatX, catBoxY, lCatW, catBoxH, prng);
+      ctx.font = `bold ${Math.max(11.5, state.fontSize - 5)}px "${state.font}", cursive`;
+      ctx.fillText(d.treeLeftCat || '非生物成分', lCatX + 8, catBoxY + catBoxH * 0.68);
+
+      // Right category box
+      const rCatW = Math.min(130, w * 0.35);
+      const rCatX = rightCenter - rCatW / 2;
+      drawOrganicRect(ctx, rCatX, catBoxY, rCatW, catBoxH, prng);
+      ctx.fillText(d.treeRightCat || '生物成分', rCatX + 16, catBoxY + catBoxH * 0.68);
+
+      // Level 2 Detail Cards
+      const cardY = catBoxY + catBoxH + 10;
+      const cardW = (w - 24) / 2;
+      const cardH = Math.max(70, y + h - cardY - 4);
+
+      // Left Detail Card
+      drawOrganicRect(ctx, x, cardY, cardW, cardH, prng);
+      const lLines = (d.treeLeftContent || '').split('\n').filter(l => l.trim());
+      const fSize = Math.max(9.5, state.fontSize - 7.5);
+      ctx.font = `${fSize}px "${state.font}", cursive`;
+      const lLineH = Math.min(19, (cardH - 12) / Math.max(1, lLines.length));
+      lLines.forEach((line, idx) => {
+        ctx.fillText(line, x + 6, cardY + 12 + idx * lLineH);
+      });
+
+      // Right Detail Card
+      const rCardX = x + cardW + 24;
+      drawOrganicRect(ctx, rCardX, cardY, cardW, cardH, prng);
+      const rLines = (d.treeRightContent || '').split('\n').filter(l => l.trim());
+      const rLineH = Math.min(19, (cardH - 12) / Math.max(1, rLines.length));
+      rLines.forEach((line, idx) => {
+        ctx.fillText(line, rCardX + 6, cardY + 12 + idx * rLineH);
+      });
+
+      // Horizontal Bidirectional Arrows between cards
+      if (d.treeCrossArrows !== false) {
+        const midArrowY1 = cardY + cardH * 0.40;
+        const midArrowY2 = cardY + cardH * 0.60;
+        const arrowX1 = x + cardW + 2;
+        const arrowX2 = rCardX - 2;
+
+        drawOrganicLine(ctx, arrowX1, midArrowY1, arrowX2, midArrowY1, prng, 3);
+        drawOrganicLine(ctx, arrowX2 - 5, midArrowY1 - 3, arrowX2, midArrowY1, prng, 2);
+        drawOrganicLine(ctx, arrowX2 - 5, midArrowY1 + 3, arrowX2, midArrowY1, prng, 2);
+
+        drawOrganicLine(ctx, arrowX1, midArrowY2, arrowX2, midArrowY2, prng, 3);
+        drawOrganicLine(ctx, arrowX1 + 5, midArrowY2 - 3, arrowX1, midArrowY2, prng, 2);
+        drawOrganicLine(ctx, arrowX1 + 5, midArrowY2 + 3, arrowX1, midArrowY2, prng, 2);
+      }
     }
 
     // Hand-drawn Table (2 Columns)
@@ -3255,18 +3653,45 @@
       } else if (type === 'diagram') {
         title.innerHTML = '📊 Sơ Đồ & Bảng Viết Tay AI';
         body.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding:8px 12px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25); border-radius:10px;">
+            <span style="font-size:12px; font-weight:600; color:#f87171;">Trạng thái: ${state.diagram.enabled ? 'Đang bật' : 'Đang tắt'}</span>
+            <button class="btn btn-secondary" onclick="clearDiagram(); closeMobileSheet();" style="color:#ef4444; font-size:11px; padding:4px 10px; background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.4);">
+              🗑️ Xóa / Tắt sơ đồ
+            </button>
+          </div>
+
           <div style="margin-bottom:12px;">
-            <label class="form-label" style="margin-bottom:6px; display:block;">Loại sơ đồ:</label>
-            <select class="form-select" onchange="state.diagram.enabled = (this.value !== 'none'); state.diagram.type = this.value; paginateText(); renderCanvas(); closeMobileSheet();">
-              <option value="none" ${!state.diagram.enabled ? 'selected' : ''}>Không có</option>
-              <option value="table2" ${state.diagram.type === 'table2' ? 'selected' : ''}>Bảng 2 cột (Từ mới - Giải nghĩa)</option>
-              <option value="table3" ${state.diagram.type === 'table3' ? 'selected' : ''}>Bảng 3 cột (Chữ Hán - Phiên âm - Nghĩa)</option>
-              <option value="mindmap" ${state.diagram.type === 'mindmap' ? 'selected' : ''}>Sơ đồ tư duy Mindmap</option>
-              <option value="process" ${state.diagram.type === 'process' ? 'selected' : ''}>Quy trình Process Flow</option>
-              <option value="callout" ${state.diagram.type === 'callout' ? 'selected' : ''}>Khung ghi chú Callout</option>
+            <label class="form-label" style="margin-bottom:6px; display:block;">Mẫu AI vẽ lại tức thì từ ảnh chụp:</label>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <button class="tool-chip" onclick="loadDiagramSample('chem'); closeMobileSheet();" style="justify-content:flex-start; padding:8px 12px;">
+                🧪 Sơ đồ Hóa học (Chuyển đổi Mol / Khối lượng) ★
+              </button>
+              <button class="tool-chip" onclick="loadDiagramSample('tree'); closeMobileSheet();" style="justify-content:flex-start; padding:8px 12px;">
+                🌲 Sơ đồ Cây Phân Cấp (Hệ sinh thái đa tầng) ★
+              </button>
+              <button class="tool-chip" onclick="loadDiagramSample('table3'); closeMobileSheet();" style="justify-content:flex-start; padding:8px 12px;">
+                📊 Bảng từ vựng HSK 3 cột
+              </button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:14px;">
+            <label class="form-label" style="margin-bottom:6px; display:block;">Chọn loại sơ đồ:</label>
+            <select class="form-select" onchange="if(this.value==='none'){clearDiagram();}else{selectDiagramType(this.value);} closeMobileSheet();">
+              <option value="none" ${!state.diagram.enabled ? 'selected' : ''}>Không có (Chỉ viết chữ thường)</option>
+              <option value="conversion" ${state.diagram.type === 'conversion' ? 'selected' : ''}>🧪 Sơ đồ Chuyển đổi Hóa học / Đại lượng</option>
+              <option value="tree" ${state.diagram.type === 'tree' ? 'selected' : ''}>🌲 Sơ đồ Cây Phân Cấp Đa Tầng</option>
+              <option value="table2" ${state.diagram.type === 'table2' ? 'selected' : ''}>📋 Bảng 2 cột (Từ mới - Giải nghĩa)</option>
+              <option value="table3" ${state.diagram.type === 'table3' ? 'selected' : ''}>📊 Bảng 3 cột (Chữ Hán - Phiên âm - Nghĩa)</option>
+              <option value="mindmap" ${state.diagram.type === 'mindmap' ? 'selected' : ''}>🧠 Sơ đồ tư duy Mindmap</option>
+              <option value="process" ${state.diagram.type === 'process' ? 'selected' : ''}>🔄 Quy trình Process Flow</option>
+              <option value="callout" ${state.diagram.type === 'callout' ? 'selected' : ''}>📝 Khung ghi chú Callout</option>
             </select>
           </div>
-          <p style="font-size:12px; color:var(--text-dim); margin-top:8px;">💡 Mẹo: Bạn có thể cấu hình chi tiết nội dung sơ đồ trong thẻ "Sơ đồ & Bảng" của phần Soạn Thảo.</p>
+
+          <button class="btn btn-primary" onclick="document.getElementById('aiPhotoFileInput').click(); closeMobileSheet();" style="width:100%; justify-content:center; padding:10px; font-weight:600;">
+            📷 Quét sơ đồ từ ảnh chụp (AI tự vẽ lại)
+          </button>
         `;
       }
 
