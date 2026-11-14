@@ -459,9 +459,10 @@
     }
     .template-preview {
       width: 100%;
-      height: 75px;
-      object-fit: cover;
-      background: #1e2230;
+      height: 80px;
+      object-fit: contain;
+      background: #141721;
+      padding: 2px;
     }
     .template-meta {
       padding: 8px;
@@ -600,6 +601,7 @@
       line-height: 0;
       display: inline-block;
       margin: 0 auto;
+      flex-shrink: 0 !important;
     }
     #renderCanvas {
       display: block;
@@ -1286,6 +1288,10 @@
           return { y: baseY + dy, angle: slope };
         }
       } else {
+        if (templateKey && templateKey.indexOf('_ai_') !== -1) {
+          // Perfectly straight AI-synthesized ruled lines
+          return { y: baseY, angle: 0 };
+        }
         // Single pages: exact camera perspective angle tracking
         if (templateKey && templateKey.indexOf('hongha_2') !== -1) {
           // Hong Ha weather page has an 11px upward tilt across the ruled area (from left margin to right margin)
@@ -1308,6 +1314,11 @@
     // CALIBRATED NOTEBOOK TEMPLATES CONFIGURATION
     // (Strict safety margins to ensure text never overflows outside paper/spine)
     // ========================================================
+        // AI GENERATED HIGH-PRECISION MATHEMATICAL LINES
+    const TN_AI_SINGLE = [75, 104, 133, 162, 191, 220, 249, 278, 307, 336, 365, 394, 423, 452, 481, 510, 539, 568, 597, 626, 655, 684, 713, 742, 771, 800, 829, 858, 887, 916];
+    const HH_AI_SINGLE = [75, 104, 133, 162, 191, 220, 249, 278, 307, 336, 365, 394, 423, 452, 481, 510, 539, 568, 597, 626, 655, 684, 713, 742, 771, 800, 829, 858, 887, 916];
+    const TN_AI_SPREAD = [65, 86, 107, 128, 149, 170, 191, 212, 233, 254, 275, 296, 317, 338, 359, 380, 401, 422, 443, 464, 485, 506, 527, 548, 569, 590, 611, 632, 653, 674, 695];
+
     const TN_SPREAD_L = [77, 96, 115, 134, 153, 172, 191, 211, 231, 251, 271, 292, 312, 333, 353, 374, 395, 416, 437, 458, 480, 501, 523, 545, 567, 589, 611, 634, 657, 680, 703, 727];
     const TN_SPREAD_R = [74, 91, 109, 128, 147, 166, 185, 204, 224, 243, 263, 283, 303, 324, 344, 365, 386, 407, 428, 450, 471, 493, 515, 537, 559, 581, 603, 626, 648, 671, 693, 716, 732];
 
@@ -1318,7 +1329,39 @@
     const HH_SINGLE_2 = [77, 105, 132, 160, 188, 217, 246, 275, 305, 335, 365, 396, 427, 458, 490, 522, 554, 586, 619, 652, 685, 719, 752, 786, 820, 854, 888, 923, 957];
     const TN_SINGLE_1 = [70, 95, 120, 145, 170, 195, 221, 247, 274, 300, 327, 354, 382, 409, 437, 465, 494, 522, 551, 580, 609, 638, 667, 697, 726, 756, 786, 816, 846, 877, 907, 938, 970];
 
-    const TEMPLATES_CONFIG = {
+        const TEMPLATES_CONFIG = {
+      // === 4 MẪU VỞ AI CHUẨN XÁC TUYỆT ĐỐI (KHÔNG LỆCH DÒNG, KHÔNG MÉO ẢNH) ===
+      'notebook_thanhnam_ai_single.jpg': {
+        name: 'Trang Đơn Thành Nam AI ★',
+        desc: 'Kẻ ngang chuẩn xác 100%, lề đỏ tiêu chuẩn học sinh',
+        isSpread: false,
+        leftMargin: 125,
+        rightMargin: 708,
+        lines: TN_AI_SINGLE
+      },
+      'notebook_hongha_ai_single.jpg': {
+        name: 'Trang Đơn Hồng Hà AI ★',
+        desc: 'Có biểu tượng thời tiết, thứ ngày và logo Hồng Hà',
+        isSpread: false,
+        leftMargin: 130,
+        rightMargin: 708,
+        lines: HH_AI_SINGLE
+      },
+      'notebook_thanhnam_ai_spread.jpg': {
+        name: 'Trang Đôi Thành Nam AI ★',
+        desc: 'Trang đôi 3D gáy sách mềm mại, kẻ ngang thẳng hàng',
+        isSpread: true,
+        leftPage: { leftMargin: 85, rightMargin: 475, lines: TN_AI_SPREAD },
+        rightPage: { leftMargin: 582, rightMargin: 980, lines: TN_AI_SPREAD }
+      },
+      'notebook_hongha_ai_spread.jpg': {
+        name: 'Trang Đôi Hồng Hà AI ★',
+        desc: 'Trang đôi truyền thống bãi bằng, chữ bám khít từng milimet',
+        isSpread: true,
+        leftPage: { leftMargin: 85, rightMargin: 475, lines: TN_AI_SPREAD },
+        rightPage: { leftMargin: 582, rightMargin: 980, lines: TN_AI_SPREAD }
+      },
+
       // 9 Double Spreads
       'notebook_thanhnam_spread.jpg': {
         name: 'Trang Đôi Thành Nam',
@@ -1447,7 +1490,7 @@
     // GLOBAL APPLICATION STATE
     // ========================================================
     const state = {
-      notebookTemplate: 'notebook_thanhnam_spread.jpg',
+      notebookTemplate: 'notebook_thanhnam_ai_single.jpg',
       spreadWriteMode: 'both',
       text: '',
       fontSize: 20, // 20px for natural handwriting weight
@@ -2687,12 +2730,15 @@
     function applyZoom() {
       const wrap = document.getElementById('canvasWrapper');
       if (wrap && canvas.width > 0) {
-        // Set exact CSS dimensions without subpixel scale blurriness
-        wrap.style.width = Math.round(canvas.width * state.zoomLevel) + 'px';
-        wrap.style.height = Math.round(canvas.height * state.zoomLevel) + 'px';
+        const scaledW = Math.round(canvas.width * state.zoomLevel);
+        const scaledH = Math.round(canvas.height * state.zoomLevel);
+        wrap.style.width = scaledW + 'px';
+        wrap.style.height = scaledH + 'px';
+        wrap.style.flexShrink = '0';
         wrap.style.transform = 'none';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
+        canvas.style.width = scaledW + 'px';
+        canvas.style.height = scaledH + 'px';
+        canvas.style.flexShrink = '0';
       }
       const b = document.getElementById('zoomLevelBtn');
       if (b) b.innerText = Math.round(state.zoomLevel * 100) + '%';
