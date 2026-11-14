@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v4.3-bottombar-reorder';
+const CACHE_NAME = 'cheptay-v4.4-streamlined-mobile';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

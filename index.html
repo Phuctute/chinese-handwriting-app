@@ -1022,46 +1022,12 @@
         margin: 0 2px;
       }
 
-      /* Slim Mobile View Switcher */
+      /* Hide top switcher and top nav-tabs on mobile (features transferred to 5 bottom dock buttons) */
       .mobile-view-switch {
-        display: block !important;
-        position: sticky;
-        top: 48px;
-        z-index: 100;
-        background: rgba(11, 15, 25, 0.95);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        padding: 5px 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: none !important;
       }
-      .segmented-switch {
-        display: flex;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 10px;
-        padding: 2px;
-        gap: 3px;
-      }
-      .switch-pill {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-        padding: 6px 8px;
-        font-size: 12px;
-        font-weight: 600;
-        border-radius: 8px;
-        border: none;
-        background: transparent;
-        color: var(--text-dim);
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
-      .switch-pill.active {
-        background: var(--accent);
-        color: #ffffff;
-        box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
+      .left-panel .nav-tabs {
+        display: none !important;
       }
 
       /* Main layout mobile behavior */
@@ -1069,8 +1035,8 @@
         display: flex;
         flex-direction: column;
         height: auto;
-        min-height: calc(100vh - 90px);
-        padding-bottom: 68px; /* space for mobile bottom bar */
+        min-height: calc(100vh - 48px);
+        padding-bottom: 60px; /* space for mobile bottom bar */
       }
 
       /* In Editor View (default): Left panel is full width, right is hidden */
@@ -1083,7 +1049,7 @@
       .right-panel {
         display: none !important;
         width: 100% !important;
-        min-height: calc(100vh - 90px);
+        min-height: calc(100vh - 48px);
       }
 
       /* In Preview View (body.view-preview):
@@ -2717,6 +2683,7 @@
         if (btnPrev) btnPrev.classList.remove('active');
         if (barEdit) barEdit.classList.add('active');
         if (barPrev) barPrev.classList.remove('active');
+        switchTab('editor-tab');
       } else {
         document.body.classList.add('view-preview');
         if (btnPrev) btnPrev.classList.add('active');
