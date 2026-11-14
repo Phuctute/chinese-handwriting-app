@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v2.1';
+const CACHE_NAME = 'cheptay-v3.1';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -8,23 +8,13 @@ const ASSETS_TO_CACHE = [
   './assets/icon-192.png',
   './assets/icon-512.png',
   './assets/apple-touch-icon.png',
+  './assets/notebook_thanhnam_ai_single.jpg',
+  './assets/notebook_hongha_ai_single.jpg',
+  './assets/notebook_thanhnam_ai_spread.jpg',
+  './assets/notebook_hongha_ai_spread.jpg',
   './assets/notebook_thanhnam_spread.jpg',
-  './assets/notebook_thanhnam_spread_warm.jpg',
-  './assets/notebook_hongha_spread.jpg',
-  './assets/notebook_hongha_spread_warm.jpg',
-  './assets/notebook_tianzige_spread.jpg',
-  './assets/notebook_oli_spread.jpg',
-  './assets/notebook_warm_spread.jpg',
-  './assets/notebook_default.jpg',
-  './assets/notebook_thanhnam_right.jpg',
-  './assets/notebook_thanhnam_left.jpg',
-  './assets/notebook_thanhnam_warm.jpg',
-  './assets/notebook_hongha_1.jpg',
   './assets/notebook_hongha_2.jpg',
-  './assets/notebook_hongha_warm.jpg',
-  './assets/notebook_tianzige.jpg',
-  './assets/notebook_oli.jpg',
-  './assets/notebook_warm.jpg',
+  './assets/notebook_hongha_1.jpg',
   './fonts/JasonHandwriting3.ttf'
 ];
 
@@ -55,8 +45,8 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-  // For navigation requests, try network first, then cache
-  if (req.mode === 'navigate') {
+  // For navigation & HTML, try network first to ensure latest updates
+  if (req.mode === 'navigate' || req.headers.get('accept')?.includes('text/html')) {
     event.respondWith(
       fetch(req).catch(() => caches.match('./index.html'))
     );
@@ -73,10 +63,7 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
         }
         return res;
-      }).catch(() => {
-        // Fallback if offline
-        return cached;
-      });
+      }).catch(() => cached);
     })
   );
 });
