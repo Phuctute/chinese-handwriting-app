@@ -64,23 +64,28 @@
     }
 
     :root {
-      --bg-base: #0b0d13;
-      --bg-card: #131722;
-      --bg-card-hover: #181d2b;
-      --bg-input: #0e111a;
-      --border-color: #232838;
-      --border-hover: #333a50;
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --accent: #38bdf8;
-      --accent-glow: rgba(56, 189, 248, 0.18);
-      --accent-hover: #0284c7;
-      --success: #10b981;
-      --danger: #ef4444;
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
+      /* Apple iOS HIG Dark Mode Palette */
+      --bg-base: #000000;
+      --bg-card: #1c1c1e;
+      --bg-card-hover: #2c2c2e;
+      --bg-input: #2c2c2e;
+      --border-color: rgba(255, 255, 255, 0.10);
+      --border-hover: rgba(255, 255, 255, 0.20);
+      --text-main: #ffffff;
+      --text-muted: rgba(235, 235, 245, 0.65);
+      --text-dim: rgba(235, 235, 245, 0.38);
+      --accent: #0a84ff; /* Apple System Blue */
+      --accent-glow: rgba(10, 132, 255, 0.24);
+      --accent-hover: #0071e3;
+      --success: #34c759; /* Apple System Green */
+      --danger: #ff453a;  /* Apple System Red */
+      --warning: #ffd60a; /* Apple System Yellow */
+      --purple: #bf5af2;  /* Apple System Purple */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 22px;
+      --ios-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", -apple-system-subheadline, "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
 
     * {
@@ -91,23 +96,27 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: var(--ios-font);
       background-color: var(--bg-base);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      letter-spacing: -0.01em;
     }
 
     /* Top Navigation Bar */
     header.app-header {
-      background: rgba(13, 17, 23, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-color);
-      height: 60px;
+      background: rgba(22, 22, 24, 0.82);
+      backdrop-filter: blur(25px) saturate(190%);
+      -webkit-backdrop-filter: blur(25px) saturate(190%);
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.12);
+      height: 52px;
       padding: 0 16px;
+      padding-top: env(safe-area-inset-top, 0px);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -124,19 +133,20 @@
       color: var(--text-main);
     }
     .brand-icon {
-      width: 34px;
-      height: 34px;
-      background: linear-gradient(135deg, #0284c7, #38bdf8);
-      border-radius: var(--radius-sm);
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(180deg, #0a84ff, #0064d2);
+      border-radius: 8.5px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
+      box-shadow: 0 2px 8px rgba(10, 132, 255, 0.35);
     }
     .brand-text h1 {
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -144,15 +154,15 @@
     .brand-text p {
       font-size: 11px;
       color: var(--text-dim);
+      font-weight: 400;
     }
     .brand-badge {
-      font-size: 9px;
+      font-size: 9.5px;
       font-weight: 600;
-      background: rgba(56, 189, 248, 0.15);
+      background: rgba(10, 132, 255, 0.16);
       color: var(--accent);
-      padding: 1px 6px;
+      padding: 1.5px 7px;
       border-radius: 99px;
-      border: 1px solid rgba(56, 189, 248, 0.3);
     }
 
     .header-actions {
@@ -169,59 +179,70 @@
       font-size: 13px;
       font-weight: 600;
       padding: 7px 14px;
-      border-radius: var(--radius-sm);
+      border-radius: 10px;
       cursor: pointer;
-      border: 1px solid transparent;
-      transition: all 0.15s ease;
+      border: 0.5px solid transparent;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       white-space: nowrap;
     }
+    .btn:active {
+      transform: scale(0.97);
+    }
     .btn-secondary {
-      background: var(--bg-card);
-      border-color: var(--border-color);
+      background: #2c2c2e;
+      border-color: rgba(255, 255, 255, 0.08);
       color: var(--text-main);
     }
     .btn-secondary:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--border-hover);
+      background: #3a3a3c;
     }
     .btn-secondary.active {
-      background: var(--accent-glow);
+      background: rgba(10, 132, 255, 0.2);
       border-color: var(--accent);
       color: var(--accent);
     }
     .btn-primary {
       background: var(--accent);
-      color: #0b0d13;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(10, 132, 255, 0.35);
+      border-radius: 9999px;
+      padding: 6px 15px;
     }
     .btn-primary:hover {
-      background: #7dd3fc;
+      background: var(--accent-hover);
     }
     .btn-icon {
       padding: 7px;
-      border-radius: var(--radius-sm);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      width: 32px;
+      height: 32px;
     }
 
-    /* Mobile Segmented Switch (Soạn Thảo vs Xem Vở) */
+    /* Apple UISegmentedControl Style */
     .mobile-view-switch {
       display: none;
-      padding: 8px 14px;
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border-color);
+      padding: 7px 14px;
+      background: rgba(22, 22, 24, 0.85);
+      backdrop-filter: blur(25px) saturate(190%);
+      -webkit-backdrop-filter: blur(25px) saturate(190%);
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.12);
     }
     .segmented-switch {
       display: flex;
-      background: var(--bg-input);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 3px;
-      gap: 3px;
+      background: rgba(118, 118, 128, 0.24);
+      border-radius: 9px;
+      padding: 2px;
+      gap: 2px;
+      border: none;
+      height: 36px;
     }
     .switch-pill {
       flex: 1;
-      padding: 7px 12px;
-      border-radius: 8px;
+      padding: 6px 12px;
+      border-radius: 7px;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 500;
       border: none;
       background: transparent;
       color: var(--text-muted);
@@ -230,12 +251,16 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: all 0.2s ease;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .switch-pill:active {
+      transform: scale(0.98);
     }
     .switch-pill.active {
-      background: var(--accent);
-      color: #0b0d13;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      background: #ffffff;
+      color: #000000;
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.22), 0 1px 2px rgba(0, 0, 0, 0.12);
     }
 
     /* Main Container Layout */
@@ -259,34 +284,42 @@
     /* Tab Navigation */
     .nav-tabs {
       display: flex;
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border-color);
-      padding: 0 10px;
-      gap: 4px;
+      background: rgba(28, 28, 30, 0.85);
+      backdrop-filter: blur(25px) saturate(190%);
+      -webkit-backdrop-filter: blur(25px) saturate(190%);
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.12);
+      padding: 8px 12px;
+      gap: 6px;
       position: sticky;
       top: 0;
       z-index: 10;
     }
     .nav-tab {
-      padding: 12px 14px;
+      padding: 7px 14px;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 500;
       color: var(--text-muted);
       border: none;
       background: transparent;
+      border-radius: 8px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      border-bottom: 2px solid transparent;
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-tab:active {
+      transform: scale(0.97);
     }
     .nav-tab:hover {
       color: var(--text-main);
+      background: rgba(255, 255, 255, 0.06);
     }
     .nav-tab.active {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
+      color: #ffffff;
+      background: #3a3a3c;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
 
     .tab-panel {
@@ -299,15 +332,16 @@
       display: flex;
     }
 
-    /* Section Cards */
+    /* Apple Inset Grouped Section Cards */
     .section-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 14px;
+      background: #1c1c1e;
+      border: 0.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 14px 16px;
       display: flex;
       flex-direction: column;
       gap: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     }
     .card-header {
       display: flex;
@@ -340,21 +374,21 @@
     textarea.text-input {
       width: 100%;
       height: 220px;
-      background: var(--bg-input);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      padding: 12px;
+      background: #2c2c2e;
+      border: 0.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 14px;
       color: var(--text-main);
       font-family: inherit;
-      font-size: 14px;
+      font-size: 14.5px;
       line-height: 1.6;
       resize: vertical;
-      transition: border-color 0.15s ease;
+      transition: all 0.2s ease;
     }
     textarea.text-input:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-glow);
+      box-shadow: 0 0 0 3px var(--accent-glow);
     }
 
     /* Quick Toolbar */
@@ -507,23 +541,31 @@
       border-radius: 4px;
       border: 1px solid var(--border-color);
     }
+    /* Apple UISlider */
     input[type="range"] {
       -webkit-appearance: none;
+      appearance: none;
       width: 100%;
-      height: 5px;
-      border-radius: 99px;
-      background: var(--border-color);
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(120, 120, 128, 0.32);
       outline: none;
+      transition: background 0.2s ease;
     }
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
+      appearance: none;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
-      background: var(--accent);
+      background: #ffffff;
       cursor: pointer;
-      border: 2px solid var(--bg-card);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      border: 0.5px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.38), 0 1px 2px rgba(0, 0, 0, 0.2);
+      transition: transform 0.15s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:active {
+      transform: scale(1.12);
     }
 
     select.form-select, input[type="text"].form-input, input[type="number"].form-input {
@@ -539,6 +581,58 @@
     }
     select.form-select:focus, input[type="text"].form-input:focus {
       border-color: var(--accent);
+    }
+
+
+    /* Apple iOS UISwitch Component */
+    .ios-switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+    .ios-switch-label {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+    .ios-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+    .ios-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .ios-switch-track {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #39393d;
+      transition: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 28px;
+    }
+    .ios-switch-track:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #ffffff;
+      transition: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 50%;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+    .ios-switch input:checked + .ios-switch-track {
+      background-color: #34c759; /* Apple Green */
+    }
+    .ios-switch input:checked + .ios-switch-track:before {
+      transform: translateX(20px);
     }
 
     /* Right Panel: Canvas Preview */
@@ -672,10 +766,10 @@
       align-items: center;
       gap: 6px;
       padding: 8px 14px;
-      background: rgba(14, 17, 26, 0.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(18, 18, 20, 0.85);
+      backdrop-filter: blur(25px) saturate(190%);
+      -webkit-backdrop-filter: blur(25px) saturate(190%);
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
       overflow-x: auto;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
@@ -688,27 +782,30 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--text-dim);
-      font-size: 11.5px;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 0.5px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 13px;
+      border-radius: 9999px; /* Apple capsule */
       white-space: nowrap;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    .preset-chip:active {
+      transform: scale(0.96);
+    }
     .preset-chip:hover {
       color: var(--text-main);
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.14);
     }
     .preset-chip.active {
-      background: rgba(99, 102, 241, 0.18);
+      background: var(--accent);
       border-color: var(--accent);
       color: #ffffff;
-      box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(10, 132, 255, 0.35);
     }
 
     /* Mobile Bottom Bar (Hidden on desktop) */
@@ -716,17 +813,17 @@
       display: none;
     }
 
-    /* Mobile Bottom Sheet Drawer */
+    /* Apple UISheetPresentationController Style */
     .mobile-sheet-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       z-index: 2100;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.28s ease;
     }
     .mobile-sheet-overlay.active {
       opacity: 1;
@@ -735,26 +832,28 @@
     .mobile-sheet {
       position: fixed;
       bottom: 0; left: 0; right: 0;
-      max-height: 82vh;
-      background: #0f131f;
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 24px 24px 0 0;
-      box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.95);
+      max-height: 84vh;
+      background: rgba(28, 28, 30, 0.96);
+      backdrop-filter: blur(35px) saturate(200%);
+      -webkit-backdrop-filter: blur(35px) saturate(200%);
+      border-top: 0.5px solid rgba(255, 255, 255, 0.18);
+      border-radius: 22px 22px 0 0;
+      box-shadow: 0 -16px 54px rgba(0, 0, 0, 0.85);
       z-index: 2200;
       transform: translateY(100%);
-      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
-      padding-bottom: env(safe-area-inset-bottom, 14px);
+      padding-bottom: env(safe-area-inset-bottom, 16px);
     }
     .mobile-sheet.active {
       transform: translateY(0);
     }
     .mobile-sheet-handle {
-      width: 44px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.25);
-      border-radius: 2px;
+      width: 36px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.32);
+      border-radius: 2.5px;
       margin: 10px auto 4px auto;
       flex-shrink: 0;
     }
@@ -799,17 +898,17 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /* PWA Install Modal */
+    /* Apple UIAlertController Style */
     .pwa-modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       z-index: 3000;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.28s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -820,12 +919,14 @@
       pointer-events: auto;
     }
     .pwa-modal-card {
-      background: #111523;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 20px;
+      background: rgba(36, 36, 38, 0.92);
+      backdrop-filter: blur(35px) saturate(200%);
+      -webkit-backdrop-filter: blur(35px) saturate(200%);
+      border: 0.5px solid rgba(255, 255, 255, 0.16);
+      border-radius: 18px;
       width: 100%;
-      max-width: 440px;
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.9);
+      max-width: 400px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85);
       overflow: hidden;
     }
     .pwa-modal-header {
@@ -957,16 +1058,16 @@
         display: flex !important;
       }
 
-      /* Floating Bottom Navigation Bar */
+      /* Apple UITabBar Style */
       .mobile-bottom-bar {
         display: flex;
         position: fixed;
         bottom: 0; left: 0; right: 0;
-        height: 60px;
-        background: rgba(12, 14, 22, 0.95);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        height: 52px;
+        background: rgba(22, 22, 24, 0.85);
+        backdrop-filter: blur(25px) saturate(190%);
+        -webkit-backdrop-filter: blur(25px) saturate(190%);
+        border-top: 0.5px solid rgba(255, 255, 255, 0.14);
         z-index: 1000;
         align-items: center;
         justify-content: space-around;
@@ -981,18 +1082,20 @@
         gap: 3px;
         background: transparent;
         border: none;
-        color: var(--text-dim);
+        color: rgba(235, 235, 245, 0.45);
         font-size: 10px;
         font-weight: 500;
         cursor: pointer;
-        padding: 6px 8px;
-        border-radius: 10px;
-        transition: all 0.15s ease;
+        padding: 5px 6px;
+        border-radius: 8px;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         flex: 1;
       }
-      .mobile-bar-btn:active, .mobile-bar-btn.active {
+      .mobile-bar-btn:active {
+        transform: scale(0.92);
+      }
+      .mobile-bar-btn.active {
         color: var(--accent);
-        background: rgba(99, 102, 241, 0.12);
       }
       .mobile-bar-btn svg {
         width: 19px;
@@ -3597,9 +3700,12 @@
             </div>
             <input type="range" class="range-slider" min="0" max="100" value="${state.messiness}" oninput="updateMessiness(this.value); document.getElementById('mMessinessVal').innerText = this.value + '%';">
           </div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <input type="checkbox" id="mAutoTypo" ${state.autoTypo ? 'checked' : ''} onchange="state.autoTypo = this.checked; paginateText(); renderCanvas();">
-            <label for="mAutoTypo" style="font-size:13px; color:var(--text-main);">Tự động gạch đè chữ sai cho chân thật</label>
+          <div class="ios-switch-row">
+            <span class="ios-switch-label">Tự động gạch chữ sai (Chân thật)</span>
+            <label class="ios-switch">
+              <input type="checkbox" id="mAutoTypo" ${state.autoTypo ? 'checked' : ''} onchange="state.autoTypo = this.checked; paginateText(); renderCanvas();">
+              <span class="ios-switch-track"></span>
+            </label>
           </div>
         `;
       } else if (type === 'template') {
