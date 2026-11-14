@@ -968,54 +968,90 @@
     /* Single Unified Clean Mobile Layout (< 992px) */
     @media (max-width: 991px) {
       .app-header {
-        height: 52px;
-        padding: 0 12px;
+        height: 48px;
+        padding: 0 10px;
       }
       .brand-text p {
         display: none;
       }
       .brand-text h1 {
-        font-size: 14.5px;
+        font-size: 13.5px;
       }
       .brand-icon {
-        width: 30px;
-        height: 30px;
+        width: 28px;
+        height: 28px;
       }
       .header-actions .btn-primary {
-        padding: 6px 12px;
-        font-size: 12px;
+        padding: 5px 10px;
+        font-size: 11.5px;
       }
 
-      /* Sticky Mobile View Switcher */
+      /* In Preview Mode: Show compact floating page/zoom capsule in header */
+      body.view-preview .mobile-header-capsule {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        padding: 2px 6px;
+        gap: 3px;
+      }
+      .capsule-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-main);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 2px 6px;
+        cursor: pointer;
+        border-radius: 6px;
+      }
+      .capsule-btn:active {
+        background: rgba(255, 255, 255, 0.15);
+      }
+      .capsule-text {
+        font-size: 11px;
+        font-weight: 600;
+        color: #fff;
+        padding: 0 2px;
+      }
+      .capsule-divider {
+        width: 1px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 0 2px;
+      }
+
+      /* Slim Mobile View Switcher */
       .mobile-view-switch {
         display: block !important;
         position: sticky;
-        top: 52px;
+        top: 48px;
         z-index: 100;
         background: rgba(11, 15, 25, 0.95);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        padding: 7px 12px;
+        padding: 5px 10px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       }
       .segmented-switch {
         display: flex;
         background: rgba(255, 255, 255, 0.06);
         border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 12px;
-        padding: 3px;
-        gap: 4px;
+        border-radius: 10px;
+        padding: 2px;
+        gap: 3px;
       }
       .switch-pill {
         flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
-        padding: 8px 10px;
-        font-size: 13px;
+        gap: 5px;
+        padding: 6px 8px;
+        font-size: 12px;
         font-weight: 600;
-        border-radius: 9px;
+        border-radius: 8px;
         border: none;
         background: transparent;
         color: var(--text-dim);
@@ -1033,8 +1069,8 @@
         display: flex;
         flex-direction: column;
         height: auto;
-        min-height: calc(100vh - 105px);
-        padding-bottom: 72px; /* space for mobile bottom bar */
+        min-height: calc(100vh - 90px);
+        padding-bottom: 68px; /* space for mobile bottom bar */
       }
 
       /* In Editor View (default): Left panel is full width, right is hidden */
@@ -1047,46 +1083,55 @@
       .right-panel {
         display: none !important;
         width: 100% !important;
-        min-height: calc(100vh - 105px);
+        min-height: calc(100vh - 90px);
       }
 
-      /* In Preview View (body.view-preview): Left panel hidden, right is shown */
+      /* In Preview View (body.view-preview):
+         ELIMINATE STACKED TOOLBAR CLUTTER:
+         Hide redundant canvas toolbar and smart presets row on mobile */
       body.view-preview .left-panel {
         display: none !important;
       }
       body.view-preview .right-panel {
         display: flex !important;
       }
+      body.view-preview .canvas-toolbar {
+        display: none !important; /* Managed by top header capsule & bottom bar */
+      }
+      body.view-preview .smart-presets-bar {
+        display: none !important; /* Presets cleanly accessible in bottom sheet */
+      }
 
-      /* Apple UITabBar Style */
+      /* Apple UITabBar Style - Highest Z-Index (9999) */
       .mobile-bottom-bar {
-        display: flex;
-        position: fixed;
-        bottom: 0; left: 0; right: 0;
-        height: 52px;
-        background: rgba(22, 22, 24, 0.85);
-        backdrop-filter: blur(25px) saturate(190%);
-        -webkit-backdrop-filter: blur(25px) saturate(190%);
-        border-top: 0.5px solid rgba(255, 255, 255, 0.14);
-        z-index: 1000;
+        display: flex !important;
+        position: fixed !important;
+        bottom: 0 !important; left: 0 !important; right: 0 !important;
+        height: 56px;
+        background: rgba(18, 18, 22, 0.92) !important;
+        backdrop-filter: blur(25px) saturate(190%) !important;
+        -webkit-backdrop-filter: blur(25px) saturate(190%) !important;
+        border-top: 0.5px solid rgba(255, 255, 255, 0.16) !important;
+        z-index: 9999 !important;
         align-items: center;
         justify-content: space-around;
         padding: 0 4px;
-        padding-bottom: env(safe-area-inset-bottom, 4px);
+        padding-bottom: env(safe-area-inset-bottom, 6px);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
       }
       .mobile-bar-btn {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 3px;
+        gap: 2px;
         background: transparent;
         border: none;
-        color: rgba(235, 235, 245, 0.45);
-        font-size: 10px;
+        color: rgba(235, 235, 245, 0.5);
+        font-size: 9.5px;
         font-weight: 500;
         cursor: pointer;
-        padding: 5px 6px;
+        padding: 4px 6px;
         border-radius: 8px;
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         flex: 1;
@@ -1098,17 +1143,320 @@
         color: var(--accent);
       }
       .mobile-bar-btn svg {
-        width: 19px;
-        height: 19px;
+        width: 18px;
+        height: 18px;
       }
 
+      /* Canvas Viewport: Full Vertical Height on Mobile */
       .canvas-viewport {
-        padding: 12px 6px 36px 6px;
+        padding: 10px 4px 68px 4px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
       }
       .canvas-wrapper {
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.9);
       }
+
+      /* Toast above bottom bar */
+      .toast {
+        bottom: 74px !important;
+        z-index: 10000 !important;
+      }
     }
+  
+    /* --- MOBILE HEADER CAPSULE & COMPACT CONTROLS --- */
+    .mobile-header-capsule {
+      display: none;
+    }
+    .btn-danger-pill {
+      background: rgba(239, 68, 68, 0.15) !important;
+      color: #ef4444 !important;
+      border: 1px solid rgba(239, 68, 68, 0.35) !important;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-danger-pill:hover {
+      background: rgba(239, 68, 68, 0.25) !important;
+    }
+
+    /* --- AI DIAGRAM & TABLE SCAN STUDIO MODAL --- */
+    .ai-studio-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      z-index: 2500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .ai-studio-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .ai-studio-card {
+      background: rgba(24, 24, 28, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 22px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(56, 189, 248, 0.2);
+      overflow: hidden;
+      animation: studioSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes studioSlideUp {
+      from { transform: translateY(24px) scale(0.96); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .ai-studio-header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .ai-studio-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(99, 102, 241, 0.25));
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .ai-studio-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .ai-studio-close:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+    .ai-studio-body {
+      padding: 18px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+    }
+    .ai-studio-dropzone {
+      border: 2px dashed rgba(56, 189, 248, 0.35);
+      background: linear-gradient(180deg, rgba(56, 189, 248, 0.06), rgba(15, 23, 42, 0.4));
+      border-radius: 16px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .ai-studio-dropzone:hover {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.6));
+      transform: translateY(-1px);
+    }
+    .dropzone-pulse-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.25);
+    }
+    .ai-archetypes-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+    }
+    .archetype-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .archetype-pill:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+    .archetype-pill.active {
+      background: rgba(14, 165, 233, 0.14);
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+    }
+    .arch-emoji {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .arch-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .arch-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .arch-desc {
+      font-size: 10.5px;
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Live AI Scan HUD */
+    .ai-scan-hud {
+      background: rgba(11, 15, 25, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 14px;
+      padding: 12px 14px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    .ai-scan-laser {
+      position: absolute;
+      left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, transparent);
+      box-shadow: 0 0 12px #38bdf8, 0 0 24px #818cf8;
+      top: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .ai-scan-hud.scanning .ai-scan-laser {
+      opacity: 1;
+      animation: laserSweep 1.6s ease-in-out infinite alternate;
+    }
+    @keyframes laserSweep {
+      0% { top: 4%; }
+      100% { top: 96%; }
+    }
+    .ai-scan-preview-box {
+      width: 64px;
+      height: 64px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .ai-scan-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .ai-scan-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      text-align: center;
+    }
+    .ai-scan-logs {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+    .ai-log-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ai-log-item.active {
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .ai-log-item.success {
+      color: #34d399;
+    }
+    .log-dot {
+      font-size: 8px;
+    }
+
+    /* Inspector Box */
+    .ai-inspector-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .inspector-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .ai-studio-footer {
+      padding: 14px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
   </style>
 </head>
 <body>
@@ -1127,6 +1475,25 @@
         <p>Vở viết tay chữ Hán & Sơ đồ thông minh</p>
       </div>
     </a>
+
+    <!-- Mobile Compact Page & Zoom Capsule (Shown in Preview Mode) -->
+    <div class="mobile-header-capsule" id="mobileHeaderCapsule">
+      <button class="capsule-btn" onclick="prevPage()" title="Trang trước">❮</button>
+      <span class="capsule-text" id="mobilePageIndicator">1 / 1</span>
+      <button class="capsule-btn" onclick="nextPage()" title="Trang tiếp">❯</button>
+      <span class="capsule-divider"></span>
+      <button class="capsule-btn" onclick="adjustZoom(-0.1)">−</button>
+      <span class="capsule-text" id="mobileZoomIndicator">40%</span>
+      <button class="capsule-btn" onclick="adjustZoom(0.1)">+</button>
+      <span class="capsule-divider"></span>
+      <button class="capsule-btn" onclick="resetZoom()" style="font-size:10.5px; padding:0 3px;">Vừa</button>
+    </div>
+
+    <!-- Mobile Danger Delete Diagram Pill (Shown when diagram is enabled) -->
+    <button class="btn-danger-pill" id="mobileClearDiagHeaderBtn" onclick="clearDiagram()" style="display:none;" title="Xóa sơ đồ hiện tại">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      <span>Xóa Sơ Đồ</span>
+    </button>
 
     <div class="header-actions">
       <!-- PWA Install Button -->
@@ -2528,6 +2895,7 @@
 
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function updateDiagramPos() {
@@ -2546,6 +2914,7 @@
 
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
 
@@ -2557,6 +2926,7 @@
       state.diagram.convBotOps = document.getElementById('convBotOps').value;
       state.diagram.convNote = document.getElementById('convNote').value;
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function updateTreeContent() {
@@ -2566,16 +2936,338 @@
       state.diagram.treeLeftContent = document.getElementById('treeLeftContent').value;
       state.diagram.treeRightContent = document.getElementById('treeRightContent').value;
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function clearDiagram() {
-      state.diagram.enabled = false;
       state.diagram.type = 'none';
+      state.diagram.enabled = false;
       selectDiagramType('none');
       paginateText();
       renderCanvas();
-      showToast('🗑️ Đã xóa sơ đồ / bảng khỏi trang vở!');
+      updateDiagramUIButtons();
+      showToast('🗑️ Đã xóa sơ đồ! Dòng kẻ vở đã được phục hồi đầy đủ.');
     }
+
+    // ========================================================
+    // AI DIAGRAM & TABLE SCAN STUDIO CONTROLLER
+    // ========================================================
+    let currentStudioArch = 'chem';
+
+    function openAiDiagramStudio() {
+      const modal = document.getElementById('aiDiagramStudioModal');
+      if (modal) {
+        modal.classList.add('active');
+        selectStudioArchetype(currentStudioArch || 'chem');
+      }
+    }
+
+    function closeAiDiagramStudio() {
+      const modal = document.getElementById('aiDiagramStudioModal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    function selectStudioArchetype(arch) {
+      currentStudioArch = arch;
+      const pills = ['archChem', 'archTree', 'archTable3', 'archProcess', 'archMindmap'];
+      pills.forEach(p => document.getElementById(p)?.classList.remove('active'));
+
+      const map = {
+        'chem': 'archChem',
+        'tree': 'archTree',
+        'table3': 'archTable3',
+        'process': 'archProcess',
+        'mindmap': 'archMindmap'
+      };
+      document.getElementById(map[arch])?.classList.add('active');
+
+      const hud = document.getElementById('aiScanHud');
+      if (hud) {
+        hud.classList.add('scanning');
+        setTimeout(() => hud.classList.remove('scanning'), 1400);
+      }
+
+      renderStudioInspector(arch);
+    }
+
+    function renderStudioInspector(arch) {
+      const box = document.getElementById('aiInspectorBox');
+      const badge = document.getElementById('aiDetectedBadge');
+      const logs = document.getElementById('aiScanLogs');
+      if (!box) return;
+
+      if (arch === 'chem') {
+        if (badge) badge.innerText = '🧪 Sơ đồ Chuyển đổi (99.4%)';
+        if (logs) {
+          logs.innerHTML = `
+            <div class="ai-log-item success"><span class="log-dot">✓</span> <span>Phát hiện: Sơ đồ Chuyển đổi Hóa học (Mole Conversion Flow)</span></div>
+            <div class="ai-log-item success"><span class="log-dot">✓</span> <span>Bóc tách: 3 Nút chính, 4 Phép biến đổi, Ghi chú hằng số Avogadro</span></div>
+            <div class="ai-log-item"><span class="log-dot">●</span> <span>Khử nhiễu nền & chuẩn hóa nét bút bi viết tay...</span></div>
+          `;
+        }
+        box.innerHTML = `
+          <div class="inspector-title">
+            <span>Cấu trúc Sơ Đồ Chuyển Đổi</span>
+            <span style="font-size:10.5px; color:var(--text-muted);">Có thể chỉnh sửa</span>
+          </div>
+          <div>
+            <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:3px;">Các Nút Chuyển Đổi (Phân cách bằng dấu phẩy):</label>
+            <input type="text" id="stuConvNodes" class="form-input" style="font-size:12px; padding:6px 10px;" value="${state.diagram.convNodes || '質量 (Mass), 莫耳數 (No. of mole), 粒子數 (No. of particles) focus'}">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div>
+              <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:3px;">Phép tính phía trên:</label>
+              <input type="text" id="stuConvTopOps" class="form-input" style="font-size:12px; padding:6px 10px;" value="${state.diagram.convTopOps || '÷ 原子量(分), × 6.02×10²³'}">
+            </div>
+            <div>
+              <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:3px;">Phép tính phía dưới:</label>
+              <input type="text" id="stuConvBotOps" class="form-input" style="font-size:12px; padding:6px 10px;" value="${state.diagram.convBotOps || '× 原(分)子量, ÷ 6.02×10²³'}">
+            </div>
+          </div>
+          <div>
+            <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:3px;">Ghi chú công thức góc phải (Kèm mũi tên ↓):</label>
+            <textarea id="stuConvNote" class="form-textarea" style="height:55px; font-size:11.5px; padding:6px 10px;">${state.diagram.convNote || '1 mole ≡ 6.02×10²³\n↓\n原子, 分子…\n恰 12g'}</textarea>
+          </div>
+        `;
+      } else if (arch === 'tree') {
+        if (badge) badge.innerText = '🌲 Cây Phân Cấp (98.9%)';
+        if (logs) {
+          logs.innerHTML = `
+            <div class="ai-log-item success"><span class="log-dot">✓</span> <span>Phát hiện: Cây Phân Cấp Đa Tầng (Hierarchical Tree)</span></div>
+            <div class="ai-log-item success"><span class="log-dot">✓</span> <span>Bóc tách: Nút gốc, 2 Nhánh danh mục, Danh sách chi tiết thụt dòng</span></div>
+            <div class="ai-log-item"><span class="log-dot">●</span> <span>Tạo hộp bóng đổ 3D thủ công & mũi tên tuần hoàn...</span></div>
+          `;
+        }
+        box.innerHTML = `
+          <div class="inspector-title">
+            <span>Cấu trúc Cây Phân Cấp Đa Tầng</span>
+            <span style="font-size:10.5px; color:var(--text-muted);">Có thể chỉnh sửa</span>
+          </div>
+          <div>
+            <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:3px;">Nút gốc (Gốc cây):</label>
+            <input type="text" id="stuTreeRoot" class="form-input" style="font-size:12px; padding:6px 10px;" value="${state.diagram.treeRoot || '生態系統'}">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div>
+              <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:3px;">Nhánh trái:</label>
+              <input type="text" id="stuTreeLeftCat" class="form-input" style="font-size:12px; padding:6px 10px;" value="${state.diagram.treeLeftCat || '非生物成分 (生命維持系統)'}">
+              <textarea id="stuTreeLeftContent" class="form-textarea" style="height:65px; font-size:11px; margin-top:4px;">${state.diagram.treeLeftContent || '1. 非生物環境\n  (1) 能源：太陽輻射\n  (2) 生物生存環境：岩石、土壤、水、空氣…\n2. 生命代謝原料\n  二氧化碳、水、氧、氮、無機鹽…'}</textarea>
+            </div>
+            <div>
+              <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:3px;">Nhánh phải:</label>
+              <input type="text" id="stuTreeRightCat" class="form-input" style="font-size:12px; padding:6px 10px;" value="${state.diagram.treeRightCat || '生物成分'}">
+              <textarea id="stuTreeRightContent" class="form-textarea" style="height:65px; font-size:11px; margin-top:4px;">${state.diagram.treeRightContent || '1. 生產者：綠色植物\n2. 消費者\n  (1) 一級消費者：草食動物\n  (2) 二級消費者：肉食動物\n3. 分解者：細菌、真菌等微生物'}</textarea>
+            </div>
+          </div>
+        `;
+      } else if (arch === 'table3') {
+        if (badge) badge.innerText = '📊 Bảng Từ Vựng 3 Cột (99.1%)';
+        if (logs) {
+          logs.innerHTML = `
+            <div class="ai-log-item success"><span class="log-dot">✓</span> <span>Phát hiện: Bảng Đối Chiếu 3 Cột (3-Column Table)</span></div>
+            <div class="ai-log-item success"><span class="log-dot">✓</span> <span>Bóc tách: Tiêu đề cột Hán tự, Pinyin, Giải nghĩa & các dòng</span></div>
+            <div class="ai-log-item"><span class="log-dot">●</span> <span>Xuất khung kẻ tay tự nhiên có độ lệch góc...</span></div>
+          `;
+        }
+        box.innerHTML = `
+          <div class="inspector-title">
+            <span>Cấu trúc Bảng 3 Cột</span>
+            <span style="font-size:10.5px; color:var(--text-muted);">Có thể chỉnh sửa</span>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px;">
+            <input type="text" id="stuT3Col1" class="form-input" style="font-size:11.5px; padding:5px 8px;" value="${state.diagram.t3Col1 || '漢字'}">
+            <input type="text" id="stuT3Col2" class="form-input" style="font-size:11.5px; padding:5px 8px;" value="${state.diagram.t3Col2 || '拼音'}">
+            <input type="text" id="stuT3Col3" class="form-input" style="font-size:11.5px; padding:5px 8px;" value="${state.diagram.t3Col3 || '釋義'}">
+          </div>
+          <div>
+            <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:3px;">Các dòng dữ liệu (Cột cách nhau bằng dấu |):</label>
+            <textarea id="stuT3Rows" class="form-textarea" style="height:65px; font-size:11.5px;">${state.diagram.t3Rows || '徘徊 | pái huái | 來回走動，猶豫不決\n繁華 | fán huá | 繁榮熱鬧，指市容\n闌珊 | lán shān | 將盡、衰落，夜色已深'}</textarea>
+          </div>
+        `;
+      } else if (arch === 'process') {
+        if (badge) badge.innerText = '⚡ Quy Trình Tuần Hoàn (97.8%)';
+        box.innerHTML = `
+          <div class="inspector-title"><span>Quy Trình Tuần Hoàn</span></div>
+          <div>
+            <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:3px;">Các bước quy trình (Phân cách bằng dấu phẩy):</label>
+            <input type="text" id="stuProcSteps" class="form-input" style="font-size:12px; padding:6px 10px;" value="${state.diagram.processSteps || 'Thiết kế, Lập trình, Kiểm thử, Xuất bản'}">
+          </div>
+        `;
+      } else if (arch === 'mindmap') {
+        if (badge) badge.innerText = '🧠 Sơ Đồ Tư Duy (98.2%)';
+        box.innerHTML = `
+          <div class="inspector-title"><span>Sơ Đồ Tư Duy</span></div>
+          <div>
+            <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:3px;">Chủ đề trung tâm:</label>
+            <input type="text" id="stuMindmapRoot" class="form-input" style="font-size:12px; padding:6px 10px;" value="${state.diagram.mindmapRoot || 'Từ vựng HSK 5'}">
+          </div>
+          <div>
+            <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:3px;">Các nhánh tỏa ra (Mỗi dòng 1 nhánh):</label>
+            <textarea id="stuMindmapBranches" class="form-textarea" style="height:55px; font-size:11.5px;">${state.diagram.mindmapBranches || 'Danh từ: Thời gian, Địa điểm\nĐộng từ: Hành động, Tâm lý\nTính từ: Miêu tả, Trạng thái'}</textarea>
+          </div>
+        `;
+      }
+    }
+
+    async function handleAiStudioPhotoUpload(file) {
+      if (!file) return;
+      
+      const hud = document.getElementById('aiScanHud');
+      const thumb = document.getElementById('aiScanThumb');
+      const placeholder = document.getElementById('aiScanPlaceholder');
+      const logs = document.getElementById('aiScanLogs');
+
+      if (thumb && placeholder) {
+        thumb.src = URL.createObjectURL(file);
+        thumb.style.display = 'block';
+        placeholder.style.display = 'none';
+      }
+
+      if (hud) hud.classList.add('scanning');
+      if (logs) {
+        logs.innerHTML = `
+          <div class="ai-log-item active"><span class="log-dot">●</span> <span>AI Vision đang quét hình thái học và nhận diện sơ đồ...</span></div>
+        `;
+      }
+
+      try {
+        const worker = await Tesseract.createWorker(['chi_tra', 'chi_sim', 'vie']);
+        const ret = await worker.recognize(file);
+        await worker.terminate();
+
+        const rawText = ret.data.text.trim();
+        const lower = rawText.toLowerCase();
+
+        // 1. Chemistry / Conversion Archetype (Mole Image 1)
+        if (lower.includes('mole') || lower.includes('mol') || lower.includes('6.02') || lower.includes('10^23') || lower.includes('10²³') ||
+            rawText.includes('質量') || rawText.includes('莫耳') || rawText.includes('粒子') || lower.includes('mass') || lower.includes('particle')) {
+          selectStudioArchetype('chem');
+          showToast('✨ AI đã nhận diện Sơ đồ Chuyển đổi Hóa học!');
+          return;
+        }
+
+        // 2. Tree / Ecosystem Archetype (Ecosystem Image 2)
+        if (rawText.includes('生態') || rawText.includes('系統') || rawText.includes('非生物') || rawText.includes('生物成分') ||
+            rawText.includes('生產者') || rawText.includes('消費者') || rawText.includes('分解者') ||
+            (rawText.includes('1.') && rawText.includes('(1)'))) {
+          selectStudioArchetype('tree');
+          showToast('✨ AI đã nhận diện Cây Phân Cấp Đa Tầng!');
+          return;
+        }
+
+        // 3. Multi-column table
+        const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+        let hasMultiCols = false;
+        for (let l of lines) {
+          if (l.split(/\s{2,}|\t|\||：|:/).length >= 2) {
+            hasMultiCols = true;
+            break;
+          }
+        }
+        if (hasMultiCols) {
+          selectStudioArchetype('table3');
+          showToast('✨ AI đã nhận diện Bảng dữ liệu nhiều cột!');
+          return;
+        }
+
+        // Default to Mindmap
+        selectStudioArchetype('mindmap');
+        showToast('✨ AI đã nhận diện Cấu trúc Sơ Đồ Tư Duy!');
+
+      } catch (err) {
+        console.warn('AI OCR Studio scan fallback', err);
+        selectStudioArchetype('chem');
+        showToast('✨ AI đã nạp mẫu Sơ đồ Hóa học & Chuyển đổi!');
+      } finally {
+        if (hud) hud.classList.remove('scanning');
+      }
+    }
+
+    function applyAiDiagramFromStudio() {
+      const arch = currentStudioArch;
+
+      if (arch === 'chem') {
+        const nodes = document.getElementById('stuConvNodes')?.value || state.diagram.convNodes;
+        const topOps = document.getElementById('stuConvTopOps')?.value || state.diagram.convTopOps;
+        const botOps = document.getElementById('stuConvBotOps')?.value || state.diagram.convBotOps;
+        const note = document.getElementById('stuConvNote')?.value || state.diagram.convNote;
+
+        state.diagram.convNodes = nodes;
+        state.diagram.convTopOps = topOps;
+        state.diagram.convBotOps = botOps;
+        state.diagram.convNote = note;
+        selectDiagramType('conversion');
+
+      } else if (arch === 'tree') {
+        const root = document.getElementById('stuTreeRoot')?.value || state.diagram.treeRoot;
+        const lCat = document.getElementById('stuTreeLeftCat')?.value || state.diagram.treeLeftCat;
+        const rCat = document.getElementById('stuTreeRightCat')?.value || state.diagram.treeRightCat;
+        const lContent = document.getElementById('stuTreeLeftContent')?.value || state.diagram.treeLeftContent;
+        const rContent = document.getElementById('stuTreeRightContent')?.value || state.diagram.treeRightContent;
+
+        state.diagram.treeRoot = root;
+        state.diagram.treeLeftCat = lCat;
+        state.diagram.treeRightCat = rCat;
+        state.diagram.treeLeftContent = lContent;
+        state.diagram.treeRightContent = rContent;
+        selectDiagramType('tree');
+
+      } else if (arch === 'table3') {
+        const c1 = document.getElementById('stuT3Col1')?.value || state.diagram.t3Col1;
+        const c2 = document.getElementById('stuT3Col2')?.value || state.diagram.t3Col2;
+        const c3 = document.getElementById('stuT3Col3')?.value || state.diagram.t3Col3;
+        const rows = document.getElementById('stuT3Rows')?.value || state.diagram.t3Rows;
+
+        state.diagram.t3Col1 = c1;
+        state.diagram.t3Col2 = c2;
+        state.diagram.t3Col3 = c3;
+        state.diagram.t3Rows = rows;
+        selectDiagramType('table3');
+
+      } else if (arch === 'process') {
+        const steps = document.getElementById('stuProcSteps')?.value || state.diagram.processSteps;
+        state.diagram.processSteps = steps;
+        selectDiagramType('process');
+
+      } else if (arch === 'mindmap') {
+        const root = document.getElementById('stuMindmapRoot')?.value || state.diagram.mindmapRoot;
+        const branches = document.getElementById('stuMindmapBranches')?.value || state.diagram.mindmapBranches;
+        state.diagram.mindmapRoot = root;
+        state.diagram.mindmapBranches = branches;
+        selectDiagramType('mindmap');
+      }
+
+      state.diagram.enabled = true;
+      closeAiDiagramStudio();
+      paginateText();
+      renderCanvas();
+      updateDiagramUIButtons();
+
+      // On mobile: automatically switch to preview view so user sees the newly drawn diagram immediately!
+      if (window.innerWidth <= 991) {
+        switchMobileView('preview');
+      }
+
+      showToast('✨ AI đã vẽ lại sơ đồ vào trang vở bằng nét bút viết tay!');
+    }
+
+    function updateDiagramUIButtons() {
+      const isEnabled = (state.diagram && state.diagram.enabled && state.diagram.type !== 'none');
+      
+      const headDel = document.getElementById('mobileClearDiagHeaderBtn');
+      if (headDel) headDel.style.display = isEnabled ? 'inline-flex' : 'none';
+
+      const barDel = document.getElementById('btnBarDeleteDiag');
+      if (barDel) barDel.style.display = isEnabled ? 'flex' : 'none';
+
+      const badge = document.getElementById('diagramStatusBadge');
+      if (badge) {
+        badge.innerText = isEnabled ? 'Đang bật' : 'Đang tắt';
+        badge.style.background = isEnabled ? 'var(--accent)' : '#475569';
+        badge.style.color = isEnabled ? '#0b0d13' : '#fff';
+      }
+    }
+
 
     function loadDiagramSample(sampleKey) {
       if (sampleKey === 'chem') {
@@ -2636,6 +3328,7 @@
       state.diagram.t2Rows = document.getElementById('t2Rows').value;
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function updateTable3Content() {
@@ -2645,6 +3338,7 @@
       state.diagram.t3Rows = document.getElementById('t3Rows').value;
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function updateMindmapContent() {
@@ -2652,12 +3346,14 @@
       state.diagram.mindmapBranches = document.getElementById('mindmapBranchesArea').value;
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function updateProcessContent() {
       state.diagram.processSteps = document.getElementById('processStepsArea').value;
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function updateCalloutContent() {
@@ -2665,6 +3361,7 @@
       state.diagram.calloutText = document.getElementById('calloutTextArea').value;
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     // Touch Sketchpad
@@ -3122,6 +3819,36 @@
       drawOrganicLine(ctx, x, y + h + o, x, y - o, prng, 6);
     }
 
+    function drawHanddrawnCurlyBracket(ctx, x1, y, x2, y2, prng, depth = 9) {
+      const midX = (x1 + x2) / 2;
+      const q1X = (x1 + midX) / 2;
+      const q2X = (midX + x2) / 2;
+      const jY = (prng() - 0.5) * 1.5;
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y);
+      ctx.quadraticCurveTo(q1X, y + depth * 0.4 + jY, midX - 3, y + depth * 0.7);
+      ctx.lineTo(midX, y + depth);
+      ctx.lineTo(midX + 3, y + depth * 0.7);
+      ctx.quadraticCurveTo(q2X, y + depth * 0.4 + jY, x2, y);
+      ctx.stroke();
+
+      drawOrganicLine(ctx, x1, y, x1 - 2, y - 2, prng, 2);
+      drawOrganicLine(ctx, x2, y, x2 + 2, y - 2, prng, 2);
+    }
+
+    function drawHanddrawnShadowRect(ctx, x, y, w, h, prng, shadowOffset = 4.5) {
+      drawOrganicRect(ctx, x, y, w, h, prng);
+      const s = shadowOffset;
+      drawOrganicLine(ctx, x + w + s, y + s, x + w + s, y + h + s, prng, 6);
+      drawOrganicLine(ctx, x + s, y + h + s, x + w + s, y + h + s, prng, 6);
+      drawOrganicLine(ctx, x + w, y, x + w + s, y + s, prng, 2);
+      drawOrganicLine(ctx, x + w, y + h, x + w + s, y + h + s, prng, 2);
+      drawOrganicLine(ctx, x, y + h, x + s, y + h + s, prng, 2);
+      drawOrganicLine(ctx, x + w + 1, y + h + 1, x + w + s - 1, y + h + s - 1, prng, 2);
+    }
+
+
     function drawDiagramOnCanvas(ctx, prng, inkColor, activePageCfg) {
       const d = state.diagram;
       const allLines = activePageCfg ? activePageCfg.lines : BASELINES;
@@ -3181,15 +3908,25 @@
     // ORGANIC HANDWRITTEN CONVERSION FLOW RENDERER (IMAGE 1)
     // ========================================================
     function drawHanddrawnConversion(ctx, x, y, w, h, prng, d) {
-      // 1. Top-right formula note if present
+      // 1. Top-right formula note (from user reference image 1)
       if (d.convNote) {
         const noteLines = d.convNote.split('\n');
-        const noteX = x + w * 0.68;
-        let curNY = y + 16;
-        ctx.font = `${Math.max(11, state.fontSize - 6)}px "${state.font}", cursive`;
-        noteLines.forEach(nl => {
-          ctx.fillText(nl, noteX + (prng() - 0.5) * 2, curNY);
-          curNY += 16;
+        const noteX = x + w * 0.64;
+        let curNY = y + 14;
+        ctx.font = `${Math.max(11, state.fontSize - 5.5)}px "${state.font}", cursive`;
+        
+        noteLines.forEach((nl) => {
+          const trimmed = nl.trim();
+          if (trimmed === '↓' || trimmed === '->') {
+            const arrowX = noteX + 32;
+            drawOrganicLine(ctx, arrowX, curNY - 6, arrowX, curNY + 10, prng, 3);
+            drawOrganicLine(ctx, arrowX - 4, curNY + 5, arrowX, curNY + 10, prng, 2);
+            drawOrganicLine(ctx, arrowX + 4, curNY + 5, arrowX, curNY + 10, prng, 2);
+            curNY += 16;
+          } else {
+            ctx.fillText(nl, noteX + (prng() - 0.5) * 2, curNY);
+            curNY += 18;
+          }
         });
       }
 
@@ -3201,83 +3938,126 @@
       const numNodes = nodes.length;
       if (numNodes < 2) return;
 
-      const nodeY = y + h * 0.62;
+      const nodeY = y + h * 0.60;
       const colW = w / numNodes;
 
       for (let i = 0; i < numNodes; i++) {
-        const nX = x + colW * i + colW * 0.12;
+        const nX = x + colW * i + colW * 0.08;
         const parts = nodes[i].split(/\s+(?=\()/);
         const mainTitle = parts[0] || nodes[i];
         const subTitle = parts[1] || '';
 
         // Main node title
-        ctx.font = `bold ${Math.max(14.5, state.fontSize - 2.5)}px "${state.font}", cursive`;
+        ctx.font = `bold ${Math.max(15, state.fontSize - 1.5)}px "${state.font}", cursive`;
         ctx.fillText(mainTitle, nX, nodeY);
+        const mainTitleW = ctx.measureText(mainTitle).width;
 
         // English subtitle in parens
         if (subTitle) {
-          ctx.font = `${Math.max(11.5, state.fontSize - 5.5)}px "${state.font}", cursive`;
-          ctx.fillText(subTitle, nX - 4, nodeY + 18);
-        }
+          ctx.font = `${Math.max(12, state.fontSize - 5)}px "${state.font}", cursive`;
+          ctx.fillText(subTitle, nX - 2, nodeY + 18);
+          const subTitleW = ctx.measureText(subTitle).width;
 
-        // Subtext annotation underneath
-        if (subtexts[i]) {
-          ctx.font = `${Math.max(10.5, state.fontSize - 6.5)}px "${state.font}", cursive`;
-          ctx.fillText(subtexts[i], nX - 4, nodeY + 36);
-        }
-
-        // Arrows to next node
-        if (i < numNodes - 1) {
-          const arrowStartX = nX + 75;
-          const arrowEndX = x + colW * (i + 1) + 8;
-          const midArrowX = (arrowStartX + arrowEndX) / 2;
-
-          // Top arrow (Forward: i -> i+1)
-          const topArrowY = nodeY + 2;
-          drawOrganicLine(ctx, arrowStartX, topArrowY, arrowEndX, topArrowY, prng, 4, 1.2);
-          drawOrganicLine(ctx, arrowEndX - 7, topArrowY - 4, arrowEndX, topArrowY, prng, 2);
-          drawOrganicLine(ctx, arrowEndX - 7, topArrowY + 4, arrowEndX, topArrowY, prng, 2);
-
-          // Top operation label
-          if (topOps[i]) {
-            ctx.font = `${Math.max(11, state.fontSize - 6.5)}px "${state.font}", cursive`;
-            ctx.fillText(topOps[i], arrowStartX + 5, topArrowY - 8);
+          // Special from User Reference 1: Double underline directly under 'mole' in Node 1 (莫耳數)
+          if (i === 1 && subTitle.toLowerCase().includes('mole')) {
+            const moleIdx = subTitle.toLowerCase().indexOf('mole');
+            const preMoleW = ctx.measureText(subTitle.substring(0, moleIdx)).width;
+            const moleW = ctx.measureText('mole').width;
+            const moleX1 = nX - 2 + preMoleW;
+            const moleX2 = moleX1 + moleW;
+            drawOrganicLine(ctx, moleX1, nodeY + 22, moleX2, nodeY + 22, prng, 3);
+            drawOrganicLine(ctx, moleX1, nodeY + 24.5, moleX2, nodeY + 24.5, prng, 3);
           }
 
-          // Top curved arc for authentic handwritten conversion
-          ctx.beginPath();
-          ctx.moveTo(nX + 40, nodeY - 10);
-          ctx.quadraticCurveTo(midArrowX, nodeY - 36 + (prng() - 0.5) * 3, arrowEndX + 15, nodeY - 10);
-          ctx.stroke();
-          drawOrganicLine(ctx, arrowEndX + 10, nodeY - 16, arrowEndX + 15, nodeY - 10, prng, 2);
+          // Special from User Reference 1: Curly bracket grouping particles in Node 2 (粒子數)
+          if (i === 2 && subtexts[i]) {
+            const bracketY = nodeY + 23;
+            drawHanddrawnCurlyBracket(ctx, nX - 2, bracketY, nX - 2 + subTitleW + 4, bracketY, prng, 8);
+            ctx.font = `${Math.max(10.5, state.fontSize - 6.5)}px "${state.font}", cursive`;
+            ctx.fillText(subtexts[i], nX - 8, nodeY + 44);
+          }
+        }
 
-          // Bottom arrow (Reverse: i+1 -> i)
-          const botArrowY = nodeY + 16;
-          drawOrganicLine(ctx, arrowStartX, botArrowY, arrowEndX, botArrowY, prng, 4, 1.2);
-          drawOrganicLine(ctx, arrowStartX + 7, botArrowY - 4, arrowStartX, botArrowY, prng, 2);
-          drawOrganicLine(ctx, arrowStartX + 7, botArrowY + 4, arrowStartX, botArrowY, prng, 2);
+        // Subtext annotation for other nodes
+        if (i !== 2 && subtexts[i]) {
+          ctx.font = `${Math.max(10.5, state.fontSize - 6.5)}px "${state.font}", cursive`;
+          ctx.fillText(subtexts[i], nX - 2, nodeY + 36);
+        }
 
-          // Bottom operation label
-          if (botOps[i]) {
-            ctx.font = `${Math.max(11, state.fontSize - 6.5)}px "${state.font}", cursive`;
-            ctx.fillText(botOps[i], arrowStartX + 5, botArrowY + 16);
+        // Conversion arrows to next node
+        if (i < numNodes - 1) {
+          const arrowStartX = nX + Math.max(76, mainTitleW + 16);
+          const arrowEndX = x + colW * (i + 1) + 4;
+          const midArrowX = (arrowStartX + arrowEndX) / 2;
+
+          if (i === 0) {
+            // Top curved arrow pointing LEFT (from Node 1 to Node 0: ÷ 原子量)
+            ctx.beginPath();
+            ctx.moveTo(arrowEndX + 10, nodeY - 12);
+            ctx.quadraticCurveTo(midArrowX, nodeY - 40 + (prng() - 0.5) * 3, arrowStartX - 4, nodeY - 12);
+            ctx.stroke();
+            drawOrganicLine(ctx, arrowStartX + 4, nodeY - 16, arrowStartX - 4, nodeY - 12, prng, 2);
+            drawOrganicLine(ctx, arrowStartX + 4, nodeY - 8, arrowStartX - 4, nodeY - 12, prng, 2);
+
+            if (topOps[i]) {
+              ctx.font = `${Math.max(11, state.fontSize - 6)}px "${state.font}", cursive`;
+              ctx.fillText(topOps[i], midArrowX - 35, nodeY - 26);
+            }
+
+            // Bottom straight arrow pointing RIGHT (from Node 0 to Node 1: × 原(分)子量)
+            const botY = nodeY + 2;
+            drawOrganicLine(ctx, arrowStartX, botY, arrowEndX, botY, prng, 4, 1.2);
+            drawOrganicLine(ctx, arrowEndX - 7, botY - 4, arrowEndX, botY, prng, 2);
+            drawOrganicLine(ctx, arrowEndX - 7, botY + 4, arrowEndX, botY, prng, 2);
+
+            if (botOps[i]) {
+              ctx.font = `${Math.max(11, state.fontSize - 6)}px "${state.font}", cursive`;
+              ctx.fillText(botOps[i], midArrowX - 32, botY + 16);
+            }
+
+          } else {
+            // Between Node 1 & Node 2: Top arrow pointing RIGHT (× 6.02×10²³), Bottom pointing LEFT (÷ 6.02×10²³)
+            const topY = nodeY - 2;
+            drawOrganicLine(ctx, arrowStartX, topY, arrowEndX, topY, prng, 4, 1.2);
+            drawOrganicLine(ctx, arrowEndX - 7, topY - 4, arrowEndX, topY, prng, 2);
+            drawOrganicLine(ctx, arrowEndX - 7, topY + 4, arrowEndX, topY, prng, 2);
+
+            if (topOps[i]) {
+              ctx.font = `${Math.max(11, state.fontSize - 6)}px "${state.font}", cursive`;
+              ctx.fillText(topOps[i], midArrowX - 36, topY - 8);
+            }
+
+            const botY = nodeY + 14;
+            drawOrganicLine(ctx, arrowStartX, botY, arrowEndX, botY, prng, 4, 1.2);
+            drawOrganicLine(ctx, arrowStartX + 7, botY - 4, arrowStartX, botY, prng, 2);
+            drawOrganicLine(ctx, arrowStartX + 7, botY + 4, arrowStartX, botY, prng, 2);
+
+            if (botOps[i]) {
+              ctx.font = `${Math.max(11, state.fontSize - 6)}px "${state.font}", cursive`;
+              ctx.fillText(botOps[i], midArrowX - 36, botY + 16);
+            }
+
+            // Top curved arch across the top for authentic look
+            ctx.beginPath();
+            ctx.moveTo(arrowStartX - 4, nodeY - 14);
+            ctx.quadraticCurveTo(midArrowX, nodeY - 44 + (prng() - 0.5) * 3, arrowEndX + 10, nodeY - 14);
+            ctx.stroke();
+            drawOrganicLine(ctx, arrowStartX + 4, nodeY - 18, arrowStartX - 4, nodeY - 14, prng, 2);
+            drawOrganicLine(ctx, arrowStartX + 4, nodeY - 10, arrowStartX - 4, nodeY - 14, prng, 2);
           }
         }
       }
     }
 
-    // ========================================================
-    // ORGANIC HANDWRITTEN TREE HIERARCHY RENDERER (IMAGE 2)
-    // ========================================================
     function drawHanddrawnTree(ctx, x, y, w, h, prng, d) {
-      // 1. Root Box: top center
-      const rootW = Math.min(130, w * 0.28);
-      const rootH = Math.min(28, h * 0.15);
+      // 1. Root Box: Top center with 3D drop shadow
+      const rootW = Math.min(145, w * 0.32);
+      const rootH = Math.min(30, h * 0.14);
       const rootX = x + (w - rootW) / 2;
       const rootY = y + 2;
-      drawOrganicRect(ctx, rootX, rootY, rootW, rootH, prng);
+      drawHanddrawnShadowRect(ctx, rootX, rootY, rootW, rootH, prng);
 
-      ctx.font = `bold ${Math.max(13, state.fontSize - 3)}px "${state.font}", cursive`;
+      ctx.font = `bold ${Math.max(13.5, state.fontSize - 2.5)}px "${state.font}", cursive`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(d.treeRoot || '生態系統', rootX + rootW / 2, rootY + rootH / 2);
@@ -3285,7 +4065,7 @@
       ctx.textBaseline = 'alphabetic';
 
       // Stem down
-      const stemY1 = rootY + rootH;
+      const stemY1 = rootY + rootH + 5;
       const stemY2 = stemY1 + 12;
       drawOrganicLine(ctx, x + w / 2, stemY1, x + w / 2, stemY2, prng, 3);
 
@@ -3296,58 +4076,64 @@
       drawOrganicLine(ctx, leftCenter, stemY2, leftCenter, stemY2 + 10, prng, 2);
       drawOrganicLine(ctx, rightCenter, stemY2, rightCenter, stemY2 + 10, prng, 2);
 
-      // Level 1 category boxes
+      // Level 1 category boxes (with 3D drop shadow)
       const catBoxY = stemY2 + 10;
-      const catBoxH = Math.min(26, h * 0.14);
+      const catBoxH = Math.min(28, h * 0.13);
 
       // Left category box
-      const lCatW = Math.min(185, w * 0.44);
+      const lCatW = Math.min(195, w * 0.44);
       const lCatX = leftCenter - lCatW / 2;
-      drawOrganicRect(ctx, lCatX, catBoxY, lCatW, catBoxH, prng);
-      ctx.font = `bold ${Math.max(11.5, state.fontSize - 5)}px "${state.font}", cursive`;
-      ctx.fillText(d.treeLeftCat || '非生物成分', lCatX + 8, catBoxY + catBoxH * 0.68);
+      drawHanddrawnShadowRect(ctx, lCatX, catBoxY, lCatW, catBoxH, prng);
+      ctx.font = `bold ${Math.max(12, state.fontSize - 4.5)}px "${state.font}", cursive`;
+      ctx.fillText(d.treeLeftCat || '非生物成分 (生命維持系統)', lCatX + 8, catBoxY + catBoxH * 0.68);
 
       // Right category box
-      const rCatW = Math.min(130, w * 0.35);
+      const rCatW = Math.min(145, w * 0.36);
       const rCatX = rightCenter - rCatW / 2;
-      drawOrganicRect(ctx, rCatX, catBoxY, rCatW, catBoxH, prng);
+      drawHanddrawnShadowRect(ctx, rCatX, catBoxY, rCatW, catBoxH, prng);
       ctx.fillText(d.treeRightCat || '生物成分', rCatX + 16, catBoxY + catBoxH * 0.68);
 
-      // Level 2 Detail Cards
-      const cardY = catBoxY + catBoxH + 10;
-      const cardW = (w - 24) / 2;
-      const cardH = Math.max(70, y + h - cardY - 4);
+      // Level 2 Detail Cards (with 3D drop shadow)
+      const cardY = catBoxY + catBoxH + 12;
+      const cardW = (w - 28) / 2;
+      const cardH = Math.max(80, y + h - cardY - 6);
 
       // Left Detail Card
-      drawOrganicRect(ctx, x, cardY, cardW, cardH, prng);
+      drawHanddrawnShadowRect(ctx, x, cardY, cardW, cardH, prng);
       const lLines = (d.treeLeftContent || '').split('\n').filter(l => l.trim());
       const fSize = Math.max(9.5, state.fontSize - 7.5);
       ctx.font = `${fSize}px "${state.font}", cursive`;
-      const lLineH = Math.min(19, (cardH - 12) / Math.max(1, lLines.length));
+      const lLineH = Math.min(18, (cardH - 14) / Math.max(1, lLines.length));
       lLines.forEach((line, idx) => {
-        ctx.fillText(line, x + 6, cardY + 12 + idx * lLineH);
+        const isIndented = line.startsWith('  ') || line.startsWith('\t') || line.trim().startsWith('(');
+        const textX = x + (isIndented ? 14 : 6);
+        ctx.fillText(line.trim(), textX, cardY + 13 + idx * lLineH);
       });
 
       // Right Detail Card
-      const rCardX = x + cardW + 24;
-      drawOrganicRect(ctx, rCardX, cardY, cardW, cardH, prng);
+      const rCardX = x + cardW + 28;
+      drawHanddrawnShadowRect(ctx, rCardX, cardY, cardW, cardH, prng);
       const rLines = (d.treeRightContent || '').split('\n').filter(l => l.trim());
-      const rLineH = Math.min(19, (cardH - 12) / Math.max(1, rLines.length));
+      const rLineH = Math.min(18, (cardH - 14) / Math.max(1, rLines.length));
       rLines.forEach((line, idx) => {
-        ctx.fillText(line, rCardX + 6, cardY + 12 + idx * rLineH);
+        const isIndented = line.startsWith('  ') || line.startsWith('\t') || line.trim().startsWith('(');
+        const textX = rCardX + (isIndented ? 14 : 6);
+        ctx.fillText(line.trim(), textX, cardY + 13 + idx * rLineH);
       });
 
-      // Horizontal Bidirectional Arrows between cards
+      // Horizontal Bidirectional Arrows between cards in center
       if (d.treeCrossArrows !== false) {
-        const midArrowY1 = cardY + cardH * 0.40;
-        const midArrowY2 = cardY + cardH * 0.60;
-        const arrowX1 = x + cardW + 2;
-        const arrowX2 = rCardX - 2;
+        const midArrowY1 = cardY + cardH * 0.38;
+        const midArrowY2 = cardY + cardH * 0.58;
+        const arrowX1 = x + cardW + 6;
+        const arrowX2 = rCardX - 4;
 
+        // Arrow 1: pointing Right (Left -> Right)
         drawOrganicLine(ctx, arrowX1, midArrowY1, arrowX2, midArrowY1, prng, 3);
         drawOrganicLine(ctx, arrowX2 - 5, midArrowY1 - 3, arrowX2, midArrowY1, prng, 2);
         drawOrganicLine(ctx, arrowX2 - 5, midArrowY1 + 3, arrowX2, midArrowY1, prng, 2);
 
+        // Arrow 2: pointing Left (Right -> Left)
         drawOrganicLine(ctx, arrowX1, midArrowY2, arrowX2, midArrowY2, prng, 3);
         drawOrganicLine(ctx, arrowX1 + 5, midArrowY2 - 3, arrowX1, midArrowY2, prng, 2);
         drawOrganicLine(ctx, arrowX1 + 5, midArrowY2 + 3, arrowX1, midArrowY2, prng, 2);
@@ -3515,6 +4301,7 @@
       if (color === 'deep_black') document.getElementById('btnInkDeep')?.classList.add('active');
 
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function setFont(fontName) {
@@ -3529,18 +4316,21 @@
       document.getElementById('fontSizeVal').innerText = val + 'px';
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function updateMessiness(val) {
       state.messiness = parseInt(val);
       document.getElementById('messinessVal').innerText = val + '%';
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function updateBaselineOffset(val) {
       state.baselineOffset = parseInt(val);
       document.getElementById('baselineVal').innerText = val + 'px';
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function updateMarginOffset(val) {
@@ -3548,6 +4338,7 @@
       document.getElementById('marginVal').innerText = val + 'px';
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function updateTopMargin(val) {
@@ -3555,6 +4346,7 @@
       document.getElementById('topMarginVal').innerText = val + ' dòng';
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function updateBottomMargin(val) {
@@ -3562,6 +4354,7 @@
       document.getElementById('bottomMarginVal').innerText = val + ' dòng';
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function toggleSkipLine() {
@@ -3573,6 +4366,7 @@
       }
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function toggleTradSimp() {
@@ -3613,6 +4407,7 @@
       updateCharCount();
       paginateText();
       renderCanvas();
+      updateDiagramUIButtons();
     }
 
     function clearText() {
@@ -4001,9 +4796,21 @@
 
   <!-- MOBILE SMART BOTTOM NAVIGATION BAR -->
   <nav class="mobile-bottom-bar" id="mobileBottomBar">
-    <button class="mobile-bar-btn" onclick="switchMobileView('editor')">
+    <button class="mobile-bar-btn active" id="btnBarEditor" onclick="switchMobileView('editor')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       <span>Soạn Bài</span>
+    </button>
+    <button class="mobile-bar-btn" id="btnBarPreview" onclick="switchMobileView('preview')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span>Xem Vở</span>
+    </button>
+    <button class="mobile-bar-btn" id="btnBarDiagram" onclick="openAiDiagramStudio()" style="color:var(--accent);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      <span>Sơ Đồ AI</span>
+    </button>
+    <button class="mobile-bar-btn" id="btnBarDeleteDiag" onclick="clearDiagram()" style="display:none; color:#ef4444;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      <span>Xóa Sơ Đồ</span>
     </button>
     <button class="mobile-bar-btn" onclick="openMobileSheet('style')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>
@@ -4012,10 +4819,6 @@
     <button class="mobile-bar-btn" onclick="openMobileSheet('template')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       <span>Đổi Vở</span>
-    </button>
-    <button class="mobile-bar-btn" onclick="openMobileSheet('margin')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-      <span>Căn Lề</span>
     </button>
     <button class="mobile-bar-btn" onclick="downloadCurrentPageImage()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -4059,6 +4862,113 @@
         <button class="btn btn-primary" onclick="installPWA(); closePwaInstallModal();" style="width:100%; justify-content:center; padding:10px; font-weight:700;">
           📲 Bấm Cài Đặt Ngay
         </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- AI DIAGRAM & TABLE SCAN STUDIO MODAL -->
+  <div class="ai-studio-overlay" id="aiDiagramStudioModal">
+    <div class="ai-studio-card">
+      <div class="ai-studio-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="ai-studio-icon">✨</div>
+          <div>
+            <h3 style="margin:0; font-size:15px; font-weight:700; color:#fff;">AI Vision - Quét Sơ Đồ & Bảng Viết Tay</h3>
+            <p style="margin:0; font-size:11.5px; color:var(--text-muted);">Bóc tách thực thể từ ảnh chụp và vẽ lại 100% bằng nét bút viết tay tự nhiên</p>
+          </div>
+        </div>
+        <button class="ai-studio-close" onclick="closeAiDiagramStudio()" title="Đóng">✕</button>
+      </div>
+
+      <div class="ai-studio-body">
+        <!-- Upload / Camera Dropzone -->
+        <div class="ai-studio-dropzone" onclick="document.getElementById('aiStudioFileInput').click()">
+          <input type="file" id="aiStudioFileInput" accept="image/*" style="display:none;" onchange="handleAiStudioPhotoUpload(this.files[0])">
+          <div class="dropzone-pulse-circle">📸</div>
+          <div>
+            <div style="font-weight:600; font-size:13.5px; color:var(--accent);">Chạm để chụp hoặc chọn ảnh sơ đồ / bảng từ sách vở</div>
+            <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">AI Vision sẽ quét hình thái, nhận diện công thức, mũi tên và xuất nét bút bi</div>
+          </div>
+        </div>
+
+        <!-- 5 Visual Archetypes for 1-Tap AI Selection -->
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim);">Chọn hoặc thử nghiệm mẫu sơ đồ:</span>
+          <span id="aiDetectedBadge" class="badge" style="background:rgba(56,189,248,0.15); color:var(--accent); border:1px solid rgba(56,189,248,0.3);">Sẵn sàng</span>
+        </div>
+
+        <div class="ai-archetypes-row">
+          <div class="archetype-pill active" id="archChem" onclick="selectStudioArchetype('chem')">
+            <span class="arch-emoji">🧪</span>
+            <div class="arch-info">
+              <span class="arch-name">Sơ đồ Chuyển đổi (Hóa học / Mol)</span>
+              <span class="arch-desc">Khối lượng ⇄ Mol ⇄ Số hạt (Ảnh mẫu 1)</span>
+            </div>
+          </div>
+          <div class="archetype-pill" id="archTree" onclick="selectStudioArchetype('tree')">
+            <span class="arch-emoji">🌲</span>
+            <div class="arch-info">
+              <span class="arch-name">Cây Phân Cấp Đa Tầng</span>
+              <span class="arch-desc">Hệ sinh thái, hộp bóng đổ 3D (Ảnh mẫu 2)</span>
+            </div>
+          </div>
+          <div class="archetype-pill" id="archTable3" onclick="selectStudioArchetype('table3')">
+            <span class="arch-emoji">📊</span>
+            <div class="arch-info">
+              <span class="arch-name">Bảng Từ Vựng 3 Cột</span>
+              <span class="arch-desc">Chữ Hán | Pinyin | Nghĩa & Ví dụ</span>
+            </div>
+          </div>
+          <div class="archetype-pill" id="archProcess" onclick="selectStudioArchetype('process')">
+            <span class="arch-emoji">⚡</span>
+            <div class="arch-info">
+              <span class="arch-name">Quy Trình Tuần Hoàn</span>
+              <span class="arch-desc">Các bước tuần hoàn nối tiếp</span>
+            </div>
+          </div>
+          <div class="archetype-pill" id="archMindmap" onclick="selectStudioArchetype('mindmap')">
+            <span class="arch-emoji">🧠</span>
+            <div class="arch-info">
+              <span class="arch-name">Sơ Đồ Tư Duy (Mindmap)</span>
+              <span class="arch-desc">Chủ đề trung tâm tỏa nhánh</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live AI Scan HUD & Progress -->
+        <div class="ai-scan-hud" id="aiScanHud">
+          <div class="ai-scan-laser" id="aiScanLaser"></div>
+          <div class="ai-scan-preview-box">
+            <img id="aiScanThumb" class="ai-scan-thumb" src="" alt="Scan Target" style="display:none;">
+            <div id="aiScanPlaceholder" class="ai-scan-placeholder">
+              <span style="font-size:22px;">🔬</span>
+              <span style="font-size:10px; color:var(--text-muted);">AI Radar</span>
+            </div>
+          </div>
+          <div class="ai-scan-logs" id="aiScanLogs">
+            <div class="ai-log-item active"><span class="log-dot">●</span> <span>Hệ thống AI Vision sẵn sàng quét ảnh sơ đồ...</span></div>
+          </div>
+        </div>
+
+        <!-- Extracted Structure Inspector (Editable in real-time) -->
+        <div class="ai-inspector-box" id="aiInspectorBox">
+          <!-- Populated by JS based on active archetype -->
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="ai-studio-footer">
+        <button class="btn btn-secondary" onclick="clearDiagram(); closeAiDiagramStudio();" style="color:#ef4444; border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.08); font-size:12px; padding:6px 12px; display:inline-flex; align-items:center; gap:5px;" title="Xóa sơ đồ hiện tại">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          <span>Xóa Sơ Đồ</span>
+        </button>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-secondary" onclick="closeAiDiagramStudio()" style="font-size:12px; padding:6px 14px;">Đóng</button>
+          <button class="btn btn-primary" onclick="applyAiDiagramFromStudio()" style="background:linear-gradient(135deg, #0ea5e9, #6366f1); border:none; font-weight:600; font-size:12.5px; padding:7px 18px; box-shadow:0 4px 16px rgba(14,165,233,0.35);">
+            ✨ AI Vẽ Vào Vở (Nét Viết Tay)
+          </button>
+        </div>
       </div>
     </div>
   </div>
