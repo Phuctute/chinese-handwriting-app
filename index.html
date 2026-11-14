@@ -813,14 +813,14 @@
       display: none;
     }
 
-    /* Apple UISheetPresentationController Style */
+    /* Apple UISheetPresentationController Style - Placed Above Bottom Bar */
     .mobile-sheet-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.25);
-      backdrop-filter: blur(1px);
-      -webkit-backdrop-filter: blur(1px);
-      z-index: 2100;
+      background: rgba(0, 0, 0, 0.22);
+      backdrop-filter: blur(1.5px);
+      -webkit-backdrop-filter: blur(1.5px);
+      z-index: 9980;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.28s ease;
@@ -831,32 +831,57 @@
     }
     .mobile-sheet {
       position: fixed;
-      bottom: 0; left: 0; right: 0;
-      max-height: 52vh;
-      background: rgba(28, 28, 30, 0.96);
+      bottom: 64px; /* Sits cleanly above the bottom dock, NEVER covering dock buttons */
+      left: 8px; right: 8px;
+      max-height: 50vh;
+      background: rgba(24, 24, 28, 0.97);
       backdrop-filter: blur(35px) saturate(200%);
       -webkit-backdrop-filter: blur(35px) saturate(200%);
-      border-top: 0.5px solid rgba(255, 255, 255, 0.18);
-      border-radius: 22px 22px 0 0;
-      box-shadow: 0 -16px 54px rgba(0, 0, 0, 0.85);
-      z-index: 2200;
-      transform: translateY(100%);
-      transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 20px;
+      box-shadow: 0 14px 44px rgba(0, 0, 0, 0.9);
+      z-index: 9990; /* below bottom dock (9999) so dock buttons remain clickable */
+      transform: translateY(calc(100% + 80px));
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease;
       display: flex;
       flex-direction: column;
-      padding-bottom: env(safe-area-inset-bottom, 16px);
       overflow-y: auto;
+      opacity: 0;
+      pointer-events: none;
     }
     .mobile-sheet.active {
       transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
     }
     .mobile-sheet-handle {
       width: 36px;
-      height: 5px;
+      height: 4px;
       background: rgba(255, 255, 255, 0.32);
-      border-radius: 2.5px;
-      margin: 10px auto 4px auto;
+      border-radius: 2px;
+      margin: 8px auto 2px auto;
       flex-shrink: 0;
+    }
+    .sheet-tab-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      border-radius: 14px;
+      padding: 3px 9px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .sheet-tab-btn:active {
+      transform: scale(0.95);
+    }
+    .sheet-tab-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(10, 132, 255, 0.4);
     }
     .mobile-sheet-header {
       display: flex;
@@ -1126,8 +1151,13 @@
       .mobile-bar-btn:active {
         transform: scale(0.92);
       }
-      .mobile-bar-btn.active {
-        color: var(--accent);
+      .mobile-bar-btn.active,
+      .mobile-bar-btn.active-feature {
+        color: var(--accent) !important;
+      }
+      .mobile-bar-btn.active-feature svg {
+        stroke: var(--accent) !important;
+        transform: translateY(-2px);
       }
       .mobile-bar-btn svg {
         width: 20px;
@@ -2024,15 +2054,15 @@
 
           <!-- Font Selection with authentic "Xấu tự nhiên" fonts -->
           <div class="form-row" style="margin-top:6px;">
-            <span class="form-label">Kiểu chữ viết tay (Đã tối ưu tự nhiên):</span>
+            <span class="form-label">Kiểu chữ viết tay:</span>
             <select class="form-select" id="fontSelector" onchange="setFont(this.value)">
-              <option value="JasonHandwriting5" selected>✨ Jason 5 (Xấu tự nhiên, hơi ẩu, chữ học sinh - Chuẩn nhất)</option>
-              <option value="JasonHandwriting4">🌪️ Jason 4 (Nét nghiêng tự do, viết tốc ký nhanh)</option>
-              <option value="JasonHandwriting3">🖋️ Jason 3 (Bút gel tự nhiên, nét đều tay)</option>
-              <option value="JasonHandwriting2">🌿 Jason 2 (Nét bút thanh mảnh, chữ học trò)</option>
-              <option value="JasonHandwriting1">📝 Jason 1 (Chữ nắn nót, bút bi trung học)</option>
-              <option value="JasonHandwriting6">✒️ Jason 6 (Bút gel đậm nét, xô lệch ngẫu nhiên)</option>
-              <option value="JasonHandwriting7">🖊️ Jason 7 (Nét dày, nét móc rõ ràng)</option>
+              <option value="JasonHandwriting5" selected>Jason 5 (Tự nhiên ★)</option>
+              <option value="JasonHandwriting3">Jason 3 (Nắn nót)</option>
+              <option value="JasonHandwriting4">Jason 4 (Tốc ký)</option>
+              <option value="JasonHandwriting1">Jason 1 (Đều tay)</option>
+              <option value="JasonHandwriting2">Jason 2 (Thanh mảnh)</option>
+              <option value="JasonHandwriting6">Jason 6 (Bút gel)</option>
+              <option value="JasonHandwriting7">Jason 7 (Nét đậm)</option>
             </select>
           </div>
 
@@ -2147,6 +2177,8 @@
             <span class="capsule-text" id="floatingPageIndicator">Trang 1 / 1</span>
             <button class="capsule-btn" onclick="nextPage()" title="Trang tiếp">❯</button>
             <span class="capsule-divider"></span>
+            <button class="capsule-btn" id="floatingDeleteDiagBtn" onclick="clearDiagram()" style="display:none; color:#ef4444; font-weight:700; background:rgba(239,68,68,0.18); border-radius:12px; padding:2px 8px;">🗑️ Xóa Sơ Đồ</button>
+            <span class="capsule-divider" id="floatingDeleteDiagDivider" style="display:none;"></span>
             <button class="capsule-btn" onclick="fitCanvasToViewport()" title="Khớp vừa màn hình" style="font-size:11px;">Fit Vừa</button>
             <span class="capsule-divider"></span>
             <button class="capsule-btn" onclick="adjustZoom(-0.1)">−</button>
@@ -2760,6 +2792,7 @@
     // MOBILE VIEW SWITCHING & TABS
     // ========================================================
     function switchMobileView(view) {
+      if (typeof closeMobileSheet === 'function') closeMobileSheet();
       const btnEdit = document.getElementById('btnSwitchEdit');
       const btnPrev = document.getElementById('btnSwitchPreview');
 
@@ -3310,6 +3343,11 @@
       
       const headDel = document.getElementById('mobileClearDiagHeaderBtn');
       if (headDel) headDel.style.display = isEnabled ? 'inline-flex' : 'none';
+
+      const floatDel = document.getElementById('floatingDeleteDiagBtn');
+      const floatDiv = document.getElementById('floatingDeleteDiagDivider');
+      if (floatDel) floatDel.style.display = isEnabled ? 'inline-flex' : 'none';
+      if (floatDiv) floatDiv.style.display = isEnabled ? 'inline-block' : 'none';
 
       const barDel = document.getElementById('btnBarDeleteDiag');
       if (barDel) barDel.style.display = isEnabled ? 'flex' : 'none';
@@ -4612,53 +4650,48 @@
     }
 
     // ========================================================
-    // MOBILE BOTTOM SHEET DRAWER & SMART PRESETS IMPLEMENTATION
+    // MOBILE BOTTOM SHEET DRAWER & CONTROLS
     // ========================================================
+    function toggleMobileSheet(type) {
+      const sheet = document.getElementById('mobileSheet');
+      if (sheet && sheet.classList.contains('active') && sheet.dataset.type === type) {
+        closeMobileSheet();
+      } else {
+        openMobileSheet(type);
+      }
+    }
+
     function openMobileSheet(type) {
       const sheet = document.getElementById('mobileSheet');
       const overlay = document.getElementById('mobileSheetOverlay');
-      const title = document.getElementById('mobileSheetTitle');
       const body = document.getElementById('mobileSheetBody');
       if (!sheet || !overlay || !body) return;
 
       sheet.dataset.type = type;
 
-      if (type === 'text') {
-        title.innerHTML = '✍️ Soạn Thảo Văn Bản';
-        body.innerHTML = `
-          <div style="display:flex; gap:6px; margin-bottom:10px; overflow-x:auto;">
-            <button class="tool-chip" onclick="loadSample('taohuayuan'); closeMobileSheet();">Đào Hoa Nguyên Ký</button>
-            <button class="tool-chip" onclick="loadSample('vocab'); closeMobileSheet();">Từ mới HSK</button>
-            <button class="tool-chip" onclick="toggleTradSimp()">Phồn ⇄ Giản</button>
-            <button class="tool-chip" onclick="clearText()">Xóa</button>
-          </div>
-          <textarea id="mobileTextInput" class="form-textarea" style="height:180px; width:100%; font-size:15px; line-height:1.5;" placeholder="Nhập chữ Hán cần chép tay vào đây...">${state.text || ''}</textarea>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-            <span style="font-size:12px; color:var(--text-dim);">${(state.text || '').replace(/\s+/g, '').length} chữ</span>
-            <button class="btn btn-primary" onclick="closeMobileSheet()" style="padding:7px 18px;">Xong & Xem Vở</button>
-          </div>
-        `;
-        const mInput = document.getElementById('mobileTextInput');
-        if (mInput) {
-          mInput.addEventListener('input', (e) => {
-            state.text = e.target.value;
-            const mainInput = document.getElementById('textInput');
-            if (mainInput) mainInput.value = e.target.value;
-            updateCharCount();
-            paginateText();
-            renderCanvas();
-          });
-        }
-      } else if (type === 'style') {
-        title.innerHTML = '🖋️ Kiểu Chữ & Màu Mực';
+      // Update active highlight on bottom dock buttons
+      document.querySelectorAll('.mobile-bar-btn').forEach(btn => btn.classList.remove('active-feature'));
+      const activeBarBtn = document.getElementById('btnBar_' + type);
+      if (activeBarBtn) activeBarBtn.classList.add('active-feature');
+
+      // Update active tab inside sheet header
+      ['style', 'margin', 'template'].forEach(t => {
+        const tabBtn = document.getElementById('sheetTab_' + t);
+        if (tabBtn) tabBtn.classList.toggle('active', t === type);
+      });
+
+      if (type === 'style') {
         body.innerHTML = `
           <div style="margin-bottom:14px;">
             <label class="form-label" style="margin-bottom:6px; display:block;">Font chữ viết tay:</label>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-              <button class="btn btn-secondary ${state.font === 'JasonHandwriting5' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting5', this)" style="font-size:12px; justify-content:center;">Jason 5 (Xấu tự nhiên ★)</button>
+              <button class="btn btn-secondary ${state.font === 'JasonHandwriting5' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting5', this)" style="font-size:12px; justify-content:center;">Jason 5 (Tự nhiên ★)</button>
               <button class="btn btn-secondary ${state.font === 'JasonHandwriting3' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting3', this)" style="font-size:12px; justify-content:center;">Jason 3 (Nắn nót)</button>
-              <button class="btn btn-secondary ${state.font === 'Muyao-Softbrush' ? 'active' : ''}" onclick="setMobileFont('Muyao-Softbrush', this)" style="font-size:12px; justify-content:center;">Mộc Dao (Tốc ký)</button>
-              <button class="btn btn-secondary ${state.font === 'Yozai' ? 'active' : ''}" onclick="setMobileFont('Yozai', this)" style="font-size:12px; justify-content:center;">Yozai (Bút máy)</button>
+              <button class="btn btn-secondary ${state.font === 'JasonHandwriting4' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting4', this)" style="font-size:12px; justify-content:center;">Jason 4 (Tốc ký)</button>
+              <button class="btn btn-secondary ${state.font === 'JasonHandwriting1' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting1', this)" style="font-size:12px; justify-content:center;">Jason 1 (Đều tay)</button>
+              <button class="btn btn-secondary ${state.font === 'JasonHandwriting2' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting2', this)" style="font-size:12px; justify-content:center;">Jason 2 (Thanh mảnh)</button>
+              <button class="btn btn-secondary ${state.font === 'JasonHandwriting6' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting6', this)" style="font-size:12px; justify-content:center;">Jason 6 (Bút gel)</button>
+              <button class="btn btn-secondary ${state.font === 'JasonHandwriting7' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting7', this)" style="font-size:12px; justify-content:center; grid-column:span 2;">Jason 7 (Nét đậm)</button>
             </div>
           </div>
           <div style="margin-bottom:14px;">
@@ -4674,15 +4707,15 @@
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
               <span>Cỡ chữ:</span><strong id="mFontSizeVal">${state.fontSize}px</strong>
             </div>
-            <input type="range" class="range-slider" min="12" max="32" value="${state.fontSize}" oninput="updateFontSize(this.value); document.getElementById('mFontSizeVal').innerText = this.value + 'px';">
+            <input type="range" class="range-slider" min="12" max="32" value="${state.fontSize}" oninput="updateFontSize(this.value); const mel = document.getElementById('mFontSizeVal'); if(mel) mel.innerText = this.value + 'px';">
           </div>
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
               <span>Độ nghiêng & lệch dòng tự nhiên:</span><strong id="mMessinessVal">${state.messiness}%</strong>
             </div>
-            <input type="range" class="range-slider" min="0" max="100" value="${state.messiness}" oninput="updateMessiness(this.value); document.getElementById('mMessinessVal').innerText = this.value + '%';">
+            <input type="range" class="range-slider" min="0" max="100" value="${state.messiness}" oninput="updateMessiness(this.value); const mel = document.getElementById('mMessinessVal'); if(mel) mel.innerText = this.value + '%';">
           </div>
-          <div class="ios-switch-row">
+          <div class="ios-switch-row" style="margin-top:8px;">
             <span class="ios-switch-label">Tự động gạch chữ sai (Chân thật)</span>
             <label class="ios-switch">
               <input type="checkbox" id="mAutoTypo" ${state.autoTypo ? 'checked' : ''} onchange="state.autoTypo = this.checked; paginateText(); renderCanvas();">
@@ -4690,8 +4723,42 @@
             </label>
           </div>
         `;
+      } else if (type === 'margin') {
+        body.innerHTML = `
+          <div style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
+              <span>Căn bám dòng ô vở (Lên / Xuống):</span><strong id="mBaselineVal">${state.baselineOffset}px</strong>
+            </div>
+            <input type="range" class="range-slider" min="-20" max="20" value="${state.baselineOffset}" oninput="updateBaselineOffset(this.value); const mel = document.getElementById('mBaselineVal'); if(mel) mel.innerText = this.value + 'px';">
+          </div>
+          <div style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
+              <span>Căn lề đỏ (Trái / Phải):</span><strong id="mMarginVal">${state.marginOffset}px</strong>
+            </div>
+            <input type="range" class="range-slider" min="-40" max="40" value="${state.marginOffset}" oninput="updateMarginOffset(this.value); const mel = document.getElementById('mMarginVal'); if(mel) mel.innerText = this.value + 'px';">
+          </div>
+          <div style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
+              <span>Đẩy lùi lề trên (Dòng trống đầu trang):</span><strong id="mTopMarginVal">${state.topMarginLines} dòng</strong>
+            </div>
+            <input type="range" class="range-slider" min="0" max="8" value="${state.topMarginLines}" oninput="updateTopMargin(this.value); const mel = document.getElementById('mTopMarginVal'); if(mel) mel.innerText = this.value + ' dòng';">
+          </div>
+          <div style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
+              <span>Dự trữ lề dưới (Tránh chạm mép đáy):</span><strong id="mBottomMarginVal">${state.bottomMarginLines} dòng</strong>
+            </div>
+            <input type="range" class="range-slider" min="0" max="8" value="${state.bottomMarginLines}" oninput="updateBottomMargin(this.value); const mel = document.getElementById('mBottomMarginVal'); if(mel) mel.innerText = this.value + ' dòng';">
+          </div>
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <button class="btn btn-secondary" onclick="toggleSkipLine(); const b = document.getElementById('mBtnSkipLine'); if(b) b.innerText = state.skipLine ? '📝 Đang bật Cách Dòng' : '📝 Đang tắt Cách Dòng';" id="mBtnSkipLine" style="flex:1; justify-content:center;">
+              ${state.skipLine ? '📝 Đang bật Cách Dòng' : '📝 Đang tắt Cách Dòng'}
+            </button>
+            <button class="btn btn-secondary" onclick="resetMargins();" style="padding:6px 12px; font-size:12px;">
+              ↺ Đặt lại lề
+            </button>
+          </div>
+        `;
       } else if (type === 'template') {
-        title.innerHTML = '📖 Chọn Mẫu Trang Vở';
         let tplCardsHtml = '';
         Object.entries(TEMPLATES_CONFIG).forEach(([filename, cfg]) => {
           const isAct = state.notebookTemplate === filename;
@@ -4707,80 +4774,6 @@
           `;
         });
         body.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px;">${tplCardsHtml}</div>`;
-      } else if (type === 'margin') {
-        title.innerHTML = '📐 Căn Chỉnh Dòng & Lề Vở';
-        body.innerHTML = `
-          <div style="margin-bottom:14px;">
-            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-              <span>Đẩy lùi lề trên (Dòng trống đầu trang):</span><strong id="mTopMarginVal">${state.topMarginLines} dòng</strong>
-            </div>
-            <input type="range" class="range-slider" min="0" max="8" value="${state.topMarginLines}" oninput="updateTopMargin(this.value); document.getElementById('mTopMarginVal').innerText = this.value + ' dòng';">
-          </div>
-          <div style="margin-bottom:14px;">
-            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-              <span>Dự trữ lề dưới (Tránh viết sát mép đáy):</span><strong id="mBottomMarginVal">${state.bottomMarginLines} dòng</strong>
-            </div>
-            <input type="range" class="range-slider" min="0" max="8" value="${state.bottomMarginLines}" oninput="updateBottomMargin(this.value); document.getElementById('mBottomMarginVal').innerText = this.value + ' dòng';">
-          </div>
-          <div style="margin-bottom:14px;">
-            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-              <span>Căn bám đường kẻ ô (Lên / Xuống):</span><strong id="mBaselineVal">${state.baselineOffset}px</strong>
-            </div>
-            <input type="range" class="range-slider" min="-15" max="15" value="${state.baselineOffset}" oninput="updateBaselineOffset(this.value); document.getElementById('mBaselineVal').innerText = this.value + 'px';">
-          </div>
-          <div style="margin-bottom:14px;">
-            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-              <span>Căn lề đỏ (Trái / Phải):</span><strong id="mMarginVal">${state.marginOffset}px</strong>
-            </div>
-            <input type="range" class="range-slider" min="-30" max="30" value="${state.marginOffset}" oninput="updateMarginOffset(this.value); document.getElementById('mMarginVal').innerText = this.value + 'px';">
-          </div>
-          <button class="btn btn-secondary" onclick="toggleSkipLine(); closeMobileSheet();" style="width:100%; justify-content:center; margin-top:6px;">
-            ${state.skipLine ? '📝 Đang bật Cách Dòng (Bấm để Tắt)' : '📝 Đang tắt Cách Dòng (Bấm để Bật)'}
-          </button>
-        `;
-      } else if (type === 'diagram') {
-        title.innerHTML = '📊 Sơ Đồ & Bảng Viết Tay AI';
-        body.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding:8px 12px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25); border-radius:10px;">
-            <span style="font-size:12px; font-weight:600; color:#f87171;">Trạng thái: ${state.diagram.enabled ? 'Đang bật' : 'Đang tắt'}</span>
-            <button class="btn btn-secondary" onclick="clearDiagram(); closeMobileSheet();" style="color:#ef4444; font-size:11px; padding:4px 10px; background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.4);">
-              🗑️ Xóa / Tắt sơ đồ
-            </button>
-          </div>
-
-          <div style="margin-bottom:12px;">
-            <label class="form-label" style="margin-bottom:6px; display:block;">Mẫu AI vẽ lại tức thì từ ảnh chụp:</label>
-            <div style="display:flex; flex-direction:column; gap:6px;">
-              <button class="tool-chip" onclick="loadDiagramSample('chem'); closeMobileSheet();" style="justify-content:flex-start; padding:8px 12px;">
-                🧪 Sơ đồ Hóa học (Chuyển đổi Mol / Khối lượng) ★
-              </button>
-              <button class="tool-chip" onclick="loadDiagramSample('tree'); closeMobileSheet();" style="justify-content:flex-start; padding:8px 12px;">
-                🌲 Sơ đồ Cây Phân Cấp (Hệ sinh thái đa tầng) ★
-              </button>
-              <button class="tool-chip" onclick="loadDiagramSample('table3'); closeMobileSheet();" style="justify-content:flex-start; padding:8px 12px;">
-                📊 Bảng từ vựng HSK 3 cột
-              </button>
-            </div>
-          </div>
-
-          <div style="margin-bottom:14px;">
-            <label class="form-label" style="margin-bottom:6px; display:block;">Chọn loại sơ đồ:</label>
-            <select class="form-select" onchange="if(this.value==='none'){clearDiagram();}else{selectDiagramType(this.value);} closeMobileSheet();">
-              <option value="none" ${!state.diagram.enabled ? 'selected' : ''}>Không có (Chỉ viết chữ thường)</option>
-              <option value="conversion" ${state.diagram.type === 'conversion' ? 'selected' : ''}>🧪 Sơ đồ Chuyển đổi Hóa học / Đại lượng</option>
-              <option value="tree" ${state.diagram.type === 'tree' ? 'selected' : ''}>🌲 Sơ đồ Cây Phân Cấp Đa Tầng</option>
-              <option value="table2" ${state.diagram.type === 'table2' ? 'selected' : ''}>📋 Bảng 2 cột (Từ mới - Giải nghĩa)</option>
-              <option value="table3" ${state.diagram.type === 'table3' ? 'selected' : ''}>📊 Bảng 3 cột (Chữ Hán - Phiên âm - Nghĩa)</option>
-              <option value="mindmap" ${state.diagram.type === 'mindmap' ? 'selected' : ''}>🧠 Sơ đồ tư duy Mindmap</option>
-              <option value="process" ${state.diagram.type === 'process' ? 'selected' : ''}>🔄 Quy trình Process Flow</option>
-              <option value="callout" ${state.diagram.type === 'callout' ? 'selected' : ''}>📝 Khung ghi chú Callout</option>
-            </select>
-          </div>
-
-          <button class="btn btn-primary" onclick="document.getElementById('aiPhotoFileInput').click(); closeMobileSheet();" style="width:100%; justify-content:center; padding:10px; font-weight:600;">
-            📷 Quét sơ đồ từ ảnh chụp (AI tự vẽ lại)
-          </button>
-        `;
       }
 
       overlay.classList.add('active');
@@ -4790,12 +4783,39 @@
     function closeMobileSheet() {
       const sheet = document.getElementById('mobileSheet');
       const overlay = document.getElementById('mobileSheetOverlay');
-      if (sheet) sheet.classList.remove('active');
+      if (sheet) {
+        sheet.classList.remove('active');
+        sheet.dataset.type = '';
+      }
       if (overlay) overlay.classList.remove('active');
+      document.querySelectorAll('.mobile-bar-btn').forEach(btn => btn.classList.remove('active-feature'));
+    }
+
+    function resetMargins() {
+      state.baselineOffset = 0;
+      state.marginOffset = 0;
+      state.topMarginLines = 0;
+      state.bottomMarginLines = 0;
+      state.skipLine = false;
+      const b0 = document.getElementById('mBaselineVal'); if (b0) b0.innerText = '0px';
+      const m0 = document.getElementById('mMarginVal'); if (m0) m0.innerText = '0px';
+      const t0 = document.getElementById('mTopMarginVal'); if (t0) t0.innerText = '0 dòng';
+      const bm0 = document.getElementById('mBottomMarginVal'); if (bm0) bm0.innerText = '0 dòng';
+      const sk0 = document.getElementById('mBtnSkipLine'); if (sk0) sk0.innerText = '📝 Đang tắt Cách Dòng';
+      const bsDesktop = document.getElementById('baselineVal'); if (bsDesktop) bsDesktop.innerText = '0px';
+      const mgDesktop = document.getElementById('marginVal'); if (mgDesktop) mgDesktop.innerText = '0px';
+      const tmDesktop = document.getElementById('topMarginVal'); if (tmDesktop) tmDesktop.innerText = '0 dòng';
+      const bmDesktop = document.getElementById('bottomMarginVal'); if (bmDesktop) bmDesktop.innerText = '0 dòng';
+      const skDesktop = document.getElementById('btnSkipLine'); if (skDesktop) { skDesktop.innerText = 'Cách dòng: Tắt'; skDesktop.classList.remove('active'); }
+      paginateText();
+      renderCanvas();
+      showToast('↺ Đã đặt lại căn lề và dòng chuẩn!');
     }
 
     function setMobileFont(fontName, elem) {
       setFont(fontName);
+      const sel = document.getElementById('fontSelector');
+      if (sel) sel.value = fontName;
       if (elem && elem.parentElement) {
         elem.parentElement.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
         elem.classList.add('active');
@@ -4843,7 +4863,7 @@
         showToast('🎓 Chế độ Học Sinh: Font Jason 5 tự nhiên, vở AI chuẩn');
       } else if (presetKey === 'fast') {
         document.getElementById('chipPresetFast')?.classList.add('active');
-        state.font = 'Muyao-Softbrush';
+        state.font = 'JasonHandwriting4';
         state.inkColor = 'gel_black';
         state.messiness = 65;
         state.autoTypo = true;
@@ -4915,27 +4935,27 @@
 
     <!-- MODE 2: XEM VỞ (CANVAS STUDIO DOCK) -->
     <div class="mobile-bar-mode mobile-bar-preview-mode">
-      <button class="mobile-bar-btn" onclick="switchMobileView('editor')" title="Quay lại sửa văn bản">
+      <button class="mobile-bar-btn" id="btnBar_editor" onclick="switchMobileView('editor')" title="Quay lại sửa văn bản">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
         <span>Soạn Chữ</span>
       </button>
-      <button class="mobile-bar-btn" onclick="openMobileSheet('style')" title="Đổi kiểu chữ và màu mực">
+      <button class="mobile-bar-btn" id="btnBar_style" onclick="toggleMobileSheet('style')" title="Đổi kiểu chữ và màu mực">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>
         <span>Chữ & Mực</span>
       </button>
-      <button class="mobile-bar-btn btn-bar-ai" onclick="openAiDiagramStudio()" title="Vẽ hoặc quét sơ đồ AI">
+      <button class="mobile-bar-btn" id="btnBar_margin" onclick="toggleMobileSheet('margin')" title="Căn lề và bám dòng ô vở">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 6H3"/><path d="M21 12H3"/><path d="M21 18H3"/><path d="M8 3v18"/><path d="M16 3v18"/></svg>
+        <span>Căn Dòng</span>
+      </button>
+      <button class="mobile-bar-btn btn-bar-ai" id="btnBar_diagram" onclick="openAiDiagramStudio()" title="Vẽ hoặc quét sơ đồ AI">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
         <span>Sơ Đồ AI</span>
       </button>
-      <button class="mobile-bar-btn btn-bar-delete-diag" id="btnBarDeleteDiag" onclick="clearDiagram()" style="display:none;" title="Xóa sơ đồ hiện tại">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        <span>Xóa Sơ Đồ</span>
-      </button>
-      <button class="mobile-bar-btn" onclick="openMobileSheet('template')" title="Đổi mẫu trang vở">
+      <button class="mobile-bar-btn" id="btnBar_template" onclick="toggleMobileSheet('template')" title="Đổi mẫu trang vở">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
         <span>Đổi Vở</span>
       </button>
-      <button class="mobile-bar-btn btn-bar-download" onclick="downloadCurrentPageImage()" title="Tải ảnh trang vở về máy">
+      <button class="mobile-bar-btn btn-bar-download" id="btnBar_download" onclick="downloadCurrentPageImage()" title="Tải ảnh trang vở về máy">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span>Tải Ảnh</span>
       </button>
@@ -4947,8 +4967,12 @@
   <div class="mobile-sheet" id="mobileSheet">
     <div class="mobile-sheet-handle"></div>
     <div class="mobile-sheet-header">
-      <span class="mobile-sheet-title" id="mobileSheetTitle">Tùy chỉnh</span>
-      <button class="btn btn-primary" onclick="closeMobileSheet()" style="padding:4px 14px; font-size:12px; font-weight:600; border-radius:14px;">✓ Hoàn tất</button>
+      <div style="display:flex; gap:6px; overflow-x:auto; padding:2px 0;" id="mobileSheetTabs">
+        <button class="sheet-tab-btn active" id="sheetTab_style" onclick="openMobileSheet('style')">🖋️ Chữ & Mực</button>
+        <button class="sheet-tab-btn" id="sheetTab_margin" onclick="openMobileSheet('margin')">📏 Căn Dòng</button>
+        <button class="sheet-tab-btn" id="sheetTab_template" onclick="openMobileSheet('template')">📓 Mẫu Vở</button>
+      </div>
+      <button class="btn btn-secondary" onclick="closeMobileSheet()" style="padding:4px 12px; font-size:12px; font-weight:600; border-radius:14px; flex-shrink:0; background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.18);" title="Đóng cửa sổ">✕ Đóng</button>
     </div>
     <div class="mobile-sheet-body" id="mobileSheetBody"></div>
   </div>
