@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <title>Chép Tay - Vở Viết Tay Chữ Hán Thông Minh</title>
-  <meta name="description" content="Chuyển văn bản tiếng Trung thành chữ viết tay tự nhiên trên các dòng kẻ vở học sinh, hỗ trợ chèn bảng từ vựng và sơ đồ tư duy không bị đè dòng.">
+  <title>Chép Tay AI - Vở Viết Tay Chữ Hán Thông Minh</title>
+  <meta name="description" content="Chuyển văn bản tiếng Trung thành chữ viết tay tự nhiên uốn theo dòng kẻ vở học sinh, vẽ lại sơ đồ và bảng thông minh không đè dòng.">
 
   <!-- PWA Metadata & Favicons -->
   <link rel="manifest" href="manifest.json">
@@ -15,14 +15,18 @@
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-  <!-- Fonts & Libraries -->
+  <!-- Preload Authentic Handwriting Fonts -->
+  <link rel="preload" href="fonts/JasonHandwriting5.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="fonts/JasonHandwriting3.ttf" as="font" type="font/ttf" crossorigin>
+
+  <!-- Google Fonts & OCR Library -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Ma+Shan+Zheng&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=Liu+Jian+Mao+Cao&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
-    /* Local Font Faces */
+    /* Local authentic handwriting fonts (JasonHandwriting 1-7) */
     @font-face {
       font-family: 'JasonHandwriting1';
       src: url('fonts/JasonHandwriting1.ttf') format('truetype');
@@ -36,6 +40,26 @@
     @font-face {
       font-family: 'JasonHandwriting3';
       src: url('fonts/JasonHandwriting3.ttf') format('truetype');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'JasonHandwriting4';
+      src: url('fonts/JasonHandwriting4.ttf') format('truetype');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'JasonHandwriting5';
+      src: url('fonts/JasonHandwriting5.ttf') format('truetype');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'JasonHandwriting6';
+      src: url('fonts/JasonHandwriting6.ttf') format('truetype');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'JasonHandwriting7';
+      src: url('fonts/JasonHandwriting7.ttf') format('truetype');
       font-display: swap;
     }
 
@@ -160,20 +184,17 @@
       background: var(--bg-card-hover);
       border-color: var(--border-hover);
     }
+    .btn-secondary.active {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
     .btn-primary {
       background: var(--accent);
       color: #0b0d13;
     }
     .btn-primary:hover {
       background: #7dd3fc;
-    }
-    .btn-danger {
-      background: rgba(239, 68, 68, 0.12);
-      border-color: rgba(239, 68, 68, 0.3);
-      color: #fca5a5;
-    }
-    .btn-danger:hover {
-      background: rgba(239, 68, 68, 0.22);
     }
     .btn-icon {
       padding: 7px;
@@ -366,7 +387,7 @@
       color: var(--accent);
     }
 
-    /* Visual Grid Selectors (Diagrams & Templates) */
+    /* Visual Grid Selectors */
     .visual-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -504,7 +525,7 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     }
 
-    select.form-select, input[type="text"].form-input {
+    select.form-select, input[type="text"].form-input, input[type="number"].form-input {
       width: 100%;
       background: var(--bg-input);
       border: 1px solid var(--border-color);
@@ -612,7 +633,7 @@
       pointer-events: auto;
     }
 
-    /* Dropzone for Diagram Image */
+    /* Dropzone */
     .dropzone {
       border: 2px dashed var(--border-color);
       border-radius: var(--radius-sm);
@@ -661,7 +682,6 @@
         min-height: calc(100vh - 110px);
       }
 
-      /* Active view class for mobile */
       body.view-preview .left-panel {
         display: none;
       }
@@ -688,7 +708,7 @@
       </div>
       <div class="brand-text">
         <h1>Chép Tay AI <span class="brand-badge">24/7 Online</span></h1>
-        <p>Tạo vở viết tay chữ Hán & Sơ đồ tự nhiên</p>
+        <p>Vở viết tay chữ Hán & Sơ đồ thông minh</p>
       </div>
     </a>
 
@@ -808,53 +828,83 @@
         </div>
       </div>
 
-      <!-- TAB 2: SƠ ĐỒ & BẢNG (SMART DIAGRAMS & TABLES) -->
+      <!-- TAB 2: SƠ ĐỒ & BẢNG (AI HANDWRITTEN DIAGRAMS & TABLES) -->
       <div class="tab-panel" id="diagram-tab">
+        
+        <!-- AI Photo Extraction Card (Highlighted) -->
+        <div class="section-card" style="border: 1px solid var(--accent); background: linear-gradient(180deg, rgba(56, 189, 248, 0.08), var(--bg-card));">
+          <div class="card-header">
+            <span class="card-title" style="color:var(--accent);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+              AI Tự Động Vẽ Lại Từ Ảnh Chụp
+            </span>
+            <span class="badge" style="background:var(--accent); color:#0b0d13;">Thông minh</span>
+          </div>
+          <p style="font-size:11.5px; color:var(--text-muted); line-height:1.4;">
+            Tải ảnh chụp bảng từ vựng hoặc sơ đồ của bạn. AI sẽ nhận diện cấu trúc, trích xuất chữ và <b>vẽ lại hoàn toàn bằng nét bút viết tay</b> đồng bộ với phông chữ đang chọn.
+          </p>
+
+          <div class="dropzone" onclick="document.getElementById('aiPhotoFileInput').click()">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <div class="dropzone-title">Chạm để chọn ảnh bảng / sơ đồ chụp từ vở</div>
+            <div class="dropzone-sub">AI tự phân tích hàng, cột và vẽ lại bằng nét chữ viết tay thật</div>
+          </div>
+          <input type="file" id="aiPhotoFileInput" accept="image/*" style="display:none;" onchange="handleAiPhotoUpload(this.files[0])">
+        </div>
+
+        <!-- Presets Selector Grid -->
         <div class="section-card">
           <div class="card-header">
-            <span class="card-title">Chế độ Sơ đồ & Bảng viết tay</span>
+            <span class="card-title">Mẫu Sơ Đồ & Bảng Viết Tay</span>
             <span class="badge" id="diagramStatusBadge" style="background:#475569; color:#fff;">Đang tắt</span>
           </div>
 
-          <!-- Diagram Selector Grid -->
           <div class="visual-grid">
             <div class="visual-card active" id="cardDiagNone" onclick="selectDiagramType('none')">
               <div class="visual-card-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
               </div>
               <div class="visual-card-title">Không dùng</div>
-              <div class="visual-card-desc">Chỉ viết văn bản chữ thông thường</div>
+              <div class="visual-card-desc">Chỉ viết văn bản thông thường</div>
             </div>
 
-            <div class="visual-card" id="cardDiagCustom" onclick="selectDiagramType('custom')">
+            <div class="visual-card" id="cardDiagTable2" onclick="selectDiagramType('table2')">
               <div class="visual-card-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M10 3v18"/></svg>
               </div>
-              <div class="visual-card-title">Tách nét từ ảnh</div>
-              <div class="visual-card-desc">Tự xóa nền giấy, vẽ lại nét bút vào vở</div>
+              <div class="visual-card-title">Bảng từ vựng (2 cột)</div>
+              <div class="visual-card-desc">Chữ Hán & Giải nghĩa / Ví dụ</div>
             </div>
 
-            <div class="visual-card" id="cardDiagTable" onclick="selectDiagramType('table')">
+            <div class="visual-card" id="cardDiagTable3" onclick="selectDiagramType('table3')">
               <div class="visual-card-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
               </div>
-              <div class="visual-card-title">Bảng từ vựng</div>
-              <div class="visual-card-desc">Kẻ bảng tay 2 cột hoặc 3 cột tự nhiên</div>
+              <div class="visual-card-title">Bảng từ vựng (3 cột)</div>
+              <div class="visual-card-desc">Chữ Hán, Phiên âm Pinyin & Nghĩa</div>
             </div>
 
             <div class="visual-card" id="cardDiagMindmap" onclick="selectDiagramType('mindmap')">
               <div class="visual-card-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
               </div>
-              <div class="visual-card-title">Sơ đồ tư duy</div>
-              <div class="visual-card-desc">Nhánh sơ đồ tư duy viết bút chì/bi</div>
+              <div class="visual-card-title">Sơ đồ tư duy (Mindmap)</div>
+              <div class="visual-card-desc">Chủ đề trung tâm & các nhánh cong</div>
+            </div>
+
+            <div class="visual-card" id="cardDiagProcess" onclick="selectDiagramType('process')">
+              <div class="visual-card-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="6" height="10" rx="1"/><rect x="16" y="7" width="6" height="10" rx="1"/><path d="M8 12h8"/><path d="m13 9 3 3-3 3"/></svg>
+              </div>
+              <div class="visual-card-title">Sơ đồ quy trình (Flow)</div>
+              <div class="visual-card-desc">Các bước nối tiếp bằng mũi tên</div>
             </div>
 
             <div class="visual-card" id="cardDiagCallout" onclick="selectDiagramType('callout')">
               <div class="visual-card-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               </div>
-              <div class="visual-card-title">Khung ghi chú</div>
+              <div class="visual-card-title">Khung ghi chú / Chú thích</div>
               <div class="visual-card-desc">Khung bo tay viền lượn sóng nổi bật</div>
             </div>
 
@@ -862,8 +912,8 @@
               <div class="visual-card-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
               </div>
-              <div class="visual-card-title">Tự vẽ tay</div>
-              <div class="visual-card-desc">Vẽ trực tiếp bằng tay hoặc bút cảm ứng</div>
+              <div class="visual-card-title">Bảng vẽ tự do cảm ứng</div>
+              <div class="visual-card-desc">Vẽ trực tiếp bằng tay hoặc bút stylus</div>
             </div>
           </div>
         </div>
@@ -892,73 +942,73 @@
             <div class="form-row">
               <div class="form-row-header">
                 <span class="form-label">Dòng bắt đầu:</span>
-                <span class="form-value" id="diagStartVal">3</span>
+                <span class="form-value" id="diagStartVal">2</span>
               </div>
-              <input type="range" id="diagStartSlider" min="0" max="22" value="3" oninput="updateDiagramPos()">
+              <input type="range" id="diagStartSlider" min="0" max="22" value="2" oninput="updateDiagramPos()">
             </div>
             <div class="form-row">
               <div class="form-row-header">
                 <span class="form-label">Số dòng chiếm:</span>
-                <span class="form-value" id="diagSpanVal">8</span>
+                <span class="form-value" id="diagSpanVal">9</span>
               </div>
-              <input type="range" id="diagSpanSlider" min="2" max="18" value="8" oninput="updateDiagramPos()">
+              <input type="range" id="diagSpanSlider" min="2" max="18" value="9" oninput="updateDiagramPos()">
             </div>
           </div>
           <p style="font-size:11px; color:var(--success); margin-top:6px;">
-            ✓ Chữ trong vở sẽ tự động chừa trống các dòng này, không bao giờ bị đè lên sơ đồ hay bảng.
+            ✓ Chữ trong vở tự động nhảy qua các dòng này và tiếp tục viết bên dưới, không bao giờ bị đè chữ.
           </p>
         </div>
 
-        <!-- SUBPANEL: TÁCH NÉT TỪ ẢNH (CUSTOM) -->
-        <div class="section-card" id="subpanelCustom" style="display:none;">
+        <!-- SUBPANEL: BẢNG 2 CỘT -->
+        <div class="section-card" id="subpanelTable2" style="display:none;">
           <div class="card-header">
-            <span class="card-title">Tải ảnh chụp sơ đồ / bảng viết tay</span>
-          </div>
-          <div class="dropzone" onclick="document.getElementById('diagImageInput').click()">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            <div class="dropzone-title">Chạm để chọn ảnh chụp sơ đồ từ máy</div>
-            <div class="dropzone-sub">Hệ thống tự động lọc sạch nền giấy, chỉ lấy nét mực bút viết</div>
-          </div>
-          <input type="file" id="diagImageInput" accept="image/*" style="display:none;" onchange="handleDiagramUpload(this.files[0])">
-
-          <div id="diagCustomPreviewWrap" style="display:none; margin-top:10px; background:#fff; padding:6px; border-radius:6px; text-align:center;">
-            <canvas id="diagCustomCanvas" style="max-height:140px; max-width:100%; border:1px solid #cbd5e1;"></canvas>
-          </div>
-
-          <div class="form-row" style="margin-top:10px;">
-            <div class="form-row-header">
-              <span class="form-label">Độ nhạy tách nét mực (Threshold)</span>
-              <span class="form-value" id="diagThreshVal">185</span>
-            </div>
-            <input type="range" id="diagThreshSlider" min="100" max="235" value="185" oninput="updateCustomThreshold(this.value)">
-          </div>
-        </div>
-
-        <!-- SUBPANEL: BẢNG TỪ VỰNG (TABLE) -->
-        <div class="section-card" id="subpanelTable" style="display:none;">
-          <div class="card-header">
-            <span class="card-title">Nội dung bảng từ vựng kẻ tay</span>
+            <span class="card-title">Nội dung Bảng từ vựng (2 Cột)</span>
           </div>
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
             <div class="form-row">
               <span class="form-label">Tiêu đề Cột 1:</span>
-              <input type="text" class="form-input" id="tableCol1Title" value="生詞 (Từ mới)" oninput="updateTableContent()">
+              <input type="text" class="form-input" id="t2Col1" value="生詞 (Từ mới)" oninput="updateTable2Content()">
             </div>
             <div class="form-row">
               <span class="form-label">Tiêu đề Cột 2:</span>
-              <input type="text" class="form-input" id="tableCol2Title" value="釋義與例句 (Giải nghĩa)" oninput="updateTableContent()">
+              <input type="text" class="form-input" id="t2Col2" value="釋義與例句 (Giải nghĩa)" oninput="updateTable2Content()">
             </div>
           </div>
           <div class="form-row" style="margin-top:8px;">
-            <span class="form-label">Các dòng từ vựng (Từ | Nghĩa):</span>
-            <textarea class="text-input" id="tableRowsArea" style="height:100px; font-size:13px;" oninput="updateTableContent()"></textarea>
+            <span class="form-label">Các hàng (Từ vựng | Giải nghĩa):</span>
+            <textarea class="text-input" id="t2Rows" style="height:100px; font-size:13px;" oninput="updateTable2Content()"></textarea>
           </div>
         </div>
 
-        <!-- SUBPANEL: SƠ ĐỒ TƯ DUY (MINDMAP) -->
+        <!-- SUBPANEL: BẢNG 3 CỘT -->
+        <div class="section-card" id="subpanelTable3" style="display:none;">
+          <div class="card-header">
+            <span class="card-title">Nội dung Bảng từ vựng (3 Cột)</span>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1.2fr; gap:8px;">
+            <div class="form-row">
+              <span class="form-label">Cột 1:</span>
+              <input type="text" class="form-input" id="t3Col1" value="漢字" oninput="updateTable3Content()">
+            </div>
+            <div class="form-row">
+              <span class="form-label">Cột 2:</span>
+              <input type="text" class="form-input" id="t3Col2" value="拼音" oninput="updateTable3Content()">
+            </div>
+            <div class="form-row">
+              <span class="form-label">Cột 3:</span>
+              <input type="text" class="form-input" id="t3Col3" value="釋義 & 詞性" oninput="updateTable3Content()">
+            </div>
+          </div>
+          <div class="form-row" style="margin-top:8px;">
+            <span class="form-label">Các hàng (Chữ Hán | Pinyin | Nghĩa):</span>
+            <textarea class="text-input" id="t3Rows" style="height:100px; font-size:13px;" oninput="updateTable3Content()"></textarea>
+          </div>
+        </div>
+
+        <!-- SUBPANEL: MINDMAP -->
         <div class="section-card" id="subpanelMindmap" style="display:none;">
           <div class="card-header">
-            <span class="card-title">Cấu trúc sơ đồ tư duy</span>
+            <span class="card-title">Cấu trúc Sơ đồ tư duy</span>
           </div>
           <div class="form-row">
             <span class="form-label">Chủ đề trung tâm:</span>
@@ -970,14 +1020,25 @@
           </div>
         </div>
 
-        <!-- SUBPANEL: KHUNG GHI CHÚ (CALLOUT) -->
+        <!-- SUBPANEL: PROCESS FLOW -->
+        <div class="section-card" id="subpanelProcess" style="display:none;">
+          <div class="card-header">
+            <span class="card-title">Sơ đồ quy trình / Bước làm</span>
+          </div>
+          <div class="form-row">
+            <span class="form-label">Các bước thực hiện (Mỗi dòng một bước):</span>
+            <textarea class="text-input" id="processStepsArea" style="height:90px; font-size:13px;" oninput="updateProcessContent()"></textarea>
+          </div>
+        </div>
+
+        <!-- SUBPANEL: CALLOUT -->
         <div class="section-card" id="subpanelCallout" style="display:none;">
           <div class="card-header">
             <span class="card-title">Khung ghi chú viết tay</span>
           </div>
           <div class="form-row">
             <span class="form-label">Tiêu đề ghi chú:</span>
-            <input type="text" class="form-input" id="calloutTitle" value="★ 注意事項 (Lưu ý quan trọng)" oninput="updateCalloutContent()">
+            <input type="text" class="form-input" id="calloutTitle" value="★ 重要筆記 (Lưu ý quan trọng)" oninput="updateCalloutContent()">
           </div>
           <div class="form-row" style="margin-top:8px;">
             <span class="form-label">Nội dung ghi chú:</span>
@@ -985,7 +1046,7 @@
           </div>
         </div>
 
-        <!-- SUBPANEL: TỰ VẼ TAY (SKETCHPAD) -->
+        <!-- SUBPANEL: SKETCHPAD -->
         <div class="section-card" id="subpanelSketch" style="display:none;">
           <div class="card-header">
             <span class="card-title">Bảng vẽ cảm ứng tay</span>
@@ -994,13 +1055,11 @@
           <div style="background:#fff; border-radius:6px; overflow:hidden; border:1px solid #cbd5e1;">
             <canvas id="sketchCanvas" width="400" height="180" style="width:100%; height:140px; display:block; cursor:crosshair; touch-action:none;"></canvas>
           </div>
-          <p style="font-size:11px; color:var(--text-dim); margin-top:4px;">
-            Dùng ngón tay hoặc bút cảm ứng vẽ trực tiếp hình bạn muốn lên khung này.
-          </p>
         </div>
+
       </div>
 
-      <!-- TAB 3: KIỂU VỞ & BÚT (STYLE & TEMPLATES) -->
+      <!-- TAB 3: KIỂU VỞ & BÚT (STYLE & MARGINS) -->
       <div class="tab-panel" id="style-tab">
         <!-- Notebook Template Selection -->
         <div class="section-card">
@@ -1017,15 +1076,13 @@
           </div>
 
           <!-- Template Cards Grid -->
-          <div class="visual-grid" id="templateGallery" style="max-height: 290px; overflow-y: auto; padding-right: 4px;">
-            <!-- Rendered dynamically by JS -->
-          </div>
+          <div class="visual-grid" id="templateGallery" style="max-height: 250px; overflow-y: auto; padding-right: 4px;"></div>
         </div>
 
         <!-- Pen & Handwriting Style -->
         <div class="section-card">
           <div class="card-header">
-            <span class="card-title">Màu Mực & Dáng Chữ</span>
+            <span class="card-title">Màu Mực & Phông Chữ Viết Tay</span>
           </div>
 
           <!-- Ink Selection -->
@@ -1047,60 +1104,91 @@
             </div>
           </div>
 
-          <!-- Font Selection -->
+          <!-- Font Selection with authentic "Xấu tự nhiên" fonts -->
           <div class="form-row" style="margin-top:6px;">
-            <span class="form-label">Kiểu chữ viết tay:</span>
+            <span class="form-label">Kiểu chữ viết tay (Đã tối ưu tự nhiên):</span>
             <select class="form-select" id="fontSelector" onchange="setFont(this.value)">
-              <option value="JasonHandwriting3" selected>Jason Viết Tay Tự Nhiên (Nét bút gel chuẩn nhất)</option>
-              <option value="JasonHandwriting1">Jason Mềm Mại (Học sinh trung học)</option>
-              <option value="JasonHandwriting2">Jason Phóng Khoáng (Chữ tốc ký)</option>
-              <option value="ZCOOL KuaiLe">ZCOOL KuaiLe (Chữ dễ thương)</option>
-              <option value="Ma Shan Zheng">Mã Sơn Chính (Bút lông khải thư)</option>
-              <option value="Liu Jian Mao Cao">Lưu Kiến Mao Thảo (Chữ hành thảo tự do)</option>
+              <option value="JasonHandwriting5" selected>✨ Jason 5 (Xấu tự nhiên, hơi ẩu, chữ học sinh - Chuẩn nhất)</option>
+              <option value="JasonHandwriting4">🌪️ Jason 4 (Nét nghiêng tự do, viết tốc ký nhanh)</option>
+              <option value="JasonHandwriting3">🖋️ Jason 3 (Bút gel tự nhiên, nét đều tay)</option>
+              <option value="JasonHandwriting2">🌿 Jason 2 (Nét bút thanh mảnh, chữ học trò)</option>
+              <option value="JasonHandwriting1">📝 Jason 1 (Chữ nắn nót, bút bi trung học)</option>
+              <option value="JasonHandwriting6">✒️ Jason 6 (Bút gel đậm nét, xô lệch ngẫu nhiên)</option>
+              <option value="JasonHandwriting7">🖊️ Jason 7 (Nét dày, nét móc rõ ràng)</option>
             </select>
           </div>
 
-          <!-- Fine Adjustments -->
+          <!-- Size and Messiness -->
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:8px;">
             <div class="form-row">
               <div class="form-row-header">
                 <span class="form-label">Cỡ chữ:</span>
-                <span class="form-value" id="fontSizeVal">17px</span>
+                <span class="form-value" id="fontSizeVal">20px</span>
               </div>
-              <input type="range" id="fontSizeSlider" min="13" max="24" value="17" oninput="updateFontSize(this.value)">
+              <input type="range" id="fontSizeSlider" min="15" max="26" value="20" oninput="updateFontSize(this.value)">
             </div>
             <div class="form-row">
               <div class="form-row-header">
-                <span class="form-label">Độ tự nhiên:</span>
-                <span class="form-value" id="messinessVal">32%</span>
+                <span class="form-label">Độ ngoáy tự nhiên:</span>
+                <span class="form-value" id="messinessVal">45%</span>
               </div>
-              <input type="range" id="messinessSlider" min="0" max="80" value="32" oninput="updateMessiness(this.value)">
-            </div>
-          </div>
-
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:8px;">
-            <div class="form-row">
-              <div class="form-row-header">
-                <span class="form-label">Nâng/hạ dòng:</span>
-                <span class="form-value" id="baselineVal">0px</span>
-              </div>
-              <input type="range" id="baselineSlider" min="-12" max="12" value="0" oninput="updateBaselineOffset(this.value)">
-            </div>
-            <div class="form-row">
-              <div class="form-row-header">
-                <span class="form-label">Căn lề trái/phải:</span>
-                <span class="form-value" id="marginVal">0px</span>
-              </div>
-              <input type="range" id="marginSlider" min="-25" max="25" value="0" oninput="updateMarginOffset(this.value)">
+              <input type="range" id="messinessSlider" min="0" max="90" value="45" oninput="updateMessiness(this.value)">
             </div>
           </div>
         </div>
+
+        <!-- Margin & Line Controls (Căn lề trên dưới đẩy lên/xuống) -->
+        <div class="section-card">
+          <div class="card-header">
+            <span class="card-title">Căn Lề Trang Vở & Canh Dòng Kẻ</span>
+          </div>
+
+          <!-- Top / Bottom Margin Shift -->
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="form-row">
+              <div class="form-row-header">
+                <span class="form-label">Lề trên (Bỏ trống đầu):</span>
+                <span class="form-value" id="topMarginVal">0 dòng</span>
+              </div>
+              <input type="range" id="topMarginSlider" min="0" max="8" value="0" oninput="updateTopMargin(this.value)">
+              <span style="font-size:10px; color:var(--text-dim);">Kéo để đẩy chữ thụt xuống dưới</span>
+            </div>
+            <div class="form-row">
+              <div class="form-row-header">
+                <span class="form-label">Lề dưới (Bỏ trống cuối):</span>
+                <span class="form-value" id="bottomMarginVal">0 dòng</span>
+              </div>
+              <input type="range" id="bottomMarginSlider" min="0" max="8" value="0" oninput="updateBottomMargin(this.value)">
+              <span style="font-size:10px; color:var(--text-dim);">Chừa dòng đáy trang không viết</span>
+            </div>
+          </div>
+
+          <!-- Baseline micro vertical offset -->
+          <div class="form-row" style="margin-top:10px;">
+            <div class="form-row-header">
+              <span class="form-label">Cao độ chữ trên dòng (Nâng/hạ micro):</span>
+              <span class="form-value" id="baselineVal">0px</span>
+            </div>
+            <input type="range" id="baselineSlider" min="-15" max="15" value="0" oninput="updateBaselineOffset(this.value)">
+            <span style="font-size:10.5px; color:var(--text-dim);">Căn chỉnh cho nét chữ nằm khít rịt đúng trên vạch kẻ xanh của vở</span>
+          </div>
+
+          <!-- Left / Right Margin -->
+          <div class="form-row" style="margin-top:8px;">
+            <div class="form-row-header">
+              <span class="form-label">Độ rộng thụt lề 2 bên:</span>
+              <span class="form-value" id="marginVal">0px</span>
+            </div>
+            <input type="range" id="marginSlider" min="-20" max="20" value="0" oninput="updateMarginOffset(this.value)">
+            <span style="font-size:10.5px; color:var(--text-dim);">Chữ được khóa chặt trong lề vở, không bao giờ viết thò ra ngoài hay chạm gáy</span>
+          </div>
+        </div>
+
       </div>
     </section>
 
     <!-- RIGHT PANEL: Canvas Viewport & Pagination -->
     <section class="right-panel" id="rightPanel">
-      <!-- Floating Canvas Toolbar -->
       <div class="canvas-toolbar">
         <div class="page-controller">
           <button class="btn btn-secondary btn-icon" onclick="prevPage()" title="Trang trước">
@@ -1124,7 +1212,6 @@
         </div>
       </div>
 
-      <!-- Canvas Viewport -->
       <div class="canvas-viewport" id="viewport">
         <div class="canvas-wrapper" id="canvasWrapper">
           <canvas id="renderCanvas" width="1024" height="768"></canvas>
@@ -1143,7 +1230,7 @@
   <!-- SCRIPT ENGINE -->
   <script>
     // ========================================================
-    // ROOT SCOPE ESSENTIAL HELPERS (CRITICAL TO PREVENT REFERENCE ERRORS)
+    // ROOT SCOPE ESSENTIAL HELPERS & PSEUDO-RANDOM GENERATOR
     // ========================================================
     function getActivePageLines(rawLines) {
       if (!rawLines || !Array.isArray(rawLines)) return [];
@@ -1178,7 +1265,42 @@
     }
 
     // ========================================================
-    // CALIBRATED NOTEBOOK TEMPLATES CONFIGURATION (16 TEMPLATES)
+    // NOTEBOOK LINE CURVATURE & CONTOUR BENDING ENGINE
+    // (Bends text with the real notebook page contour)
+    // ========================================================
+    function getNotebookLineContour(baseY, x, leftM, rightM, isSpread, isRightSubpage, templateKey) {
+      const span = Math.max(1, rightM - leftM);
+      const t = Math.max(0, Math.min(1, (x - leftM) / span));
+
+      if (isSpread) {
+        if (isRightSubpage) {
+          // Right page: starts lower near center spine (x=565), curves upward to outer margin (x=950)
+          const dy = -8.0 * Math.pow(Math.max(0, 1.0 - t), 1.5) + (t - 0.5) * 2.0;
+          const slope = 0.035 * Math.pow(Math.max(0, 1.0 - t), 0.5) + 0.005;
+          return { y: baseY + dy, angle: slope };
+        } else {
+          // Left page: flat near outer edge (x=42), bows upward near center spine (x=465)
+          const dy = -11.0 * Math.pow(t, 1.6);
+          const slope = -0.042 * Math.pow(t, 0.6);
+          return { y: baseY + dy, angle: slope };
+        }
+      } else {
+        // Single pages: slight natural slant
+        if (templateKey && templateKey.indexOf('hongha_1') !== -1) {
+          const dy = -3.0 * t;
+          return { y: baseY + dy, angle: -0.005 };
+        }
+        if (templateKey && templateKey.indexOf('thanhnam') !== -1) {
+          const dy = -2.5 * t;
+          return { y: baseY + dy, angle: -0.004 };
+        }
+        return { y: baseY, angle: 0 };
+      }
+    }
+
+    // ========================================================
+    // CALIBRATED NOTEBOOK TEMPLATES CONFIGURATION
+    // (Strict safety margins to ensure text never overflows outside paper/spine)
     // ========================================================
     const TN_SPREAD_L = [70, 88, 107, 126, 145, 165, 184, 203, 223, 243, 264, 284, 305, 325, 346, 367, 388, 409, 431, 452, 474, 496, 518, 540, 563, 585, 608, 630, 653, 676, 699];
     const TN_SPREAD_R = [66, 84, 103, 121, 140, 159, 178, 197, 217, 237, 256, 276, 297, 317, 337, 358, 378, 400, 420, 442, 463, 485, 507, 528, 550, 572, 595, 617, 639, 662, 685, 708];
@@ -1196,89 +1318,89 @@
         name: 'Trang Đôi Thành Nam',
         desc: 'Kẻ ngang tiêu chuẩn học sinh',
         isSpread: true,
-        leftPage: { leftMargin: 42, rightMargin: 485, lines: TN_SPREAD_L },
-        rightPage: { leftMargin: 560, rightMargin: 970, lines: TN_SPREAD_R }
+        leftPage: { leftMargin: 42, rightMargin: 465, lines: TN_SPREAD_L },
+        rightPage: { leftMargin: 565, rightMargin: 950, lines: TN_SPREAD_R }
       },
       'notebook_thanhnam_spread_clean.jpg': {
         name: 'Trang Đôi Thành Nam (Trắng)',
         desc: 'Nền giấy trắng sáng rõ nét',
         isSpread: true,
-        leftPage: { leftMargin: 42, rightMargin: 485, lines: TN_SPREAD_L },
-        rightPage: { leftMargin: 560, rightMargin: 970, lines: TN_SPREAD_R }
+        leftPage: { leftMargin: 42, rightMargin: 465, lines: TN_SPREAD_L },
+        rightPage: { leftMargin: 565, rightMargin: 950, lines: TN_SPREAD_R }
       },
       'notebook_thanhnam_spread_warm.jpg': {
         name: 'Trang Đôi Thành Nam (Ấm)',
         desc: 'Giấy ngà bảo vệ mắt Vintage',
         isSpread: true,
-        leftPage: { leftMargin: 42, rightMargin: 485, lines: TN_SPREAD_L },
-        rightPage: { leftMargin: 560, rightMargin: 970, lines: TN_SPREAD_R }
+        leftPage: { leftMargin: 42, rightMargin: 465, lines: TN_SPREAD_L },
+        rightPage: { leftMargin: 565, rightMargin: 950, lines: TN_SPREAD_R }
       },
       'notebook_hongha_spread.jpg': {
         name: 'Trang Đôi Hồng Hà',
         desc: 'Hồng Hà kẻ ngang truyền thống',
         isSpread: true,
-        leftPage: { leftMargin: 46, rightMargin: 485, lines: HH_SPREAD_L },
-        rightPage: { leftMargin: 550, rightMargin: 970, lines: HH_SPREAD_R }
+        leftPage: { leftMargin: 46, rightMargin: 465, lines: HH_SPREAD_L },
+        rightPage: { leftMargin: 555, rightMargin: 950, lines: HH_SPREAD_R }
       },
       'notebook_hongha_spread_soft.jpg': {
         name: 'Trang Đôi Hồng Hà (Dịu)',
         desc: 'Tone màu êm ái chống lóa',
         isSpread: true,
-        leftPage: { leftMargin: 46, rightMargin: 485, lines: HH_SPREAD_L },
-        rightPage: { leftMargin: 550, rightMargin: 970, lines: HH_SPREAD_R }
+        leftPage: { leftMargin: 46, rightMargin: 465, lines: HH_SPREAD_L },
+        rightPage: { leftMargin: 555, rightMargin: 950, lines: HH_SPREAD_R }
       },
       'notebook_hongha_spread_warm.jpg': {
         name: 'Trang Đôi Hồng Hà (Vàng)',
         desc: 'Giấy bãi bằng vàng học trò',
         isSpread: true,
-        leftPage: { leftMargin: 46, rightMargin: 485, lines: HH_SPREAD_L },
-        rightPage: { leftMargin: 550, rightMargin: 970, lines: HH_SPREAD_R }
+        leftPage: { leftMargin: 46, rightMargin: 465, lines: HH_SPREAD_L },
+        rightPage: { leftMargin: 555, rightMargin: 950, lines: HH_SPREAD_R }
       },
       'notebook_oli_spread.jpg': {
         name: 'Trang Đôi Ô Ly',
         desc: 'Ô ly 4 dòng luyện chữ',
         isSpread: true,
-        leftPage: { leftMargin: 50, rightMargin: 480, lines: TN_SPREAD_L },
-        rightPage: { leftMargin: 550, rightMargin: 960, lines: TN_SPREAD_R }
+        leftPage: { leftMargin: 48, rightMargin: 465, lines: TN_SPREAD_L },
+        rightPage: { leftMargin: 555, rightMargin: 950, lines: TN_SPREAD_R }
       },
       'notebook_tianzige_spread.jpg': {
         name: 'Trang Đôi Điền Tự Cách',
         desc: 'Vở ô vuông Mễ Tự luyện viết chữ Hán',
         isSpread: true,
-        leftPage: { leftMargin: 50, rightMargin: 480, lines: TN_SPREAD_L },
-        rightPage: { leftMargin: 550, rightMargin: 960, lines: TN_SPREAD_R }
+        leftPage: { leftMargin: 48, rightMargin: 465, lines: TN_SPREAD_L },
+        rightPage: { leftMargin: 555, rightMargin: 950, lines: TN_SPREAD_R }
       },
       'notebook_warm_spread.jpg': {
         name: 'Trang Đôi Campus Vintage',
         desc: 'Phong cách tối giản Muji',
         isSpread: true,
-        leftPage: { leftMargin: 45, rightMargin: 485, lines: HH_SPREAD_L },
-        rightPage: { leftMargin: 550, rightMargin: 970, lines: HH_SPREAD_R }
+        leftPage: { leftMargin: 45, rightMargin: 465, lines: HH_SPREAD_L },
+        rightPage: { leftMargin: 555, rightMargin: 950, lines: HH_SPREAD_R }
       },
 
-      // 7 Single Pages
+      // 7 Single Pages (Safe margins preventing overflowing outside desk/paper)
       'notebook_hongha_1.jpg': {
         name: 'Trang Đơn Hồng Hà (Biểu tượng)',
         desc: 'Có đồng hồ, sách vở, bóng đèn góc trên',
         isSpread: false,
-        leftMargin: 125,
-        rightMargin: 745,
+        leftMargin: 130,
+        rightMargin: 695,
         lines: HH_SINGLE_1
       },
       'notebook_hongha_2.jpg': {
         name: 'Trang Đơn Hồng Hà (Thời tiết)',
         desc: 'Có biểu tượng Thứ ngày & Thời tiết',
         isSpread: false,
-        leftMargin: 45,
-        rightMargin: 720,
+        leftMargin: 50,
+        rightMargin: 690,
         lines: HH_SINGLE_2
       },
       'notebook_thanhnam_left.jpg': {
         name: 'Trang Đơn Thành Nam',
         desc: 'Dòng kẻ chuẩn có lề đỏ',
         isSpread: false,
-        leftMargin: 88,
-        rightMargin: 730,
+        leftMargin: 95,
+        rightMargin: 685,
         lines: TN_SINGLE_1
       },
       'notebook_oli.jpg': {
@@ -1286,7 +1408,7 @@
         desc: 'Ô ly tiểu học',
         isSpread: false,
         leftMargin: 90,
-        rightMargin: 720,
+        rightMargin: 685,
         lines: TN_SINGLE_1
       },
       'notebook_tianzige.jpg': {
@@ -1294,7 +1416,7 @@
         desc: 'Ô luyện chữ Hán chuẩn',
         isSpread: false,
         leftMargin: 90,
-        rightMargin: 720,
+        rightMargin: 685,
         lines: TN_SINGLE_1
       },
       'notebook_warm.jpg': {
@@ -1302,7 +1424,7 @@
         desc: 'Giấy ngà đơn giản',
         isSpread: false,
         leftMargin: 90,
-        rightMargin: 720,
+        rightMargin: 685,
         lines: HH_SINGLE_1
       },
       'notebook_default.jpg': {
@@ -1310,7 +1432,7 @@
         desc: 'Kẻ ngang căn bản',
         isSpread: false,
         leftMargin: 90,
-        rightMargin: 720,
+        rightMargin: 685,
         lines: TN_SINGLE_1
       }
     };
@@ -1320,14 +1442,16 @@
     // ========================================================
     const state = {
       notebookTemplate: 'notebook_thanhnam_spread.jpg',
-      spreadWriteMode: 'both', // 'both', 'left', 'right'
+      spreadWriteMode: 'both',
       text: '',
-      fontSize: 17,
-      inkColor: 'gel_black', // 'gel_black', 'blue', 'deep_black'
-      font: 'JasonHandwriting3',
-      messiness: 32,
+      fontSize: 20, // 20px for natural handwriting weight
+      inkColor: 'gel_black',
+      font: 'JasonHandwriting5', // Default: authentic "xấu tự nhiên" handwriting
+      messiness: 45, // 45% natural wobble & micro-tilt
       baselineOffset: 0,
       marginOffset: 0,
+      topMarginLines: 0, // Top margin shift
+      bottomMarginLines: 0, // Bottom margin reserve
       skipLine: false,
       autoTypo: true,
       zoomLevel: 1.0,
@@ -1335,26 +1459,40 @@
       // Pagination
       currentPage: 0,
       totalPages: 1,
-      allPagesLines: [], // Array of subpage line arrays
+      allPagesLines: [],
 
-      // Diagram & Table Config
+      // Smart Diagrams & Tables Configuration
       diagram: {
         enabled: false,
-        type: 'none', // 'none', 'custom', 'table', 'mindmap', 'callout', 'sketch'
-        page: 0, // 0-indexed spread page
-        spreadSide: 'right', // 'right' or 'left'
-        startLine: 3,
-        lineSpan: 8,
-        customImage: null,
-        customThreshold: 185,
-        customProcessedCanvas: null,
-        col1Header: '生詞 (Từ mới)',
-        col2Header: '釋義與例句 (Giải nghĩa)',
-        tableRowsRaw: '落英繽紛 | 形容落花繁多，飄零紛飛。\n豁然開朗 | 眼前頓時間開朗明亮，喻領悟。\n怡然自樂 | 喜樂自得、悠閒自在的樣子。',
+        type: 'none', // 'none', 'table2', 'table3', 'mindmap', 'process', 'callout', 'sketch'
+        page: 0,
+        spreadSide: 'right',
+        startLine: 2,
+        lineSpan: 9,
+
+        // Table 2-col
+        t2Col1: '生詞 (Từ mới)',
+        t2Col2: '釋義與例句 (Giải nghĩa)',
+        t2Rows: '落英繽紛 | 形容落花繁多，飄零紛飛。\n豁然開朗 | 眼前頓時間開朗明亮，喻領悟。\n怡然自樂 | 喜樂自得、悠閒自在的樣子。\n阡陌交通 | 田間小路交錯相通。',
+
+        // Table 3-col
+        t3Col1: '漢字',
+        t3Col2: '拼音',
+        t3Col3: '釋義 & 詞性',
+        t3Rows: '徘徊 | pái huái | 來回走動，猶豫不決 (動詞)\n繁華 | fán huá | 繁榮熱鬧，指市容 (形容詞)\n闌珊 | lán shān | 將盡、衰落，夜色已深 (形容詞)\n眷戀 | juàn liàn | 深切留戀與懷念 (動詞)',
+
+        // Mindmap
         mindmapRoot: '漢語語法 (Ngữ pháp Hán ngữ)',
-        mindmapBranchesRaw: '詞類: 實詞與虛詞\n句型: 主謂賓結構\n補語: 結果補語與方向補語\n時態: 了、著、過標記',
-        calloutTitle: '★ 注意事項 (Lưu ý quan trọng)',
-        calloutText: '書寫時請注意筆順與筆畫粗細變化，\n保持橫平豎直，結構勻稱自然。'
+        mindmapBranches: '詞類: 實詞與虛詞分類\n句型: 主謂賓定狀補結構\n補語: 結果、方向、程度補語\n時態: 了、著、過標記',
+
+        // Process flow
+        processSteps: '1. 提出假設 (Đưa ra giả thuyết)\n2. 蒐集語料 (Thu thập ngữ liệu)\n3. 歸納規律 (Quy nạp quy luật)\n4. 得出結論 (Rút ra kết luận)',
+
+        // Callout
+        calloutTitle: '★ 重要筆記 (Lưu ý ôn tập)',
+        calloutText: '1. 注意成語之字形與聲調變化。\n2. 書寫時保持橫平豎直，筆畫流暢。\n3. 每日複習新詞彙至少十五分鐘。',
+
+        sketchCanvas: null
       },
 
       notebookImg: null,
@@ -1366,7 +1504,7 @@
     const textInput = document.getElementById('textInput');
 
     // ========================================================
-    // INITIALIZATION
+    // INITIALIZATION & FONT PRELOAD CHECK
     // ========================================================
     window.addEventListener('DOMContentLoaded', () => {
       // Register Service Worker for PWA
@@ -1374,15 +1512,15 @@
         navigator.serviceWorker.register('sw.js').catch(err => console.log('SW failed', err));
       }
 
-      // Populate templates gallery
       renderTemplateGallery('all');
 
-      // Populate sample table & mindmap data in inputs
-      document.getElementById('tableRowsArea').value = state.diagram.tableRowsRaw;
-      document.getElementById('mindmapBranchesArea').value = state.diagram.mindmapBranchesRaw;
+      // Populate initial values
+      document.getElementById('t2Rows').value = state.diagram.t2Rows;
+      document.getElementById('t3Rows').value = state.diagram.t3Rows;
+      document.getElementById('mindmapBranchesArea').value = state.diagram.mindmapBranches;
+      document.getElementById('processStepsArea').value = state.diagram.processSteps;
       document.getElementById('calloutTextArea').value = state.diagram.calloutText;
 
-      // Load default notebook image
       loadNotebookImage('assets/' + state.notebookTemplate);
 
       // Listen for text input
@@ -1396,18 +1534,12 @@
       // Init sketchpad
       initSketchpad();
 
-      // Listen for global image paste for OCR
-      window.addEventListener('paste', (e) => {
-        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-        for (let item of items) {
-          if (item.type.indexOf('image') !== -1) {
-            const file = item.getAsFile();
-            showToast('Đang nhận diện ảnh từ clipboard...');
-            handleOcrUpload(file);
-            break;
-          }
-        }
-      });
+      // Wait for fonts to be loaded for pristine first-frame render
+      if (document.fonts) {
+        document.fonts.ready.then(() => {
+          renderCanvas();
+        });
+      }
     });
 
     function loadNotebookImage(src) {
@@ -1470,13 +1602,12 @@
       state.notebookTemplate = filename;
       const cfg = TEMPLATES_CONFIG[filename];
 
-      // Update spread side dropdown visibility
       const spreadRow = document.getElementById('spreadSideRow');
       if (spreadRow) spreadRow.style.display = cfg.isSpread ? 'flex' : 'none';
 
       renderTemplateGallery(document.querySelector('.tool-chip.active')?.id.replace('filterTpl', '').toLowerCase() || 'all');
       loadNotebookImage('assets/' + filename);
-      showToast('Đã đổi mẫu: ' + cfg.name);
+      showToast('Đã chọn mẫu: ' + cfg.name);
     }
 
     // ========================================================
@@ -1510,29 +1641,115 @@
     }
 
     // ========================================================
-    // SMART DIAGRAMS & TABLES LOGIC
+    // AI PHOTO RECOGNITION & REDRAW ENGINE
+    // ========================================================
+    async function handleAiPhotoUpload(file) {
+      if (!file) return;
+      showToast('🤖 AI đang phân tích ảnh và trích xuất cấu trúc bảng/sơ đồ...');
+
+      try {
+        const worker = await Tesseract.createWorker(['chi_tra', 'chi_sim', 'vie']);
+        const ret = await worker.recognize(file);
+        await worker.terminate();
+
+        const rawText = ret.data.text.trim();
+        if (!rawText) {
+          showToast('Không nhận diện được chữ trong ảnh chụp');
+          return;
+        }
+
+        // Parse lines into table or mindmap
+        const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+        
+        let hasMultiCols = false;
+        let maxColsFound = 1;
+        const parsedRows = [];
+
+        for (let l of lines) {
+          // Check for separator: tab, pipe, colon, or 2+ consecutive spaces
+          const parts = l.split(/\s{2,}|\t|\||：|:/).map(p => p.trim()).filter(p => p.length > 0);
+          if (parts.length >= 2) {
+            hasMultiCols = true;
+            maxColsFound = Math.max(maxColsFound, parts.length);
+            parsedRows.push(parts);
+          } else {
+            parsedRows.push([l]);
+          }
+        }
+
+        if (hasMultiCols && maxColsFound >= 3) {
+          // Setup Table 3-col
+          selectDiagramType('table3');
+          const header = parsedRows[0];
+          document.getElementById('t3Col1').value = header[0] || 'Cột 1';
+          document.getElementById('t3Col2').value = header[1] || 'Cột 2';
+          document.getElementById('t3Col3').value = header[2] || 'Cột 3';
+          state.diagram.t3Col1 = header[0] || 'Cột 1';
+          state.diagram.t3Col2 = header[1] || 'Cột 2';
+          state.diagram.t3Col3 = header[2] || 'Cột 3';
+
+          const rowsText = parsedRows.slice(1).map(r => r.join(' | ')).join('\n');
+          document.getElementById('t3Rows').value = rowsText;
+          state.diagram.t3Rows = rowsText;
+          showToast('✨ AI đã nhận diện và vẽ lại Bảng 3 cột bằng chữ viết tay!');
+
+        } else if (hasMultiCols && maxColsFound === 2) {
+          // Setup Table 2-col
+          selectDiagramType('table2');
+          const header = parsedRows[0];
+          document.getElementById('t2Col1').value = header[0] || '生詞';
+          document.getElementById('t2Col2').value = header[1] || '釋義';
+          state.diagram.t2Col1 = header[0] || '生詞';
+          state.diagram.t2Col2 = header[1] || '釋義';
+
+          const rowsText = parsedRows.slice(1).map(r => r.join(' | ')).join('\n');
+          document.getElementById('t2Rows').value = rowsText;
+          state.diagram.t2Rows = rowsText;
+          showToast('✨ AI đã nhận diện và vẽ lại Bảng 2 cột bằng chữ viết tay!');
+
+        } else {
+          // Setup Mindmap
+          selectDiagramType('mindmap');
+          document.getElementById('mindmapRootTitle').value = lines[0] || '主題';
+          state.diagram.mindmapRoot = lines[0] || '主題';
+
+          const branches = lines.slice(1).join('\n');
+          document.getElementById('mindmapBranchesArea').value = branches;
+          state.diagram.mindmapBranches = branches;
+          showToast('✨ AI đã nhận diện và vẽ lại Sơ đồ tư duy bằng nét bút viết tay!');
+        }
+
+        paginateText();
+        renderCanvas();
+
+      } catch (err) {
+        console.error(err);
+        showToast('Lỗi khi AI phân tích ảnh!');
+      }
+    }
+
+    // ========================================================
+    // DIAGRAM SELECTOR & LIVE EDITORS
     // ========================================================
     function selectDiagramType(type) {
       state.diagram.type = type;
       state.diagram.enabled = (type !== 'none');
 
-      // Update card active classes
       const cardMap = {
         'none': 'cardDiagNone',
-        'custom': 'cardDiagCustom',
-        'table': 'cardDiagTable',
+        'table2': 'cardDiagTable2',
+        'table3': 'cardDiagTable3',
         'mindmap': 'cardDiagMindmap',
+        'process': 'cardDiagProcess',
         'callout': 'cardDiagCallout',
         'sketch': 'cardDiagSketch'
       };
       Object.values(cardMap).forEach(cid => {
-        const c = document.getElementById(cid);
-        if (c) c.classList.remove('active');
+        document.getElementById(cid)?.classList.remove('active');
       });
       document.getElementById(cardMap[type])?.classList.add('active');
 
-      // Update subpanels visibility
-      const subpanels = ['subpanelCustom', 'subpanelTable', 'subpanelMindmap', 'subpanelCallout', 'subpanelSketch'];
+      const subpanels = ['subpanelTable2', 'subpanelTable3', 'subpanelMindmap', 'subpanelProcess', 'subpanelCallout', 'subpanelSketch'];
       subpanels.forEach(sp => {
         const el = document.getElementById(sp);
         if (el) el.style.display = 'none';
@@ -1579,101 +1796,32 @@
       renderCanvas();
     }
 
-    function handleDiagramUpload(file) {
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          state.diagram.customImage = img;
-          state.diagram.enabled = true;
-          state.diagram.type = 'custom';
-          processCustomDiagramImage();
-          document.getElementById('diagCustomPreviewWrap').style.display = 'block';
-          showToast('Đã trích xuất nét vẽ từ ảnh thành công!');
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function updateCustomThreshold(val) {
-      state.diagram.customThreshold = parseInt(val);
-      document.getElementById('diagThreshVal').innerText = val;
-      if (state.diagram.customImage) {
-        processCustomDiagramImage();
-      }
-    }
-
-    function processCustomDiagramImage() {
-      if (!state.diagram.customImage) return;
-      const img = state.diagram.customImage;
-      const pCanvas = document.getElementById('diagCustomCanvas');
-      const pCtx = pCanvas.getContext('2d');
-
-      const maxDim = 800;
-      let w = img.width;
-      let h = img.height;
-      if (w > maxDim || h > maxDim) {
-        if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
-        else { w = Math.round((w * maxDim) / h); h = maxDim; }
-      }
-
-      pCanvas.width = w;
-      pCanvas.height = h;
-
-      const tCanvas = document.createElement('canvas');
-      tCanvas.width = w;
-      tCanvas.height = h;
-      const tCtx = tCanvas.getContext('2d');
-      tCtx.drawImage(img, 0, 0, w, h);
-
-      const imgData = tCtx.getImageData(0, 0, w, h);
-      const data = imgData.data;
-      const thresh = state.diagram.customThreshold || 185;
-
-      let rTarget = 24, gTarget = 28, bTarget = 36;
-      if (state.inkColor === 'blue') { rTarget = 26; gTarget = 58; bTarget = 120; }
-      else if (state.inkColor === 'deep_black') { rTarget = 8; gTarget = 8; bTarget = 12; }
-
-      for (let i = 0; i < data.length; i += 4) {
-        if (data[i+3] < 30) {
-          data[i+3] = 0;
-          continue;
-        }
-        const lum = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
-        if (lum < thresh) {
-          const strength = (thresh - lum) / thresh;
-          data[i] = rTarget;
-          data[i+1] = gTarget;
-          data[i+2] = bTarget;
-          data[i+3] = Math.min(255, Math.round(strength * 2.4 * 255));
-        } else {
-          data[i+3] = 0;
-        }
-      }
-
-      tCtx.putImageData(imgData, 0, 0);
-      state.diagram.customProcessedCanvas = tCanvas;
-
-      pCtx.clearRect(0, 0, w, h);
-      pCtx.drawImage(tCanvas, 0, 0);
-
+    function updateTable2Content() {
+      state.diagram.t2Col1 = document.getElementById('t2Col1').value;
+      state.diagram.t2Col2 = document.getElementById('t2Col2').value;
+      state.diagram.t2Rows = document.getElementById('t2Rows').value;
       paginateText();
       renderCanvas();
     }
 
-    function updateTableContent() {
-      state.diagram.col1Header = document.getElementById('tableCol1Title').value;
-      state.diagram.col2Header = document.getElementById('tableCol2Title').value;
-      state.diagram.tableRowsRaw = document.getElementById('tableRowsArea').value;
+    function updateTable3Content() {
+      state.diagram.t3Col1 = document.getElementById('t3Col1').value;
+      state.diagram.t3Col2 = document.getElementById('t3Col2').value;
+      state.diagram.t3Col3 = document.getElementById('t3Col3').value;
+      state.diagram.t3Rows = document.getElementById('t3Rows').value;
       paginateText();
       renderCanvas();
     }
 
     function updateMindmapContent() {
       state.diagram.mindmapRoot = document.getElementById('mindmapRootTitle').value;
-      state.diagram.mindmapBranchesRaw = document.getElementById('mindmapBranchesArea').value;
+      state.diagram.mindmapBranches = document.getElementById('mindmapBranchesArea').value;
+      paginateText();
+      renderCanvas();
+    }
+
+    function updateProcessContent() {
+      state.diagram.processSteps = document.getElementById('processStepsArea').value;
       paginateText();
       renderCanvas();
     }
@@ -1754,7 +1902,7 @@
     }
 
     // ========================================================
-    // TEXT PAGINATION & MATHEMATICAL LINE AVOIDANCE
+    // TEXT PAGINATION WITH TOP/BOTTOM MARGINS & ZERO OVERLAP
     // ========================================================
     function paginateText() {
       const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
@@ -1767,17 +1915,17 @@
       if (isSpread) {
         const effLeft_L = cfg.leftPage.leftMargin + leftOff;
         const effRight_L = cfg.leftPage.rightMargin + rightOff;
-        maxW_Left = Math.max(80, (effRight_L - effLeft_L) - 16);
+        maxW_Left = Math.max(80, (effRight_L - effLeft_L) - 22);
         linesLeft = getActivePageLines(cfg.leftPage.lines).length;
 
         const effLeft_R = cfg.rightPage.leftMargin + leftOff;
         const effRight_R = cfg.rightPage.rightMargin + rightOff;
-        maxW_Right = Math.max(80, (effRight_R - effLeft_R) - 16);
+        maxW_Right = Math.max(80, (effRight_R - effLeft_R) - 22);
         linesRight = getActivePageLines(cfg.rightPage.lines).length;
       } else {
         const effLeft = (cfg.leftMargin || 90) + leftOff;
-        const effRight = (cfg.rightMargin || 720) + rightOff;
-        maxW_Left = maxW_Right = Math.max(80, (effRight - effLeft) - 18);
+        const effRight = (cfg.rightMargin || 685) + rightOff;
+        maxW_Left = maxW_Right = Math.max(80, (effRight - effLeft) - 24);
         linesLeft = linesRight = getActivePageLines(cfg.lines).length;
       }
 
@@ -1809,7 +1957,7 @@
           const ch = PUNC_MAP[rawChar] || rawChar;
           charCounterGlobal++;
 
-          if (state.autoTypo && !inStrike && charCounterGlobal % 68 === 0 && '，。、；：'.indexOf(ch) === -1) {
+          if (state.autoTypo && !inStrike && charCounterGlobal % 58 === 0 && '，。、；：'.indexOf(ch) === -1) {
             const wrongChars = '了的地是不人在有這我箇';
             const wrongCh = wrongChars[charCounterGlobal % wrongChars.length];
             tokens.push({ char: wrongCh, isCrossedOut: true });
@@ -1819,7 +1967,7 @@
         }
 
         let currentChars = [];
-        let curW = isSpread ? 20 : 32;
+        let curW = isSpread ? 20 : 30;
         let isStart = true;
         const activeMaxW = maxW_Left;
 
@@ -1851,7 +1999,7 @@
         }
       }
 
-      // Chunk lines into subpages with zero-overlap diagram avoidance
+      // Chunk lines into subpages with top/bottom margin shifts & zero-overlap diagram avoidance
       state.allPagesLines = [];
       const unplaced = [...parsedLines];
       let subpageIdx = 0;
@@ -1860,6 +2008,18 @@
         const isRightSubpage = isSpread && (subpageIdx % 2 === 1);
         const subpageCapacity = isRightSubpage ? linesRight : linesLeft;
         const slots = new Array(subpageCapacity).fill(null);
+
+        // Apply Top Margin lines (Skip lines at top)
+        const topSkip = Math.min(subpageCapacity - 2, Math.max(0, state.topMarginLines));
+        for (let t = 0; t < topSkip; t++) {
+          slots[t] = { isMarginPlaceholder: true, chars: [] };
+        }
+
+        // Apply Bottom Margin lines (Reserve lines at bottom)
+        const botSkip = Math.min(subpageCapacity - topSkip - 1, Math.max(0, state.bottomMarginLines));
+        for (let b = subpageCapacity - botSkip; b < subpageCapacity; b++) {
+          slots[b] = { isMarginPlaceholder: true, chars: [] };
+        }
 
         // Check if diagram is targeted on this exact subpage
         let hasDiagramOnThisSubpage = false;
@@ -1873,8 +2033,8 @@
         }
 
         if (hasDiagramOnThisSubpage) {
-          const dStart = Math.max(0, Math.min(subpageCapacity - 2, state.diagram.startLine));
-          const dSpan = Math.max(2, Math.min(subpageCapacity - dStart, state.diagram.lineSpan));
+          const dStart = Math.max(topSkip, Math.min(subpageCapacity - botSkip - 2, state.diagram.startLine));
+          const dSpan = Math.max(2, Math.min(subpageCapacity - botSkip - dStart, state.diagram.lineSpan));
           for (let s = dStart; s < dStart + dSpan; s++) {
             slots[s] = { isDiagramPlaceholder: true, chars: [] };
           }
@@ -1961,7 +2121,7 @@
     }
 
     // ========================================================
-    // CANVAS RENDERING ENGINE
+    // CANVAS RENDERING ENGINE (ORGANIC LINE FOLLOWING & HANDWRITING)
     // ========================================================
     function renderCanvas() {
       if (!state.notebookImg || !state.notebookImg.complete) return;
@@ -1969,12 +2129,12 @@
       const w = canvas.width;
       const h = canvas.height;
 
-      // 1. Draw notebook paper background
+      // 1. Draw notebook background
       ctx.globalCompositeOperation = 'source-over';
       ctx.clearRect(0, 0, w, h);
       ctx.drawImage(state.notebookImg, 0, 0, w, h);
 
-      // 2. Set blend mode to Multiply for realistic gel pen ink penetration
+      // 2. Set ink blend mode to Multiply
       ctx.globalCompositeOperation = 'multiply';
 
       const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
@@ -1987,11 +2147,10 @@
       const prng = mulberry32(state.seed + state.currentPage * 7919);
 
       let baseR = 24, baseG = 28, baseB = 36;
-      if (state.inkColor === 'blue') { baseR = 26; baseG = 58; baseB = 120; }
+      if (state.inkColor === 'blue') { baseR = 24; baseG = 56; baseB = 125; }
       else if (state.inkColor === 'deep_black') { baseR = 8; baseG = 8; baseB = 12; }
 
       if (isSpread) {
-        // Double spread
         const leftM_L = cfg.leftPage.leftMargin + leftOff;
         const rightM_L = cfg.leftPage.rightMargin + rightOff;
         const leftM_R = cfg.rightPage.leftMargin + leftOff;
@@ -2009,56 +2168,63 @@
           drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, sideCfg);
         }
 
-        renderLineSet(ctx, leftSubpage, cfg.leftPage.lines, leftM_L, rightM_L, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font);
-        renderLineSet(ctx, rightSubpage, cfg.rightPage.lines, leftM_R, rightM_R, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font);
+        renderLineSet(ctx, leftSubpage, cfg.leftPage.lines, leftM_L, rightM_L, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, true, false);
+        renderLineSet(ctx, rightSubpage, cfg.rightPage.lines, leftM_R, rightM_R, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, true, true);
 
       } else {
-        // Single page
         const leftM = (cfg.leftMargin || 90) + leftOff;
-        const rightM = (cfg.rightMargin || 720) + rightOff;
+        const rightM = (cfg.rightMargin || 685) + rightOff;
         const pageLines = state.allPagesLines[state.currentPage] || [];
 
         if (state.diagram.enabled && state.currentPage === state.diagram.page) {
           drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, { lines: cfg.lines, leftMargin: leftM, rightMargin: rightM });
         }
 
-        renderLineSet(ctx, pageLines, cfg.lines, leftM, rightM, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font);
+        renderLineSet(ctx, pageLines, cfg.lines, leftM, rightM, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, false, false);
       }
     }
 
-    function renderLineSet(ctx, lineTokensList, linesConfig, leftM, rightM, blOffset, prng, baseR, baseG, baseB, mFactor, fontSize, fontName) {
+    function renderLineSet(ctx, lineTokensList, linesConfig, leftM, rightM, blOffset, prng, baseR, baseG, baseB, mFactor, fontSize, fontName, isSpread, isRightSubpage) {
       if (!lineTokensList || lineTokensList.length === 0) return;
       const baselines = getActivePageLines(linesConfig);
 
       for (let lIdx = 0; lIdx < lineTokensList.length; lIdx++) {
         if (lIdx >= baselines.length) break;
         const lineItem = lineTokensList[lIdx];
-        if (!lineItem || lineItem.isSkipLine || lineItem.isDiagramPlaceholder) continue;
+        if (!lineItem || lineItem.isSkipLine || lineItem.isDiagramPlaceholder || lineItem.isMarginPlaceholder) continue;
 
-        const targetY = baselines[lIdx] + blOffset;
-        const lineJitterY = (prng() - 0.5) * 1.5 * mFactor;
-        const effectiveBaseY = targetY + lineJitterY;
+        const rawBaseY = baselines[lIdx] + blOffset;
+        const lineJitterY = (prng() - 0.5) * 1.4 * mFactor;
 
-        let curX = leftM + (lineItem.isStart ? (fontSize * 1.8) : (prng() * 4 * mFactor));
+        let curX = leftM + (lineItem.isStart ? (fontSize * 1.6) : (prng() * 4 * mFactor));
 
         for (let tok of lineItem.chars) {
           const ch = tok.char;
           const charAdvance = getCharAdvanceWidth(ch, fontSize);
+
+          // STRICT SAFETY MARGIN CHECK: Never allow writing past right margin or onto desk/spine!
+          if (curX + charAdvance > rightM - 4) {
+            break;
+          }
 
           if (ch === ' ') {
             curX += charAdvance;
             continue;
           }
 
+          // Exact line curvature & normal slope calculation:
+          const contour = getNotebookLineContour(rawBaseY, curX, leftM, rightM, isSpread, isRightSubpage, state.notebookTemplate);
+          const effectiveBaseY = contour.y + lineJitterY;
+
           const chJitterX = (prng() - 0.5) * 2.2 * mFactor;
           const chJitterY = (prng() - 0.5) * 2.2 * mFactor;
-          const chAngle = (prng() - 0.5) * 0.05 * mFactor;
-          const chScale = 1.0 + (prng() - 0.5) * 0.06 * mFactor;
+          const chAngle = contour.angle + (prng() - 0.5) * 0.12 * mFactor; // Follow line curve + random hand tilt
+          const chScale = 1.0 + (prng() - 0.5) * 0.08 * mFactor;
 
-          const rVar = Math.max(0, Math.min(255, baseR + Math.round((prng() - 0.5) * 16)));
-          const gVar = Math.max(0, Math.min(255, baseG + Math.round((prng() - 0.5) * 16)));
-          const bVar = Math.max(0, Math.min(255, baseB + Math.round((prng() - 0.5) * 16)));
-          const alphaVar = 0.86 + prng() * 0.12;
+          const rVar = Math.max(0, Math.min(255, baseR + Math.round((prng() - 0.5) * 14)));
+          const gVar = Math.max(0, Math.min(255, baseG + Math.round((prng() - 0.5) * 14)));
+          const bVar = Math.max(0, Math.min(255, baseB + Math.round((prng() - 0.5) * 14)));
+          const alphaVar = 0.85 + prng() * 0.13;
 
           ctx.save();
           ctx.translate(curX + charAdvance / 2 + chJitterX, effectiveBaseY + chJitterY);
@@ -2070,7 +2236,7 @@
           ctx.textBaseline = 'alphabetic';
           ctx.fillText(ch, -charAdvance / 2, 0);
 
-          // Draw strikethrough if crossed out
+          // Authentic crossed-out strikethrough effect
           if (tok.isCrossedOut) {
             ctx.strokeStyle = `rgba(${rVar}, ${gVar}, ${bVar}, 0.88)`;
             ctx.lineWidth = 1.8;
@@ -2095,15 +2261,39 @@
     }
 
     // ========================================================
-    // DIAGRAM RENDERING HELPERS
+    // ORGANIC HANDWRITTEN DIAGRAM & TABLE DRAWING HELPERS
+    // (Full vector redrawing matching active handwriting font)
     // ========================================================
+    function drawOrganicLine(ctx, x1, y1, x2, y2, prng, segments = 6, amp = 1.4) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      const dx = (x2 - x1) / segments;
+      const dy = (y2 - y1) / segments;
+      for (let i = 1; i <= segments; i++) {
+        const curX = x1 + dx * i;
+        const curY = y1 + dy * i;
+        const jX = (i === segments) ? 0 : (prng() - 0.5) * amp;
+        const jY = (i === segments) ? 0 : (prng() - 0.5) * amp;
+        ctx.lineTo(curX + jX, curY + jY);
+      }
+      ctx.stroke();
+    }
+
+    function drawOrganicRect(ctx, x, y, w, h, prng) {
+      const o = 2.0; // overshoot
+      drawOrganicLine(ctx, x - o, y, x + w + o, y, prng, 8);
+      drawOrganicLine(ctx, x + w, y - o, x + w, y + h + o, prng, 6);
+      drawOrganicLine(ctx, x + w + o, y + h, x - o, y + h, prng, 8);
+      drawOrganicLine(ctx, x, y + h + o, x, y - o, prng, 6);
+    }
+
     function drawDiagramOnCanvas(ctx, prng, inkColor, activePageCfg) {
       const d = state.diagram;
       const allLines = activePageCfg ? activePageCfg.lines : BASELINES;
       const baselines = getActivePageLines(allLines);
 
       const leftM = activePageCfg ? activePageCfg.leftMargin : 90;
-      const rightM = activePageCfg ? activePageCfg.rightMargin : 720;
+      const rightM = activePageCfg ? activePageCfg.rightMargin : 685;
 
       const dStart = Math.max(0, Math.min(baselines.length - 2, d.startLine));
       const dSpan = Math.max(2, Math.min(baselines.length - dStart, d.lineSpan));
@@ -2123,16 +2313,7 @@
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
-      if (d.type === 'custom' && d.customProcessedCanvas) {
-        const cW = d.customProcessedCanvas.width;
-        const cH = d.customProcessedCanvas.height;
-        const scale = Math.min(boxW / cW, boxH / cH);
-        const drawW = cW * scale;
-        const drawH = cH * scale;
-        const offX = boxX + (boxW - drawW) / 2;
-        const offY = startY + (boxH - drawH) / 2;
-        ctx.drawImage(d.customProcessedCanvas, offX, offY, drawW, drawH);
-      } else if (d.type === 'sketch' && d.sketchCanvas) {
+      if (d.type === 'sketch' && d.sketchCanvas) {
         const cW = d.sketchCanvas.width;
         const cH = d.sketchCanvas.height;
         const scale = Math.min(boxW / cW, boxH / cH);
@@ -2141,10 +2322,14 @@
         const offX = boxX + (boxW - drawW) / 2;
         const offY = startY + (boxH - drawH) / 2;
         ctx.drawImage(d.sketchCanvas, offX, offY, drawW, drawH);
-      } else if (d.type === 'table') {
-        drawHanddrawnTable(ctx, boxX, startY, boxW, boxH, prng, d);
+      } else if (d.type === 'table2') {
+        drawHanddrawnTable2(ctx, boxX, startY, boxW, boxH, prng, d);
+      } else if (d.type === 'table3') {
+        drawHanddrawnTable3(ctx, boxX, startY, boxW, boxH, prng, d);
       } else if (d.type === 'mindmap') {
         drawHanddrawnMindmap(ctx, boxX, startY, boxW, boxH, prng, d);
+      } else if (d.type === 'process') {
+        drawHanddrawnProcess(ctx, boxX, startY, boxW, boxH, prng, d);
       } else if (d.type === 'callout') {
         drawHanddrawnCallout(ctx, boxX, startY, boxW, boxH, prng, d);
       }
@@ -2152,83 +2337,95 @@
       ctx.restore();
     }
 
-    function strokeOrganicLine(ctx, x1, y1, x2, y2, prng, segments = 5) {
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      const dx = (x2 - x1) / segments;
-      const dy = (y2 - y1) / segments;
-      for (let i = 1; i <= segments; i++) {
-        const curTargetX = x1 + dx * i;
-        const curTargetY = y1 + dy * i;
-        const jX = (i === segments) ? 0 : (prng() - 0.5) * 1.8;
-        const jY = (i === segments) ? 0 : (prng() - 0.5) * 1.8;
-        ctx.lineTo(curTargetX + jX, curTargetY + jY);
-      }
-      ctx.stroke();
-    }
+    // Hand-drawn Table (2 Columns)
+    function drawHanddrawnTable2(ctx, x, y, w, h, prng, d) {
+      drawOrganicRect(ctx, x, y, w, h, prng);
+      const colSplit = x + w * 0.32;
+      drawOrganicLine(ctx, colSplit, y, colSplit, y + h, prng, 8);
 
-    function strokeOrganicRect(ctx, x, y, w, h, prng) {
-      strokeOrganicLine(ctx, x, y, x + w, y, prng, 8);
-      strokeOrganicLine(ctx, x + w, y, x + w, y + h, prng, 6);
-      strokeOrganicLine(ctx, x + w, y + h, x, y + h, prng, 8);
-      strokeOrganicLine(ctx, x, y + h, x, y, prng, 6);
-    }
+      const headerH = Math.min(32, Math.max(24, h * 0.22));
+      drawOrganicLine(ctx, x, y + headerH, x + w, y + headerH, prng, 8);
 
-    function drawHanddrawnTable(ctx, x, y, w, h, prng, d) {
-      strokeOrganicRect(ctx, x, y, w, h, prng);
-      const colSplit = x + w * 0.35;
-      strokeOrganicLine(ctx, colSplit, y, colSplit, y + h, prng, 7);
+      const fSize = Math.max(13, state.fontSize - 3);
+      ctx.font = `bold ${fSize}px "${state.font}", cursive`;
+      ctx.fillText(d.t2Col1 || '生詞', x + 10, y + headerH * 0.68);
+      ctx.fillText(d.t2Col2 || '釋義', colSplit + 10, y + headerH * 0.68);
 
-      const headerH = Math.min(32, Math.max(22, h * 0.22));
-      strokeOrganicLine(ctx, x, y + headerH, x + w, y + headerH, prng, 8);
-
-      const fSize = Math.max(12, Math.min(15, headerH * 0.56));
-      ctx.font = `bold ${fSize}px "JasonHandwriting3", cursive`;
-      ctx.fillText(d.col1Header || '生詞', x + 10, y + headerH * 0.68);
-      ctx.fillText(d.col2Header || '釋義', colSplit + 10, y + headerH * 0.68);
-
-      const rows = (d.tableRowsRaw || '').split('\n').filter(r => r.trim());
+      const rows = (d.t2Rows || '').split('\n').filter(r => r.trim());
       if (rows.length > 0) {
         const rowH = (h - headerH) / rows.length;
-        ctx.font = `${Math.max(11, fSize - 1)}px "JasonHandwriting3", cursive`;
+        ctx.font = `${Math.max(12, fSize - 1)}px "${state.font}", cursive`;
 
         rows.forEach((r, idx) => {
           const rowY = y + headerH + rowH * (idx + 1);
           if (idx < rows.length - 1) {
-            strokeOrganicLine(ctx, x, rowY, x + w, rowY, prng, 8);
+            drawOrganicLine(ctx, x, rowY, x + w, rowY, prng, 8);
           }
           const parts = r.split('|').map(s => s.trim());
-          const c1 = parts[0] || '';
-          const c2 = parts[1] || '';
-
-          ctx.fillText(c1, x + 8, rowY - rowH * 0.32);
-          ctx.fillText(c2, colSplit + 8, rowY - rowH * 0.32);
+          ctx.fillText(parts[0] || '', x + 8, rowY - rowH * 0.32);
+          ctx.fillText(parts[1] || '', colSplit + 8, rowY - rowH * 0.32);
         });
       }
     }
 
+    // Hand-drawn Table (3 Columns)
+    function drawHanddrawnTable3(ctx, x, y, w, h, prng, d) {
+      drawOrganicRect(ctx, x, y, w, h, prng);
+      const c1Split = x + w * 0.28;
+      const c2Split = x + w * 0.58;
+      drawOrganicLine(ctx, c1Split, y, c1Split, y + h, prng, 8);
+      drawOrganicLine(ctx, c2Split, y, c2Split, y + h, prng, 8);
+
+      const headerH = Math.min(32, Math.max(24, h * 0.22));
+      drawOrganicLine(ctx, x, y + headerH, x + w, y + headerH, prng, 8);
+
+      const fSize = Math.max(13, state.fontSize - 3);
+      ctx.font = `bold ${fSize}px "${state.font}", cursive`;
+      ctx.fillText(d.t3Col1 || '漢字', x + 8, y + headerH * 0.68);
+      ctx.fillText(d.t3Col2 || '拼音', c1Split + 8, y + headerH * 0.68);
+      ctx.fillText(d.t3Col3 || '釋義', c2Split + 8, y + headerH * 0.68);
+
+      const rows = (d.t3Rows || '').split('\n').filter(r => r.trim());
+      if (rows.length > 0) {
+        const rowH = (h - headerH) / rows.length;
+        ctx.font = `${Math.max(12, fSize - 1)}px "${state.font}", cursive`;
+
+        rows.forEach((r, idx) => {
+          const rowY = y + headerH + rowH * (idx + 1);
+          if (idx < rows.length - 1) {
+            drawOrganicLine(ctx, x, rowY, x + w, rowY, prng, 8);
+          }
+          const parts = r.split('|').map(s => s.trim());
+          ctx.fillText(parts[0] || '', x + 8, rowY - rowH * 0.32);
+          ctx.fillText(parts[1] || '', c1Split + 8, rowY - rowH * 0.32);
+          ctx.fillText(parts[2] || '', c2Split + 8, rowY - rowH * 0.32);
+        });
+      }
+    }
+
+    // Hand-drawn Mindmap
     function drawHanddrawnMindmap(ctx, x, y, w, h, prng, d) {
-      const cx = x + w * 0.32;
+      const cx = x + w * 0.30;
       const cy = y + h * 0.5;
 
-      const rootW = Math.min(150, w * 0.35);
-      const rootH = Math.min(38, h * 0.32);
-      strokeOrganicRect(ctx, cx - rootW / 2, cy - rootH / 2, rootW, rootH, prng);
+      const rootW = Math.min(145, w * 0.32);
+      const rootH = Math.min(36, h * 0.30);
+      drawOrganicRect(ctx, cx - rootW / 2, cy - rootH / 2, rootW, rootH, prng);
 
-      ctx.font = `bold 13px "JasonHandwriting3", cursive`;
+      ctx.font = `bold 13.5px "${state.font}", cursive`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(d.mindmapRoot || '主題', cx, cy);
 
-      const branches = (d.mindmapBranchesRaw || '').split('\n').filter(b => b.trim());
+      const branches = (d.mindmapBranches || '').split('\n').filter(b => b.trim());
       if (branches.length > 0) {
         const branchGap = h / (branches.length + 1);
-        ctx.font = `12px "JasonHandwriting3", cursive`;
+        ctx.font = `12px "${state.font}", cursive`;
         ctx.textAlign = 'left';
 
         branches.forEach((bText, idx) => {
           const bY = y + branchGap * (idx + 1);
-          const bX = x + w * 0.58;
+          const bX = x + w * 0.54;
 
           ctx.beginPath();
           ctx.moveTo(cx + rootW / 2, cy);
@@ -2236,24 +2433,57 @@
           ctx.quadraticCurveTo(cpX, bY, bX, bY);
           ctx.stroke();
 
-          strokeOrganicLine(ctx, bX, bY, x + w - 10, bY, prng, 6);
+          drawOrganicLine(ctx, bX, bY, x + w - 8, bY, prng, 6);
           ctx.fillText(bText, bX + 6, bY - 4);
         });
       }
       ctx.textAlign = 'start';
     }
 
-    function drawHanddrawnCallout(ctx, x, y, w, h, prng, d) {
-      strokeOrganicRect(ctx, x, y, w, h, prng);
-      strokeOrganicLine(ctx, x + 3, y + 3, x + 3, y + h - 3, prng, 6);
+    // Hand-drawn Process Flow
+    function drawHanddrawnProcess(ctx, x, y, w, h, prng, d) {
+      const steps = (d.processSteps || '').split('\n').filter(s => s.trim());
+      if (steps.length === 0) return;
 
-      ctx.font = `bold 13.5px "JasonHandwriting3", cursive`;
-      ctx.fillText(d.calloutTitle || '★ Lưu ý', x + 14, y + 20);
+      const stepW = (w - 20) / steps.length;
+      const boxH = Math.min(48, h * 0.55);
+      const boxY = y + (h - boxH) / 2;
+
+      ctx.font = `12.5px "${state.font}", cursive`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      steps.forEach((st, idx) => {
+        const bX = x + idx * stepW + 6;
+        const curW = stepW - 22;
+        drawOrganicRect(ctx, bX, boxY, curW, boxH, prng);
+        ctx.fillText(st, bX + curW / 2, boxY + boxH / 2);
+
+        // Arrow to next step
+        if (idx < steps.length - 1) {
+          const arrowX1 = bX + curW + 2;
+          const arrowX2 = arrowX1 + 14;
+          const arrowY = boxY + boxH / 2;
+          drawOrganicLine(ctx, arrowX1, arrowY, arrowX2, arrowY, prng, 3);
+          drawOrganicLine(ctx, arrowX2 - 4, arrowY - 4, arrowX2, arrowY, prng, 2);
+          drawOrganicLine(ctx, arrowX2 - 4, arrowY + 4, arrowX2, arrowY, prng, 2);
+        }
+      });
+      ctx.textAlign = 'start';
+    }
+
+    // Hand-drawn Callout
+    function drawHanddrawnCallout(ctx, x, y, w, h, prng, d) {
+      drawOrganicRect(ctx, x, y, w, h, prng);
+      drawOrganicLine(ctx, x + 4, y + 4, x + 4, y + h - 4, prng, 6);
+
+      ctx.font = `bold 14px "${state.font}", cursive`;
+      ctx.fillText(d.calloutTitle || '★ Lưu ý', x + 14, y + 22);
 
       const lines = (d.calloutText || '').split('\n');
-      ctx.font = `12px "JasonHandwriting3", cursive`;
+      ctx.font = `12.5px "${state.font}", cursive`;
       lines.forEach((l, idx) => {
-        ctx.fillText(l, x + 14, y + 42 + idx * 20);
+        ctx.fillText(l, x + 14, y + 44 + idx * 20);
       });
     }
 
@@ -2267,17 +2497,14 @@
       if (color === 'blue') document.getElementById('btnInkBlue')?.classList.add('active');
       if (color === 'deep_black') document.getElementById('btnInkDeep')?.classList.add('active');
 
-      if (state.diagram.type === 'custom' && state.diagram.customImage) {
-        processCustomDiagramImage();
-      } else {
-        renderCanvas();
-      }
+      renderCanvas();
     }
 
     function setFont(fontName) {
       state.font = fontName;
       paginateText();
       renderCanvas();
+      showToast('Đã đổi font: ' + fontName);
     }
 
     function updateFontSize(val) {
@@ -2306,6 +2533,20 @@
       renderCanvas();
     }
 
+    function updateTopMargin(val) {
+      state.topMarginLines = parseInt(val);
+      document.getElementById('topMarginVal').innerText = val + ' dòng';
+      paginateText();
+      renderCanvas();
+    }
+
+    function updateBottomMargin(val) {
+      state.bottomMarginLines = parseInt(val);
+      document.getElementById('bottomMarginVal').innerText = val + ' dòng';
+      paginateText();
+      renderCanvas();
+    }
+
     function toggleSkipLine() {
       state.skipLine = !state.skipLine;
       const b = document.getElementById('btnSkipLine');
@@ -2319,7 +2560,6 @@
 
     function toggleTradSimp() {
       showToast('Đang chuyển đổi Phồn thể / Giản thể...');
-      // Simple toggle using dictionary mappings
       const simp = '门见为来还进国听说话书练习时汉语言学习';
       const trad = '門見為來還進國聽說話書練習時漢語言學習';
       let val = textInput.value;
