@@ -817,9 +817,9 @@
     .mobile-sheet-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(1px);
       z-index: 2100;
       opacity: 0;
       pointer-events: none;
@@ -832,7 +832,7 @@
     .mobile-sheet {
       position: fixed;
       bottom: 0; left: 0; right: 0;
-      max-height: 84vh;
+      max-height: 52vh;
       background: rgba(28, 28, 30, 0.96);
       backdrop-filter: blur(35px) saturate(200%);
       -webkit-backdrop-filter: blur(35px) saturate(200%);
@@ -845,6 +845,7 @@
       display: flex;
       flex-direction: column;
       padding-bottom: env(safe-area-inset-bottom, 16px);
+      overflow-y: auto;
     }
     .mobile-sheet.active {
       transform: translateY(0);
@@ -986,43 +987,18 @@
         font-size: 11.5px;
       }
 
-      /* In Preview Mode: Show compact floating page/zoom capsule in header */
-      body.view-preview .mobile-header-capsule {
-        display: inline-flex;
-        align-items: center;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 18px;
-        padding: 2px 6px;
-        gap: 3px;
+      /* Clean Top Header on mobile: hide duplicate page capsule, download button & danger pill */
+      .mobile-header-capsule {
+        display: none !important;
       }
-      .capsule-btn {
-        background: transparent;
-        border: none;
-        color: var(--text-main);
-        font-size: 12px;
-        font-weight: 700;
-        padding: 2px 6px;
-        cursor: pointer;
-        border-radius: 6px;
+      .btn-danger-pill {
+        display: none !important;
       }
-      .capsule-btn:active {
-        background: rgba(255, 255, 255, 0.15);
-      }
-      .capsule-text {
-        font-size: 11px;
-        font-weight: 600;
-        color: #fff;
-        padding: 0 2px;
-      }
-      .capsule-divider {
-        width: 1px;
-        height: 10px;
-        background: rgba(255, 255, 255, 0.2);
-        margin: 0 2px;
+      .header-actions .btn-primary {
+        display: none !important;
       }
 
-      /* Hide top switcher and top nav-tabs on mobile (features transferred to 5 bottom dock buttons) */
+      /* Hide top switcher and top nav-tabs on mobile */
       .mobile-view-switch {
         display: none !important;
       }
@@ -1036,7 +1012,7 @@
         flex-direction: column;
         height: auto;
         min-height: calc(100vh - 48px);
-        padding-bottom: 60px; /* space for mobile bottom bar */
+        padding-bottom: 64px; /* space for mobile bottom bar */
       }
 
       /* In Editor View (default): Left panel is full width, right is hidden */
@@ -1052,9 +1028,7 @@
         min-height: calc(100vh - 48px);
       }
 
-      /* In Preview View (body.view-preview):
-         ELIMINATE STACKED TOOLBAR CLUTTER:
-         Hide redundant canvas toolbar and smart presets row on mobile */
+      /* In Preview View (body.view-preview): */
       body.view-preview .left-panel {
         display: none !important;
       }
@@ -1062,10 +1036,38 @@
         display: flex !important;
       }
       body.view-preview .canvas-toolbar {
-        display: none !important; /* Managed by top header capsule & bottom bar */
+        display: none !important;
       }
       body.view-preview .smart-presets-bar {
-        display: none !important; /* Presets cleanly accessible in bottom sheet */
+        display: none !important;
+      }
+
+      /* Floating Page Capsule on Mobile Canvas */
+      .mobile-canvas-floating-header {
+        display: none;
+      }
+      body.view-preview .mobile-canvas-floating-header {
+        display: flex !important;
+        position: sticky;
+        top: 6px;
+        z-index: 50;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 8px;
+        pointer-events: none;
+      }
+      .floating-capsule {
+        pointer-events: auto;
+        display: inline-flex;
+        align-items: center;
+        background: rgba(22, 22, 28, 0.88);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 20px;
+        padding: 3px 12px;
+        gap: 5px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
       }
 
       /* Apple UITabBar Style - Highest Z-Index (9999) */
@@ -1073,18 +1075,37 @@
         display: flex !important;
         position: fixed !important;
         bottom: 0 !important; left: 0 !important; right: 0 !important;
-        height: 56px;
-        background: rgba(18, 18, 22, 0.92) !important;
+        height: 60px;
+        background: rgba(18, 18, 22, 0.94) !important;
         backdrop-filter: blur(25px) saturate(190%) !important;
         -webkit-backdrop-filter: blur(25px) saturate(190%) !important;
         border-top: 0.5px solid rgba(255, 255, 255, 0.16) !important;
         z-index: 9999 !important;
         align-items: center;
-        justify-content: space-around;
-        padding: 0 4px;
+        padding: 0 8px;
         padding-bottom: env(safe-area-inset-bottom, 6px);
         box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
       }
+      .mobile-bar-mode {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-around;
+        gap: 4px;
+      }
+      .mobile-bar-editor-mode {
+        display: flex;
+      }
+      .mobile-bar-preview-mode {
+        display: none;
+      }
+      body.view-preview .mobile-bar-editor-mode {
+        display: none !important;
+      }
+      body.view-preview .mobile-bar-preview-mode {
+        display: flex !important;
+      }
+
       .mobile-bar-btn {
         display: flex;
         flex-direction: column;
@@ -1093,7 +1114,7 @@
         gap: 2px;
         background: transparent;
         border: none;
-        color: rgba(235, 235, 245, 0.5);
+        color: rgba(235, 235, 245, 0.6);
         font-size: 10.5px;
         font-weight: 500;
         cursor: pointer;
@@ -1109,19 +1130,72 @@
         color: var(--accent);
       }
       .mobile-bar-btn svg {
-        width: 21px;
-        height: 21px;
+        width: 20px;
+        height: 20px;
       }
 
-      /* Canvas Viewport: Full Vertical Height on Mobile */
+      /* Primary CTA in Editor mode: 'Xem Trang Vở ➜' */
+      .btn-cta-view-preview {
+        background: linear-gradient(135deg, #0a84ff, #0066cc) !important;
+        color: #ffffff !important;
+        border-radius: 20px !important;
+        padding: 9px 14px !important;
+        flex: 2.2 !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        font-size: 12.5px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 14px rgba(10, 132, 255, 0.4) !important;
+        border: none !important;
+      }
+      .btn-cta-view-preview:active {
+        transform: scale(0.96) !important;
+      }
+      .btn-cta-view-preview svg {
+        width: 16px !important;
+        height: 16px !important;
+        stroke: #ffffff !important;
+      }
+
+      /* Highlighted Action Buttons in Preview mode */
+      .btn-bar-download {
+        color: var(--accent) !important;
+        font-weight: 600 !important;
+      }
+      .btn-bar-download svg {
+        stroke: var(--accent) !important;
+      }
+      .btn-bar-ai {
+        color: #38bdf8 !important;
+      }
+      .btn-bar-ai svg {
+        stroke: #38bdf8 !important;
+      }
+      .btn-bar-delete-diag {
+        color: #ef4444 !important;
+      }
+      .btn-bar-delete-diag svg {
+        stroke: #ef4444 !important;
+      }
+
+      /* Canvas Viewport: Full Width with Centered Paper on Mobile */
       .canvas-viewport {
-        padding: 10px 4px 68px 4px;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
+        padding: 8px 8px 84px 8px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        background: #000000 !important;
       }
       .canvas-wrapper {
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.9);
+        box-shadow: 0 6px 28px rgba(0, 0, 0, 0.85) !important;
+        border-radius: 4px !important;
+        margin: 0 auto !important;
       }
 
       /* Toast above bottom bar */
@@ -2066,6 +2140,20 @@
         </div>
 
       <div class="canvas-viewport" id="viewport">
+        <!-- Floating page and zoom control for mobile preview -->
+        <div class="mobile-canvas-floating-header" id="mobileCanvasFloatingHeader">
+          <div class="floating-capsule">
+            <button class="capsule-btn" onclick="prevPage()" title="Trang trước">❮</button>
+            <span class="capsule-text" id="floatingPageIndicator">Trang 1 / 1</span>
+            <button class="capsule-btn" onclick="nextPage()" title="Trang tiếp">❯</button>
+            <span class="capsule-divider"></span>
+            <button class="capsule-btn" onclick="fitCanvasToViewport()" title="Khớp vừa màn hình" style="font-size:11px;">Fit Vừa</button>
+            <span class="capsule-divider"></span>
+            <button class="capsule-btn" onclick="adjustZoom(-0.1)">−</button>
+            <span class="capsule-text" id="floatingZoomIndicator">50%</span>
+            <button class="capsule-btn" onclick="adjustZoom(0.1)">+</button>
+          </div>
+        </div>
         <div class="canvas-wrapper" id="canvasWrapper">
           <canvas id="renderCanvas" width="1024" height="768"></canvas>
         </div>
@@ -2674,25 +2762,18 @@
     function switchMobileView(view) {
       const btnEdit = document.getElementById('btnSwitchEdit');
       const btnPrev = document.getElementById('btnSwitchPreview');
-      const barEdit = document.getElementById('btnBarEditor');
-      const barPrev = document.getElementById('btnBarPreview');
 
       if (view === 'editor') {
         document.body.classList.remove('view-preview');
         if (btnEdit) btnEdit.classList.add('active');
         if (btnPrev) btnPrev.classList.remove('active');
-        if (barEdit) barEdit.classList.add('active');
-        if (barPrev) barPrev.classList.remove('active');
         switchTab('editor-tab');
       } else {
         document.body.classList.add('view-preview');
         if (btnPrev) btnPrev.classList.add('active');
         if (btnEdit) btnEdit.classList.remove('active');
-        if (barPrev) barPrev.classList.add('active');
-        if (barEdit) barEdit.classList.remove('active');
         setTimeout(() => {
-          state.zoomLevel = 0.40;
-          applyZoom();
+          fitCanvasToViewport();
         }, 50);
       }
     }
@@ -3596,16 +3677,21 @@
 
     function updatePaginationUI() {
       const ind = document.getElementById('pageIndicator');
-      if (!ind) return;
+      const floatInd = document.getElementById('floatingPageIndicator');
+      const mInd = document.getElementById('mobilePageIndicator');
       const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
+      let str = '';
       if (cfg.isSpread && state.spreadWriteMode === 'both') {
         const p1 = state.currentPage * 2 + 1;
         const p2 = state.currentPage * 2 + 2;
         const totalSubpages = Math.max(2, state.totalPages * 2);
-        ind.innerText = `Trang ${p1}-${p2} / ${totalSubpages}`;
+        str = `Trang ${p1}-${p2} / ${totalSubpages}`;
       } else {
-        ind.innerText = `Trang ${state.currentPage + 1} / ${state.totalPages}`;
+        str = `Trang ${state.currentPage + 1} / ${state.totalPages}`;
       }
+      if (ind) ind.innerText = str;
+      if (floatInd) floatInd.innerText = str;
+      if (mInd) mInd.innerText = `${state.currentPage + 1} / ${state.totalPages}`;
     }
 
     function prevPage() {
@@ -4438,29 +4524,27 @@
       }
     }
 
-    // Zoom & Canvas View Controls (Default 40% for optimal mobile page overview)
+    // Zoom & Canvas View Controls (Default auto-fit to screen width on mobile)
     function adjustZoom(delta) {
       state.zoomLevel = Math.max(0.20, Math.min(2.5, Math.round((state.zoomLevel + delta) * 100) / 100));
       applyZoom();
     }
     function resetZoom() {
-      state.zoomLevel = 0.40;
-      applyZoom();
+      fitCanvasToViewport();
     }
     function fitCanvasToViewport() {
-      // User requested 40% default view for perfect mobile fit
-      if (window.innerWidth < 768) {
-        state.zoomLevel = 0.40;
+      const cWidth = canvas.width || 760;
+      if (window.innerWidth <= 991) {
+        const pad = 16;
+        const availW = Math.max(320, window.innerWidth - pad);
+        const fitScale = availW / cWidth;
+        state.zoomLevel = Math.round(fitScale * 100) / 100;
       } else {
         const vp = document.getElementById('viewport');
-        if (!vp) {
-          state.zoomLevel = 0.40;
-        } else {
-          const pad = 24;
-          const availW = vp.clientWidth - pad;
-          const fitScale = availW / canvas.width;
-          state.zoomLevel = Math.min(1.0, Math.max(0.40, fitScale));
-        }
+        const pad = 32;
+        const availW = (vp ? vp.clientWidth : 800) - pad;
+        const fitScale = availW / cWidth;
+        state.zoomLevel = Math.min(1.0, Math.max(0.40, fitScale));
       }
       applyZoom();
     }
@@ -4479,6 +4563,10 @@
       }
       const b = document.getElementById('zoomLevelBtn');
       if (b) b.innerText = Math.round(state.zoomLevel * 100) + '%';
+      const fz = document.getElementById('floatingZoomIndicator');
+      if (fz) fz.innerText = Math.round(state.zoomLevel * 100) + '%';
+      const mz = document.getElementById('mobileZoomIndicator');
+      if (mz) mz.innerText = Math.round(state.zoomLevel * 100) + '%';
     }
 
     // Download Image
@@ -4562,24 +4650,24 @@
           });
         }
       } else if (type === 'style') {
-        title.innerHTML = '🎨 Kiểu Chữ & Màu Mực';
+        title.innerHTML = '🖋️ Kiểu Chữ & Màu Mực';
         body.innerHTML = `
           <div style="margin-bottom:14px;">
             <label class="form-label" style="margin-bottom:6px; display:block;">Font chữ viết tay:</label>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-              <button class="btn btn-secondary ${state.font === 'JasonHandwriting5' ? 'active' : ''}" onclick="setFont('JasonHandwriting5'); closeMobileSheet();" style="font-size:12px; justify-content:center;">Jason 5 (Xấu tự nhiên ★)</button>
-              <button class="btn btn-secondary ${state.font === 'JasonHandwriting3' ? 'active' : ''}" onclick="setFont('JasonHandwriting3'); closeMobileSheet();" style="font-size:12px; justify-content:center;">Jason 3 (Nắn nót)</button>
-              <button class="btn btn-secondary ${state.font === 'Muyao-Softbrush' ? 'active' : ''}" onclick="setFont('Muyao-Softbrush'); closeMobileSheet();" style="font-size:12px; justify-content:center;">Mộc Dao (Tốc ký)</button>
-              <button class="btn btn-secondary ${state.font === 'Yozai' ? 'active' : ''}" onclick="setFont('Yozai'); closeMobileSheet();" style="font-size:12px; justify-content:center;">Yozai (Bút máy)</button>
+              <button class="btn btn-secondary ${state.font === 'JasonHandwriting5' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting5', this)" style="font-size:12px; justify-content:center;">Jason 5 (Xấu tự nhiên ★)</button>
+              <button class="btn btn-secondary ${state.font === 'JasonHandwriting3' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting3', this)" style="font-size:12px; justify-content:center;">Jason 3 (Nắn nót)</button>
+              <button class="btn btn-secondary ${state.font === 'Muyao-Softbrush' ? 'active' : ''}" onclick="setMobileFont('Muyao-Softbrush', this)" style="font-size:12px; justify-content:center;">Mộc Dao (Tốc ký)</button>
+              <button class="btn btn-secondary ${state.font === 'Yozai' ? 'active' : ''}" onclick="setMobileFont('Yozai', this)" style="font-size:12px; justify-content:center;">Yozai (Bút máy)</button>
             </div>
           </div>
           <div style="margin-bottom:14px;">
             <label class="form-label" style="margin-bottom:6px; display:block;">Màu mực:</label>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="tool-chip ${state.inkColor === 'gel_black' ? 'active' : ''}" onclick="setInkColor('gel_black'); closeMobileSheet();">⚫ Mực Gel Đen</button>
-              <button class="tool-chip ${state.inkColor === 'blue' ? 'active' : ''}" onclick="setInkColor('blue'); closeMobileSheet();">🔵 Mực Xanh</button>
-              <button class="tool-chip ${state.inkColor === 'purple' ? 'active' : ''}" onclick="setInkColor('purple'); closeMobileSheet();">🟣 Mực Tím</button>
-              <button class="tool-chip ${state.inkColor === 'deep_black' ? 'active' : ''}" onclick="setInkColor('deep_black'); closeMobileSheet();">⬛ Đen Đậm</button>
+              <button class="tool-chip ${state.inkColor === 'gel_black' ? 'active' : ''}" onclick="setMobileInkColor('gel_black', this)">⚫ Mực Gel Đen</button>
+              <button class="tool-chip ${state.inkColor === 'blue' ? 'active' : ''}" onclick="setMobileInkColor('blue', this)">🔵 Mực Xanh</button>
+              <button class="tool-chip ${state.inkColor === 'purple' ? 'active' : ''}" onclick="setMobileInkColor('purple', this)">🟣 Mực Tím</button>
+              <button class="tool-chip ${state.inkColor === 'deep_black' ? 'active' : ''}" onclick="setMobileInkColor('deep_black', this)">⬛ Đen Đậm</button>
             </div>
           </div>
           <div style="margin-bottom:14px;">
@@ -4608,13 +4696,13 @@
         Object.entries(TEMPLATES_CONFIG).forEach(([filename, cfg]) => {
           const isAct = state.notebookTemplate === filename;
           tplCardsHtml += `
-            <div class="template-card ${isAct ? 'active' : ''}" onclick="selectTemplate('${filename}'); closeMobileSheet();" style="display:flex; flex-direction:row; align-items:center; gap:10px; padding:8px;">
+            <div class="template-card ${isAct ? 'active' : ''}" onclick="setMobileTemplate('${filename}', this)" style="display:flex; flex-direction:row; align-items:center; gap:10px; padding:8px;">
               <img src="assets/${filename}" style="width:50px; height:50px; object-fit:contain; background:#141721; border-radius:6px; flex-shrink:0;">
               <div style="flex:1; min-width:0;">
                 <div style="font-size:13px; font-weight:600; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${cfg.name}</div>
-                <div style="font-size:11px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${cfg.isSpread ? 'Trang Đôi' : 'Trang Đơn'} • ${cfg.desc}</div>
+                <div style="font-size:11px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${cfg.isSpread ? 'Trang Đôi 3D' : 'Trang Đơn'} • ${cfg.desc}</div>
               </div>
-              ${isAct ? '<span style="color:var(--accent); font-size:14px; font-weight:bold;">✓</span>' : ''}
+              ${isAct ? '<span class="sheet-check" style="color:var(--accent); font-size:14px; font-weight:bold;">✓</span>' : ''}
             </div>
           `;
         });
@@ -4706,6 +4794,38 @@
       if (overlay) overlay.classList.remove('active');
     }
 
+    function setMobileFont(fontName, elem) {
+      setFont(fontName);
+      if (elem && elem.parentElement) {
+        elem.parentElement.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+        elem.classList.add('active');
+      }
+    }
+    function setMobileInkColor(colorKey, elem) {
+      setInkColor(colorKey);
+      if (elem && elem.parentElement) {
+        elem.parentElement.querySelectorAll('.tool-chip').forEach(b => b.classList.remove('active'));
+        elem.classList.add('active');
+      }
+    }
+    function setMobileTemplate(filename, elem) {
+      selectTemplate(filename);
+      fitCanvasToViewport();
+      if (elem && elem.parentElement) {
+        elem.parentElement.querySelectorAll('.template-card').forEach(b => {
+          b.classList.remove('active');
+          const ck = b.querySelector('.sheet-check');
+          if (ck) ck.remove();
+        });
+        elem.classList.add('active');
+        const ck = document.createElement('span');
+        ck.className = 'sheet-check';
+        ck.style.cssText = 'color:var(--accent); font-size:14px; font-weight:bold;';
+        ck.innerText = '✓';
+        elem.appendChild(ck);
+      }
+    }
+
     function applySmartPreset(presetKey) {
       document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
 
@@ -4769,30 +4889,57 @@
 
   <!-- MOBILE SMART BOTTOM NAVIGATION BAR -->
   <nav class="mobile-bottom-bar" id="mobileBottomBar">
-    <button class="mobile-bar-btn active" id="btnBarEditor" onclick="switchMobileView('editor')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-      <span>Soạn Bài</span>
-    </button>
-    <button class="mobile-bar-btn" id="btnBarDiagram" onclick="openAiDiagramStudio()" style="color:var(--accent);">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-      <span>Sơ Đồ AI</span>
-    </button>
-    <button class="mobile-bar-btn" id="btnBarDeleteDiag" onclick="clearDiagram()" style="display:none; color:#ef4444;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-      <span>Xóa Sơ Đồ</span>
-    </button>
-    <button class="mobile-bar-btn" onclick="openMobileSheet('style')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>
-      <span>Chữ & Bút</span>
-    </button>
-    <button class="mobile-bar-btn" onclick="openMobileSheet('template')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      <span>Đổi Vở</span>
-    </button>
-    <button class="mobile-bar-btn" id="btnBarPreview" onclick="switchMobileView('preview')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      <span>Xem Vở</span>
-    </button>
+    <!-- MODE 1: SOẠN BÀI (WRITING DOCK) -->
+    <div class="mobile-bar-mode mobile-bar-editor-mode">
+      <button class="mobile-bar-btn" onclick="document.getElementById('ocrFileInput').click()" title="Quét chữ từ ảnh">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>Quét OCR</span>
+      </button>
+      <button class="mobile-bar-btn" onclick="toggleTradSimp()" title="Đổi Phồn / Giản thể">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        <span>Phồn ⇄ Giản</span>
+      </button>
+      <button class="mobile-bar-btn" onclick="loadSample('taohuayuan')" title="Nạp bài văn mẫu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Bài Mẫu</span>
+      </button>
+      <button class="mobile-bar-btn" onclick="clearText()" title="Xóa nội dung" style="color:var(--text-dim);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <span>Xóa Hết</span>
+      </button>
+      <button class="mobile-bar-btn btn-cta-view-preview" onclick="switchMobileView('preview')">
+        <span>Xem Trang Vở</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
+    <!-- MODE 2: XEM VỞ (CANVAS STUDIO DOCK) -->
+    <div class="mobile-bar-mode mobile-bar-preview-mode">
+      <button class="mobile-bar-btn" onclick="switchMobileView('editor')" title="Quay lại sửa văn bản">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <span>Soạn Chữ</span>
+      </button>
+      <button class="mobile-bar-btn" onclick="openMobileSheet('style')" title="Đổi kiểu chữ và màu mực">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>
+        <span>Chữ & Mực</span>
+      </button>
+      <button class="mobile-bar-btn btn-bar-ai" onclick="openAiDiagramStudio()" title="Vẽ hoặc quét sơ đồ AI">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        <span>Sơ Đồ AI</span>
+      </button>
+      <button class="mobile-bar-btn btn-bar-delete-diag" id="btnBarDeleteDiag" onclick="clearDiagram()" style="display:none;" title="Xóa sơ đồ hiện tại">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <span>Xóa Sơ Đồ</span>
+      </button>
+      <button class="mobile-bar-btn" onclick="openMobileSheet('template')" title="Đổi mẫu trang vở">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Đổi Vở</span>
+      </button>
+      <button class="mobile-bar-btn btn-bar-download" onclick="downloadCurrentPageImage()" title="Tải ảnh trang vở về máy">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Tải Ảnh</span>
+      </button>
+    </div>
   </nav>
 
   <!-- MOBILE BOTTOM SHEET DRAWER -->
@@ -4801,7 +4948,7 @@
     <div class="mobile-sheet-handle"></div>
     <div class="mobile-sheet-header">
       <span class="mobile-sheet-title" id="mobileSheetTitle">Tùy chỉnh</span>
-      <button class="mobile-sheet-close" onclick="closeMobileSheet()">✕</button>
+      <button class="btn btn-primary" onclick="closeMobileSheet()" style="padding:4px 14px; font-size:12px; font-weight:600; border-radius:14px;">✓ Hoàn tất</button>
     </div>
     <div class="mobile-sheet-body" id="mobileSheetBody"></div>
   </div>
