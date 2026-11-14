@@ -2673,11 +2673,11 @@
       renderTemplateGallery('all');
 
       // Populate initial values
-      document.getElementById('t2Rows').value = state.diagram.t2Rows;
-      document.getElementById('t3Rows').value = state.diagram.t3Rows;
-      document.getElementById('mindmapBranchesArea').value = state.diagram.mindmapBranches;
-      document.getElementById('processStepsArea').value = state.diagram.processSteps;
-      document.getElementById('calloutTextArea').value = state.diagram.calloutText;
+      const elT2 = document.getElementById('t2Rows'); if (elT2) elT2.value = state.diagram.t2Rows;
+      const elT3 = document.getElementById('t3Rows'); if (elT3) elT3.value = state.diagram.t3Rows;
+      const elMM = document.getElementById('mindmapBranchesArea'); if (elMM) elMM.value = state.diagram.mindmapBranches;
+      const elPS = document.getElementById('processStepsArea'); if (elPS) elPS.value = state.diagram.processSteps;
+      const elCO = document.getElementById('calloutTextArea'); if (elCO) elCO.value = state.diagram.calloutText;
 
       loadNotebookImage('assets/' + state.notebookTemplate);
 
@@ -2885,15 +2885,15 @@
           // Setup Table 3-col
           selectDiagramType('table3');
           const header = parsedRows[0];
-          document.getElementById('t3Col1').value = header[0] || 'Cột 1';
-          document.getElementById('t3Col2').value = header[1] || 'Cột 2';
-          document.getElementById('t3Col3').value = header[2] || 'Cột 3';
+          const el1 = document.getElementById('t3Col1'); if (el1) el1.value = header[0] || 'Cột 1';
+          const el2 = document.getElementById('t3Col2'); if (el2) el2.value = header[1] || 'Cột 2';
+          const el3 = document.getElementById('t3Col3'); if (el3) el3.value = header[2] || 'Cột 3';
           state.diagram.t3Col1 = header[0] || 'Cột 1';
           state.diagram.t3Col2 = header[1] || 'Cột 2';
           state.diagram.t3Col3 = header[2] || 'Cột 3';
 
           const rowsText = parsedRows.slice(1).map(r => r.join(' | ')).join('\n');
-          document.getElementById('t3Rows').value = rowsText;
+          const rEl = document.getElementById('t3Rows'); if (rEl) rEl.value = rowsText;
           state.diagram.t3Rows = rowsText;
           showToast('✨ AI đã nhận diện và vẽ lại Bảng 3 cột bằng chữ viết tay!');
 
@@ -2901,30 +2901,35 @@
           // Setup Table 2-col
           selectDiagramType('table2');
           const header = parsedRows[0];
-          document.getElementById('t2Col1').value = header[0] || '生詞';
-          document.getElementById('t2Col2').value = header[1] || '釋義';
+          const el1 = document.getElementById('t2Col1'); if (el1) el1.value = header[0] || '生詞';
+          const el2 = document.getElementById('t2Col2'); if (el2) el2.value = header[1] || '釋義';
           state.diagram.t2Col1 = header[0] || '生詞';
           state.diagram.t2Col2 = header[1] || '釋義';
 
           const rowsText = parsedRows.slice(1).map(r => r.join(' | ')).join('\n');
-          document.getElementById('t2Rows').value = rowsText;
+          const rEl = document.getElementById('t2Rows'); if (rEl) rEl.value = rowsText;
           state.diagram.t2Rows = rowsText;
           showToast('✨ AI đã nhận diện và vẽ lại Bảng 2 cột bằng chữ viết tay!');
 
         } else {
           // Setup Mindmap
           selectDiagramType('mindmap');
-          document.getElementById('mindmapRootTitle').value = lines[0] || '主題';
+          const rEl = document.getElementById('mindmapRootTitle'); if (rEl) rEl.value = lines[0] || '主題';
           state.diagram.mindmapRoot = lines[0] || '主題';
 
           const branches = lines.slice(1).join('\n');
-          document.getElementById('mindmapBranchesArea').value = branches;
+          const bEl = document.getElementById('mindmapBranchesArea'); if (bEl) bEl.value = branches;
           state.diagram.mindmapBranches = branches;
           showToast('✨ AI đã nhận diện và vẽ lại Sơ đồ tư duy bằng nét bút viết tay!');
         }
 
         paginateText();
         renderCanvas();
+        updateDiagramUIButtons();
+
+        if (window.innerWidth <= 991) {
+          switchMobileView('preview');
+        }
 
       } catch (err) {
         console.error(err);
@@ -3412,45 +3417,49 @@
         selectDiagramType('table3');
         showToast('📊 Đã nạp Bảng Từ Vựng HSK 3 Cột!');
       }
+
+      if (window.innerWidth <= 991) {
+        switchMobileView('preview');
+      }
     }
 
     function updateTable2Content() {
-      state.diagram.t2Col1 = document.getElementById('t2Col1').value;
-      state.diagram.t2Col2 = document.getElementById('t2Col2').value;
-      state.diagram.t2Rows = document.getElementById('t2Rows').value;
+      state.diagram.t2Col1 = document.getElementById('t2Col1')?.value || state.diagram.t2Col1 || '生詞';
+      state.diagram.t2Col2 = document.getElementById('t2Col2')?.value || state.diagram.t2Col2 || '釋義';
+      state.diagram.t2Rows = document.getElementById('t2Rows')?.value || state.diagram.t2Rows || '';
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
     }
 
     function updateTable3Content() {
-      state.diagram.t3Col1 = document.getElementById('t3Col1').value;
-      state.diagram.t3Col2 = document.getElementById('t3Col2').value;
-      state.diagram.t3Col3 = document.getElementById('t3Col3').value;
-      state.diagram.t3Rows = document.getElementById('t3Rows').value;
+      state.diagram.t3Col1 = document.getElementById('t3Col1')?.value || state.diagram.t3Col1 || '漢字';
+      state.diagram.t3Col2 = document.getElementById('t3Col2')?.value || state.diagram.t3Col2 || '拼音';
+      state.diagram.t3Col3 = document.getElementById('t3Col3')?.value || state.diagram.t3Col3 || '意思';
+      state.diagram.t3Rows = document.getElementById('t3Rows')?.value || state.diagram.t3Rows || '';
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
     }
 
     function updateMindmapContent() {
-      state.diagram.mindmapRoot = document.getElementById('mindmapRootTitle').value;
-      state.diagram.mindmapBranches = document.getElementById('mindmapBranchesArea').value;
+      state.diagram.mindmapRoot = document.getElementById('mindmapRootTitle')?.value || state.diagram.mindmapRoot || '主題';
+      state.diagram.mindmapBranches = document.getElementById('mindmapBranchesArea')?.value || state.diagram.mindmapBranches || '';
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
     }
 
     function updateProcessContent() {
-      state.diagram.processSteps = document.getElementById('processStepsArea').value;
+      state.diagram.processSteps = document.getElementById('processStepsArea')?.value || state.diagram.processSteps || '';
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
     }
 
     function updateCalloutContent() {
-      state.diagram.calloutTitle = document.getElementById('calloutTitle').value;
-      state.diagram.calloutText = document.getElementById('calloutTextArea').value;
+      state.diagram.calloutTitle = document.getElementById('calloutTitle')?.value || state.diagram.calloutTitle || '★ Lưu ý';
+      state.diagram.calloutText = document.getElementById('calloutTextArea')?.value || state.diagram.calloutText || '';
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
@@ -4403,6 +4412,8 @@
 
     function setFont(fontName) {
       state.font = fontName;
+      const sel = document.getElementById('fontSelector');
+      if (sel && sel.value !== fontName) sel.value = fontName;
       paginateText();
       renderCanvas();
       showToast('Đã đổi font: ' + fontName);
@@ -4410,7 +4421,8 @@
 
     function updateFontSize(val) {
       state.fontSize = parseInt(val);
-      document.getElementById('fontSizeVal').innerText = val + 'px';
+      const dEl = document.getElementById('fontSizeVal'); if (dEl) dEl.innerText = val + 'px';
+      const mEl = document.getElementById('mFontSizeVal'); if (mEl) mEl.innerText = val + 'px';
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
@@ -4418,21 +4430,24 @@
 
     function updateMessiness(val) {
       state.messiness = parseInt(val);
-      document.getElementById('messinessVal').innerText = val + '%';
+      const dEl = document.getElementById('messinessVal'); if (dEl) dEl.innerText = val + '%';
+      const mEl = document.getElementById('mMessinessVal'); if (mEl) mEl.innerText = val + '%';
       renderCanvas();
       updateDiagramUIButtons();
     }
 
     function updateBaselineOffset(val) {
       state.baselineOffset = parseInt(val);
-      document.getElementById('baselineVal').innerText = val + 'px';
+      const dEl = document.getElementById('baselineVal'); if (dEl) dEl.innerText = val + 'px';
+      const mEl = document.getElementById('mBaselineVal'); if (mEl) mEl.innerText = val + 'px';
       renderCanvas();
       updateDiagramUIButtons();
     }
 
     function updateMarginOffset(val) {
       state.marginOffset = parseInt(val);
-      document.getElementById('marginVal').innerText = val + 'px';
+      const dEl = document.getElementById('marginVal'); if (dEl) dEl.innerText = val + 'px';
+      const mEl = document.getElementById('mMarginVal'); if (mEl) mEl.innerText = val + 'px';
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
@@ -4440,7 +4455,8 @@
 
     function updateTopMargin(val) {
       state.topMarginLines = parseInt(val);
-      document.getElementById('topMarginVal').innerText = val + ' dòng';
+      const dEl = document.getElementById('topMarginVal'); if (dEl) dEl.innerText = val + ' dòng';
+      const mEl = document.getElementById('mTopMarginVal'); if (mEl) mEl.innerText = val + ' dòng';
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
@@ -4448,7 +4464,8 @@
 
     function updateBottomMargin(val) {
       state.bottomMarginLines = parseInt(val);
-      document.getElementById('bottomMarginVal').innerText = val + ' dòng';
+      const dEl = document.getElementById('bottomMarginVal'); if (dEl) dEl.innerText = val + ' dòng';
+      const mEl = document.getElementById('mBottomMarginVal'); if (mEl) mEl.innerText = val + ' dòng';
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
@@ -4460,6 +4477,11 @@
       if (b) {
         b.innerText = state.skipLine ? 'Cách dòng: Bật' : 'Cách dòng: Tắt';
         b.classList.toggle('active', state.skipLine);
+      }
+      const mb = document.getElementById('mBtnSkipLine');
+      if (mb) {
+        mb.innerText = state.skipLine ? '📝 Đang bật Cách Dòng' : '📝 Đang tắt Cách Dòng';
+        mb.classList.toggle('active', state.skipLine);
       }
       paginateText();
       renderCanvas();
@@ -4520,7 +4542,8 @@
     function updateCharCount() {
       const len = (state.text || '').replace(/\s+/g, '').length;
       const lines = (state.text || '').split('\n').length;
-      document.getElementById('charCountBadge').innerText = `${len} chữ • ${lines} dòng`;
+      const b = document.getElementById('charCountBadge');
+      if (b) b.innerText = `${len} chữ • ${lines} dòng`;
     }
 
     function loadSample(key) {
@@ -4612,7 +4635,9 @@
       const link = document.createElement('a');
       link.download = `chep-tay-trang-${state.currentPage + 1}.jpg`;
       link.href = canvas.toDataURL('image/jpeg', 0.95);
+      document.body.appendChild(link);
       link.click();
+      setTimeout(() => link.remove(), 100);
       showToast('Đã tải ảnh vở về máy thành công!');
     }
 

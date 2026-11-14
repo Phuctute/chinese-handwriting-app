@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v4.7-dock-toggle-margins';
+const CACHE_NAME = 'cheptay-v4.8-optimized-stability';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -15,6 +15,7 @@ const ASSETS_TO_CACHE = [
   './assets/notebook_thanhnam_spread.jpg',
   './assets/notebook_hongha_2.jpg',
   './assets/notebook_hongha_1.jpg',
+  './fonts/JasonHandwriting5.ttf',
   './fonts/JasonHandwriting3.ttf'
 ];
 
