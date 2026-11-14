@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v4.8-optimized-stability';
+const CACHE_NAME = 'cheptay-v4.9-ios-refined-dock';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

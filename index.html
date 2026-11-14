@@ -808,6 +808,56 @@
       box-shadow: 0 2px 8px rgba(10, 132, 255, 0.35);
     }
 
+    /* iOS Frosted Glass Capsule & Controls */
+    .floating-capsule {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(28, 28, 32, 0.90) !important;
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border: 0.5px solid rgba(255, 255, 255, 0.18) !important;
+      border-radius: 20px !important;
+      padding: 4px 10px !important;
+      gap: 3px !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+    }
+    .capsule-btn {
+      background: transparent !important;
+      border: none !important;
+      color: #ffffff !important;
+      font-size: 13px !important;
+      font-weight: 550 !important;
+      padding: 4px 8px !important;
+      border-radius: 10px !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      line-height: 1 !important;
+      outline: none !important;
+      box-shadow: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+      transition: background 0.15s ease, opacity 0.15s ease !important;
+    }
+    .capsule-btn:active {
+      background: rgba(255, 255, 255, 0.20) !important;
+      opacity: 0.75 !important;
+    }
+    .capsule-text {
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      color: rgba(255, 255, 255, 0.9) !important;
+      padding: 0 4px !important;
+      user-select: none !important;
+      white-space: nowrap !important;
+    }
+    .capsule-divider {
+      width: 1px !important;
+      height: 14px !important;
+      background: rgba(255, 255, 255, 0.18) !important;
+      margin: 0 4px !important;
+    }
+
     /* Mobile Bottom Bar (Hidden on desktop) */
     .mobile-bottom-bar {
       display: none;
@@ -817,13 +867,13 @@
     .mobile-sheet-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.22);
-      backdrop-filter: blur(1.5px);
-      -webkit-backdrop-filter: blur(1.5px);
+      background: rgba(0, 0, 0, 0.12); /* Subtle dark tint, NO BLUR as requested */
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
       z-index: 9980;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.28s ease;
+      transition: opacity 0.22s ease;
     }
     .mobile-sheet-overlay.active {
       opacity: 1;
@@ -833,19 +883,19 @@
       position: fixed;
       bottom: 64px; /* Sits cleanly above the bottom dock, NEVER covering dock buttons */
       left: 8px; right: 8px;
-      max-height: 50vh;
-      background: rgba(24, 24, 28, 0.97);
+      max-height: 52vh;
+      background: rgba(24, 24, 28, 0.98);
       backdrop-filter: blur(35px) saturate(200%);
       -webkit-backdrop-filter: blur(35px) saturate(200%);
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      border: 0.5px solid rgba(255, 255, 255, 0.16);
       border-radius: 20px;
-      box-shadow: 0 14px 44px rgba(0, 0, 0, 0.9);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.9);
       z-index: 9990; /* below bottom dock (9999) so dock buttons remain clickable */
       transform: translateY(calc(100% + 80px));
       transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease;
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
+      overflow: hidden; /* Header fixed, body scrolls */
       opacity: 0;
       pointer-events: none;
     }
@@ -862,42 +912,80 @@
       margin: 8px auto 2px auto;
       flex-shrink: 0;
     }
-    .sheet-tab-btn {
-      background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: var(--text-muted);
-      border-radius: 14px;
-      padding: 3px 9px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-    .sheet-tab-btn:active {
-      transform: scale(0.95);
-    }
-    .sheet-tab-btn.active {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
-      box-shadow: 0 2px 8px rgba(10, 132, 255, 0.4);
-    }
     .mobile-sheet-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 18px 12px 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px 18px;
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
       flex-shrink: 0;
     }
     .mobile-sheet-title {
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 7px;
+      letter-spacing: -0.2px;
+    }
+    .sheet-close-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.10);
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .sheet-close-btn:active {
+      background: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+    }
+
+    /* iOS Native Range Sliders */
+    .range-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 3px;
+      outline: none;
+      margin: 8px 0 4px 0;
+      transition: background 0.2s ease;
+    }
+    .range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45), 0 0 1px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      border: none;
+    }
+    .range-slider::-webkit-slider-thumb:active {
+      transform: scale(1.15);
+      box-shadow: 0 3px 12px rgba(10, 132, 255, 0.6);
+    }
+    .range-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+      border: none;
+      cursor: pointer;
     }
     .mobile-sheet-close {
       background: rgba(255, 255, 255, 0.08);
@@ -1085,14 +1173,51 @@
         pointer-events: auto;
         display: inline-flex;
         align-items: center;
-        background: rgba(22, 22, 28, 0.88);
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        border-radius: 20px;
-        padding: 3px 12px;
-        gap: 5px;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+        background: rgba(28, 28, 32, 0.90) !important;
+        backdrop-filter: blur(25px) saturate(180%);
+        -webkit-backdrop-filter: blur(25px) saturate(180%);
+        border: 0.5px solid rgba(255, 255, 255, 0.18) !important;
+        border-radius: 20px !important;
+        padding: 4px 10px !important;
+        gap: 3px !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+      }
+      .capsule-btn {
+        background: transparent !important;
+        border: none !important;
+        color: #ffffff !important;
+        font-size: 13px !important;
+        font-weight: 550 !important;
+        padding: 4px 8px !important;
+        border-radius: 10px !important;
+        cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1 !important;
+        outline: none !important;
+        box-shadow: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+        transition: background 0.15s ease, opacity 0.15s ease !important;
+      }
+      .capsule-btn:active {
+        background: rgba(255, 255, 255, 0.20) !important;
+        opacity: 0.75 !important;
+      }
+      .capsule-text {
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        padding: 0 4px !important;
+        user-select: none !important;
+        white-space: nowrap !important;
+      }
+      .capsule-divider {
+        width: 1px !important;
+        height: 14px !important;
+        background: rgba(255, 255, 255, 0.22) !important;
+        margin: 0 3px !important;
+        display: inline-block !important;
       }
 
       /* Apple UITabBar Style - Highest Z-Index (9999) */
@@ -1101,7 +1226,7 @@
         position: fixed !important;
         bottom: 0 !important; left: 0 !important; right: 0 !important;
         height: 60px;
-        background: rgba(18, 18, 22, 0.94) !important;
+        background: rgba(18, 18, 22, 0.95) !important;
         backdrop-filter: blur(25px) saturate(190%) !important;
         -webkit-backdrop-filter: blur(25px) saturate(190%) !important;
         border-top: 0.5px solid rgba(255, 255, 255, 0.16) !important;
@@ -1116,7 +1241,7 @@
         width: 100%;
         align-items: center;
         justify-content: space-around;
-        gap: 4px;
+        gap: 2px;
       }
       .mobile-bar-editor-mode {
         display: flex;
@@ -1136,17 +1261,18 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 2px;
+        gap: 2.5px;
         background: transparent;
         border: none;
         color: rgba(235, 235, 245, 0.6);
-        font-size: 10.5px;
+        font-size: 11px;
         font-weight: 500;
         cursor: pointer;
-        padding: 4px 6px;
+        padding: 4px 4px;
         border-radius: 8px;
-        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: color 0.15s ease, transform 0.12s ease;
         flex: 1;
+        -webkit-tap-highlight-color: transparent;
       }
       .mobile-bar-btn:active {
         transform: scale(0.92);
@@ -1154,14 +1280,32 @@
       .mobile-bar-btn.active,
       .mobile-bar-btn.active-feature {
         color: var(--accent) !important;
+        font-weight: 600;
       }
       .mobile-bar-btn.active-feature svg {
         stroke: var(--accent) !important;
-        transform: translateY(-2px);
+        transform: translateY(-1.5px);
       }
       .mobile-bar-btn svg {
         width: 20px;
         height: 20px;
+      }
+
+      .ai-studio-overlay {
+        align-items: flex-end !important;
+        padding: 0 8px 68px 8px !important;
+        background: rgba(0, 0, 0, 0.45) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        z-index: 9990 !important;
+      }
+      .ai-studio-card {
+        max-height: 80vh !important;
+        border-radius: 20px !important;
+        margin-bottom: 0 !important;
+      }
+      .ai-studio-footer {
+        padding: 10px 14px !important;
       }
 
       /* Primary CTA in Editor mode: 'Xem Trang Vở ➜' */
@@ -3046,17 +3190,31 @@
     // ========================================================
     let currentStudioArch = 'chem';
 
+    function toggleAiDiagramStudio() {
+      const modal = document.getElementById('aiDiagramStudioModal');
+      if (modal && modal.classList.contains('active')) {
+        closeAiDiagramStudio();
+      } else {
+        if (typeof closeMobileSheet === 'function') closeMobileSheet();
+        openAiDiagramStudio();
+      }
+    }
+
     function openAiDiagramStudio() {
+      if (typeof closeMobileSheet === 'function') closeMobileSheet();
       const modal = document.getElementById('aiDiagramStudioModal');
       if (modal) {
         modal.classList.add('active');
         selectStudioArchetype(currentStudioArch || 'chem');
       }
+      document.querySelectorAll('.mobile-bar-btn').forEach(btn => btn.classList.remove('active-feature'));
+      document.getElementById('btnBar_diagram')?.classList.add('active-feature');
     }
 
     function closeAiDiagramStudio() {
       const modal = document.getElementById('aiDiagramStudioModal');
       if (modal) modal.classList.remove('active');
+      document.getElementById('btnBar_diagram')?.classList.remove('active-feature');
     }
 
     function selectStudioArchetype(arch) {
@@ -4694,18 +4852,17 @@
 
       sheet.dataset.type = type;
 
+      if (typeof closeAiDiagramStudio === 'function') closeAiDiagramStudio();
+
       // Update active highlight on bottom dock buttons
       document.querySelectorAll('.mobile-bar-btn').forEach(btn => btn.classList.remove('active-feature'));
       const activeBarBtn = document.getElementById('btnBar_' + type);
       if (activeBarBtn) activeBarBtn.classList.add('active-feature');
 
-      // Update active tab inside sheet header
-      ['style', 'margin', 'template'].forEach(t => {
-        const tabBtn = document.getElementById('sheetTab_' + t);
-        if (tabBtn) tabBtn.classList.toggle('active', t === type);
-      });
+      const title = document.getElementById('mobileSheetTitle');
 
       if (type === 'style') {
+        if (title) title.innerHTML = '🖋️ Nét & Kiểu Chữ';
         body.innerHTML = `
           <div style="margin-bottom:14px;">
             <label class="form-label" style="margin-bottom:6px; display:block;">Font chữ viết tay:</label>
@@ -4749,6 +4906,7 @@
           </div>
         `;
       } else if (type === 'margin') {
+        if (title) title.innerHTML = '📏 Căn Dòng & Lề Vở';
         body.innerHTML = `
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
@@ -4784,6 +4942,7 @@
           </div>
         `;
       } else if (type === 'template') {
+        if (title) title.innerHTML = '📓 Chọn Mẫu Vở';
         let tplCardsHtml = '';
         Object.entries(TEMPLATES_CONFIG).forEach(([filename, cfg]) => {
           const isAct = state.notebookTemplate === filename;
@@ -4813,7 +4972,7 @@
         sheet.dataset.type = '';
       }
       if (overlay) overlay.classList.remove('active');
-      document.querySelectorAll('.mobile-bar-btn').forEach(btn => btn.classList.remove('active-feature'));
+      document.querySelectorAll('.mobile-bar-btn:not(#btnBar_diagram)').forEach(btn => btn.classList.remove('active-feature'));
     }
 
     function resetMargins() {
@@ -4962,27 +5121,27 @@
     <div class="mobile-bar-mode mobile-bar-preview-mode">
       <button class="mobile-bar-btn" id="btnBar_editor" onclick="switchMobileView('editor')" title="Quay lại sửa văn bản">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        <span>Soạn Chữ</span>
+        <span>Soạn</span>
       </button>
       <button class="mobile-bar-btn" id="btnBar_style" onclick="toggleMobileSheet('style')" title="Đổi kiểu chữ và màu mực">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>
-        <span>Chữ & Mực</span>
+        <span>Nét</span>
       </button>
       <button class="mobile-bar-btn" id="btnBar_margin" onclick="toggleMobileSheet('margin')" title="Căn lề và bám dòng ô vở">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 6H3"/><path d="M21 12H3"/><path d="M21 18H3"/><path d="M8 3v18"/><path d="M16 3v18"/></svg>
-        <span>Căn Dòng</span>
+        <span>Căn</span>
       </button>
-      <button class="mobile-bar-btn btn-bar-ai" id="btnBar_diagram" onclick="openAiDiagramStudio()" title="Vẽ hoặc quét sơ đồ AI">
+      <button class="mobile-bar-btn btn-bar-ai" id="btnBar_diagram" onclick="toggleAiDiagramStudio()" title="Vẽ hoặc quét sơ đồ AI">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-        <span>Sơ Đồ AI</span>
+        <span>Sơ Đồ</span>
       </button>
       <button class="mobile-bar-btn" id="btnBar_template" onclick="toggleMobileSheet('template')" title="Đổi mẫu trang vở">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        <span>Đổi Vở</span>
+        <span>Vở</span>
       </button>
       <button class="mobile-bar-btn btn-bar-download" id="btnBar_download" onclick="downloadCurrentPageImage()" title="Tải ảnh trang vở về máy">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span>Tải Ảnh</span>
+        <span>Tải</span>
       </button>
     </div>
   </nav>
@@ -4992,12 +5151,8 @@
   <div class="mobile-sheet" id="mobileSheet">
     <div class="mobile-sheet-handle"></div>
     <div class="mobile-sheet-header">
-      <div style="display:flex; gap:6px; overflow-x:auto; padding:2px 0;" id="mobileSheetTabs">
-        <button class="sheet-tab-btn active" id="sheetTab_style" onclick="openMobileSheet('style')">🖋️ Chữ & Mực</button>
-        <button class="sheet-tab-btn" id="sheetTab_margin" onclick="openMobileSheet('margin')">📏 Căn Dòng</button>
-        <button class="sheet-tab-btn" id="sheetTab_template" onclick="openMobileSheet('template')">📓 Mẫu Vở</button>
-      </div>
-      <button class="btn btn-secondary" onclick="closeMobileSheet()" style="padding:4px 12px; font-size:12px; font-weight:600; border-radius:14px; flex-shrink:0; background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.18);" title="Đóng cửa sổ">✕ Đóng</button>
+      <span class="mobile-sheet-title" id="mobileSheetTitle">Tùy chỉnh</span>
+      <button class="sheet-close-btn" onclick="closeMobileSheet()" title="Đóng">✕</button>
     </div>
     <div class="mobile-sheet-body" id="mobileSheetBody"></div>
   </div>
@@ -5033,7 +5188,7 @@
 
 
   <!-- AI DIAGRAM & TABLE SCAN STUDIO MODAL -->
-  <div class="ai-studio-overlay" id="aiDiagramStudioModal">
+  <div class="ai-studio-overlay" id="aiDiagramStudioModal" onclick="if(event.target===this)closeAiDiagramStudio()">
     <div class="ai-studio-card">
       <div class="ai-studio-header">
         <div style="display:flex; align-items:center; gap:10px;">
