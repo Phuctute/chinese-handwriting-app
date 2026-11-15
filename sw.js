@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v5.4-fixed-spreads-and-lines';
+const CACHE_NAME = 'cheptay-v5.5-photorealistic-spreads-4only';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -10,9 +10,10 @@ const ASSETS_TO_CACHE = [
   './assets/apple-touch-icon.png',
   './assets/notebook_thanhnam_ai_single.jpg',
   './assets/notebook_hongha_ai_single.jpg',
-  './assets/notebook_thanhnam_ai_spread.jpg',
-  './assets/notebook_hongha_ai_spread.jpg',
   './assets/notebook_thanhnam_spread.jpg',
+  './assets/notebook_thanhnam_spread_warm.jpg',
+  './assets/notebook_hongha_spread.jpg',
+  './assets/notebook_thanhnam_spread_clean.jpg',
   './assets/notebook_hongha_2.jpg',
   './assets/notebook_hongha_1.jpg',
   './fonts/JasonHandwriting5.ttf',

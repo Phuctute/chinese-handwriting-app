@@ -2771,15 +2771,45 @@
         // AI GENERATED HIGH-PRECISION MATHEMATICAL LINES
     const TN_AI_SINGLE = [75, 104, 133, 162, 191, 220, 249, 278, 307, 336, 365, 394, 423, 452, 481, 510, 539, 568, 597, 626, 655, 684, 713, 742, 771, 800, 829, 858, 887, 916];
     const HH_AI_SINGLE = [75, 104, 133, 162, 191, 220, 249, 278, 307, 336, 365, 394, 423, 452, 481, 510, 539, 568, 597, 626, 655, 684, 713, 742, 771, 800, 829, 858, 887, 916];
-    const TN_AI_SPREAD = [65, 86, 107, 128, 149, 170, 191, 212, 233, 254, 275, 296, 317, 338, 359, 380, 401, 422, 443, 464, 485, 506, 527, 548, 569, 590, 611, 632, 653, 674, 695];
+    const SPREAD_LINES = [68, 89, 110, 132, 153, 174, 195, 216, 238, 259, 280, 301, 322, 344, 365, 386, 407, 428, 450, 471, 492, 513, 534, 556, 577, 598, 619, 640, 662, 683, 704, 725];
 
     // Single Page Calibrated Lines (True count and spacing)
     const HH_SINGLE_1 = [81, 108, 136, 164, 192, 221, 251, 281, 311, 342, 373, 404, 435, 466, 498, 530, 562, 594, 627, 660, 694, 728, 762, 796, 830, 864, 898, 932, 966];
     const HH_SINGLE_2 = [65, 92, 121, 150, 179, 209, 240, 270, 300, 332, 363, 393, 424, 455, 487, 517, 546, 577, 610, 644, 678, 713, 748, 783, 817, 852, 887, 923, 958, 990];
     const TN_SINGLE_1 = [69, 93, 118, 143, 168, 194, 220, 246, 273, 299, 327, 354, 382, 410, 438, 466, 494, 522, 550, 580, 609, 639, 668, 698, 729, 759, 790, 820, 851, 880, 910, 940, 971, 996];
 
-        const TEMPLATES_CONFIG = {
-      // === 4 MẪU VỞ AI CHUẨN XÁC TUYỆT ĐỐI (KHÔNG LỆCH DÒNG, KHÔNG MÉO ẢNH) ===
+    const TEMPLATES_CONFIG = {
+      // === 4 MẪU TRANG ĐÔI KẺ NGANG CHỤP THỰC TẾ TRÊN BÀN HỌC (CHUẨN 100% DÒNG KẺ) ===
+      'notebook_thanhnam_spread.jpg': {
+        name: 'Trang Đôi Thành Nam (Tiêu chuẩn)',
+        desc: 'Vở kẻ ngang chụp thực tế trên bàn gỗ, chuẩn từng dòng',
+        isSpread: true,
+        leftPage: { leftMargin: 55, rightMargin: 480, lines: SPREAD_LINES },
+        rightPage: { leftMargin: 565, rightMargin: 960, lines: SPREAD_LINES }
+      },
+      'notebook_thanhnam_spread_warm.jpg': {
+        name: 'Trang Đôi Thành Nam (Ấm Vintage)',
+        desc: 'Giấy vàng ngà chống mỏi mắt chụp thật dưới đèn bàn',
+        isSpread: true,
+        leftPage: { leftMargin: 55, rightMargin: 480, lines: SPREAD_LINES },
+        rightPage: { leftMargin: 565, rightMargin: 960, lines: SPREAD_LINES }
+      },
+      'notebook_hongha_spread.jpg': {
+        name: 'Trang Đôi Hồng Hà (Kẻ Ngang)',
+        desc: 'Vở Hồng Hà bãi bằng có biểu tượng thời tiết, thứ ngày & logo',
+        isSpread: true,
+        leftPage: { leftMargin: 55, rightMargin: 480, lines: SPREAD_LINES },
+        rightPage: { leftMargin: 565, rightMargin: 960, lines: SPREAD_LINES }
+      },
+      'notebook_thanhnam_spread_clean.jpg': {
+        name: 'Trang Đôi Bãi Bằng (Trắng Sáng)',
+        desc: 'Giấy bãi bằng trắng tinh sạch sẽ chụp thật trên bàn học',
+        isSpread: true,
+        leftPage: { leftMargin: 55, rightMargin: 480, lines: SPREAD_LINES },
+        rightPage: { leftMargin: 565, rightMargin: 960, lines: SPREAD_LINES }
+      },
+
+      // === MẪU TRANG ĐƠN CHUẨN XÁC ===
       'notebook_thanhnam_ai_single.jpg': {
         name: 'Trang Đơn Thành Nam AI ★',
         desc: 'Kẻ ngang chuẩn xác 100%, lề đỏ tiêu chuẩn học sinh',
@@ -2796,66 +2826,6 @@
         rightMargin: 708,
         lines: HH_AI_SINGLE
       },
-      'notebook_thanhnam_ai_spread.jpg': {
-        name: 'Trang Đôi Thành Nam AI ★',
-        desc: 'Trang đôi 3D gáy sách mềm mại, kẻ ngang thẳng hàng',
-        isSpread: true,
-        leftPage: { leftMargin: 85, rightMargin: 475, lines: TN_AI_SPREAD },
-        rightPage: { leftMargin: 582, rightMargin: 980, lines: TN_AI_SPREAD }
-      },
-      'notebook_hongha_ai_spread.jpg': {
-        name: 'Trang Đôi Hồng Hà AI ★',
-        desc: 'Trang đôi truyền thống bãi bằng, chữ bám khít từng milimet',
-        isSpread: true,
-        leftPage: { leftMargin: 85, rightMargin: 475, lines: TN_AI_SPREAD },
-        rightPage: { leftMargin: 582, rightMargin: 980, lines: TN_AI_SPREAD }
-      },
-
-      // 8 Seamless 3D Double Spreads (Uniform 31 Lines, 100% Snap & Zero Central Seam)
-      'notebook_thanhnam_spread.jpg': {
-        name: 'Trang Đôi Thành Nam',
-        desc: 'Kẻ ngang tiêu chuẩn học sinh',
-        isSpread: true,
-        leftPage: { leftMargin: 85, rightMargin: 475, lines: TN_AI_SPREAD },
-        rightPage: { leftMargin: 582, rightMargin: 980, lines: TN_AI_SPREAD }
-      },
-      'notebook_thanhnam_spread_clean.jpg': {
-        name: 'Trang Đôi Thành Nam (Trắng)',
-        desc: 'Nền giấy trắng sáng rõ nét',
-        isSpread: true,
-        leftPage: { leftMargin: 85, rightMargin: 475, lines: TN_AI_SPREAD },
-        rightPage: { leftMargin: 582, rightMargin: 980, lines: TN_AI_SPREAD }
-      },
-      'notebook_thanhnam_spread_warm.jpg': {
-        name: 'Trang Đôi Thành Nam (Ấm)',
-        desc: 'Giấy ngà bảo vệ mắt Vintage',
-        isSpread: true,
-        leftPage: { leftMargin: 85, rightMargin: 475, lines: TN_AI_SPREAD },
-        rightPage: { leftMargin: 582, rightMargin: 980, lines: TN_AI_SPREAD }
-      },
-      'notebook_hongha_spread.jpg': {
-        name: 'Trang Đôi Hồng Hà',
-        desc: 'Hồng Hà kẻ ngang truyền thống',
-        isSpread: true,
-        leftPage: { leftMargin: 85, rightMargin: 475, lines: TN_AI_SPREAD },
-        rightPage: { leftMargin: 582, rightMargin: 980, lines: TN_AI_SPREAD }
-      },
-      'notebook_hongha_spread_soft.jpg': {
-        name: 'Trang Đôi Hồng Hà (Dịu)',
-        desc: 'Tone màu êm ái chống lóa',
-        isSpread: true,
-        leftPage: { leftMargin: 85, rightMargin: 475, lines: TN_AI_SPREAD },
-        rightPage: { leftMargin: 582, rightMargin: 980, lines: TN_AI_SPREAD }
-      },
-      'notebook_hongha_spread_warm.jpg': {
-        name: 'Trang Đôi Hồng Hà (Vàng)',
-        desc: 'Giấy bãi bằng vàng học trò',
-        isSpread: true,
-        leftPage: { leftMargin: 85, rightMargin: 475, lines: TN_AI_SPREAD },
-        rightPage: { leftMargin: 582, rightMargin: 980, lines: TN_AI_SPREAD }
-      },
-
-      // 7 Single Pages (Calibrated margins & real 30-line count)
       'notebook_hongha_1.jpg': {
         name: 'Trang Đơn Hồng Hà (Biểu tượng)',
         desc: 'Có đồng hồ, sách vở, bóng đèn góc trên',
@@ -5523,8 +5493,8 @@
         state.font = 'JasonHandwriting5';
         state.inkColor = 'blue';
         state.fontSize = 15;
-        selectTemplate('notebook_hongha_ai_spread.jpg');
-        showToast('📖 Đã đổi sang Trang Đôi AI Hồng Hà 3D');
+        selectTemplate('notebook_hongha_spread.jpg');
+        showToast('📖 Đã đổi sang Trang Đôi Hồng Hà');
       } else if (presetKey === 'purple') {
         document.getElementById('chipPresetPurple')?.classList.add('active');
         setInkColor('purple');
