@@ -2363,14 +2363,14 @@
         <div class="section-card">
           <div class="card-header">
             <span class="card-title">Mẫu Vở Học Sinh</span>
-            <span class="badge" id="templateCountBadge">16 mẫu</span>
+            <span class="badge" id="templateCountBadge">8 mẫu</span>
           </div>
 
           <!-- Template Category Pills -->
           <div style="display:flex; gap:6px;">
             <button class="tool-chip active" id="filterTplAll" onclick="filterTemplates('all')">Tất cả</button>
-            <button class="tool-chip" id="filterTplSpread" onclick="filterTemplates('spread')">Trang Đôi (9)</button>
-            <button class="tool-chip" id="filterTplSingle" onclick="filterTemplates('single')">Trang Đơn (7)</button>
+            <button class="tool-chip" id="filterTplSpread" onclick="filterTemplates('spread')">Trang Đôi (4)</button>
+            <button class="tool-chip" id="filterTplSingle" onclick="filterTemplates('single')">Trang Đơn (4)</button>
           </div>
 
           <!-- Template Cards Grid -->
@@ -2763,7 +2763,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '5.8.4';
+    const APP_VERSION = '5.8.5';
     function getAssetUrl(url) {
       if (!url) return '';
       return url + (url.includes('?') ? '&' : '?') + 'v=' + APP_VERSION;
