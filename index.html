@@ -1118,6 +1118,65 @@
       border-radius: 6px;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
     }
+    /* Export Resolution Picker */
+    .download-scale-picker {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .scale-picker-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .scale-pills-row {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+    }
+    .scale-pill {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 7px 4px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .scale-pill:hover {
+      background: rgba(255, 255, 255, 0.09);
+      color: #fff;
+    }
+    .scale-pill.active {
+      background: rgba(14, 165, 233, 0.22);
+      border-color: #0ea5e9;
+      color: #38bdf8;
+      box-shadow: 0 0 12px rgba(14, 165, 233, 0.25);
+    }
+    .scale-sub {
+      font-size: 9.5px;
+      font-weight: 400;
+      opacity: 0.75;
+    }
+    .scale-pill.active .scale-sub {
+      opacity: 1;
+      font-weight: 600;
+      color: #7dd3fc;
+    }
     .download-meta-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -2886,6 +2945,7 @@
       skipLine: false,
       autoTypo: true,
       zoomLevel: 0.40,
+      exportScale: 2, // 1 = 1x Standard, 2 = 2x Retina HD (Default), 3 = 3x Ultra HD 4K
 
       // Pagination
       currentPage: 0,
@@ -4052,18 +4112,28 @@
     // CANVAS RENDERING ENGINE (ORGANIC LINE FOLLOWING & HANDWRITING)
     // ========================================================
     function renderCanvas() {
+      if (!ctx || !canvas) return;
+      renderPageToContext(ctx, canvas.width, canvas.height, state.currentPage, 1);
+    }
+
+    function renderPageToContext(targetCtx, targetW, targetH, pageIndex, scaleFactor = 1) {
       if (!state.notebookImg || !state.notebookImg.complete) return;
 
-      const w = canvas.width;
-      const h = canvas.height;
+      targetCtx.save();
+      targetCtx.imageSmoothingEnabled = true;
+      targetCtx.imageSmoothingQuality = 'high';
 
       // 1. Draw notebook background
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.clearRect(0, 0, w, h);
-      ctx.drawImage(state.notebookImg, 0, 0, w, h);
+      targetCtx.globalCompositeOperation = 'source-over';
+      targetCtx.clearRect(0, 0, targetW, targetH);
+      targetCtx.drawImage(state.notebookImg, 0, 0, targetW, targetH);
 
       // 2. Set ink blend mode to Multiply
-      ctx.globalCompositeOperation = 'multiply';
+      targetCtx.globalCompositeOperation = 'multiply';
+
+      if (scaleFactor !== 1) {
+        targetCtx.scale(scaleFactor, scaleFactor);
+      }
 
       const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
       const isSpread = !!cfg.isSpread;
@@ -4072,7 +4142,7 @@
       const blOffset = state.baselineOffset || 0;
 
       const mFactor = state.messiness / 100.0;
-      const prng = mulberry32(state.seed + state.currentPage * 7919);
+      const prng = mulberry32(state.seed + pageIndex * 7919);
 
       let baseR = 24, baseG = 28, baseB = 36;
       if (state.inkColor === 'blue') { baseR = 24; baseG = 56; baseB = 125; }
@@ -4085,32 +4155,34 @@
         const leftM_R = cfg.rightPage.leftMargin + leftOff;
         const rightM_R = cfg.rightPage.rightMargin + rightOff;
 
-        const leftSubpage = state.allPagesLines[state.currentPage * 2] || [];
-        const rightSubpage = state.allPagesLines[state.currentPage * 2 + 1] || [];
+        const leftSubpage = state.allPagesLines[pageIndex * 2] || [];
+        const rightSubpage = state.allPagesLines[pageIndex * 2 + 1] || [];
 
         // Draw diagram on designated spread side
-        if (state.diagram.enabled && state.currentPage === state.diagram.page) {
+        if (state.diagram.enabled && pageIndex === state.diagram.page) {
           const isRight = (state.diagram.spreadSide === 'right');
           const sideCfg = isRight ? 
             { lines: cfg.rightPage.lines, leftMargin: leftM_R, rightMargin: rightM_R } : 
             { lines: cfg.leftPage.lines, leftMargin: leftM_L, rightMargin: rightM_L };
-          drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, sideCfg);
+          drawDiagramOnCanvas(targetCtx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, sideCfg);
         }
 
-        renderLineSet(ctx, leftSubpage, cfg.leftPage.lines, leftM_L, rightM_L, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, true, false);
-        renderLineSet(ctx, rightSubpage, cfg.rightPage.lines, leftM_R, rightM_R, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, true, true);
+        renderLineSet(targetCtx, leftSubpage, cfg.leftPage.lines, leftM_L, rightM_L, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, true, false);
+        renderLineSet(targetCtx, rightSubpage, cfg.rightPage.lines, leftM_R, rightM_R, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, true, true);
 
       } else {
         const leftM = (cfg.leftMargin || 90) + leftOff;
         const rightM = (cfg.rightMargin || 685) + rightOff;
-        const pageLines = state.allPagesLines[state.currentPage] || [];
+        const pageLines = state.allPagesLines[pageIndex] || [];
 
-        if (state.diagram.enabled && state.currentPage === state.diagram.page) {
-          drawDiagramOnCanvas(ctx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, { lines: cfg.lines, leftMargin: leftM, rightMargin: rightM });
+        if (state.diagram.enabled && pageIndex === state.diagram.page) {
+          drawDiagramOnCanvas(targetCtx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, { lines: cfg.lines, leftMargin: leftM, rightMargin: rightM });
         }
 
-        renderLineSet(ctx, pageLines, cfg.lines, leftM, rightM, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, false, false);
+        renderLineSet(targetCtx, pageLines, cfg.lines, leftM, rightM, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, false, false);
       }
+
+      targetCtx.restore();
     }
 
     function renderLineSet(ctx, lineTokensList, linesConfig, leftM, rightM, blOffset, prng, baseR, baseG, baseB, mFactor, fontSize, fontName, isSpread, isRightSubpage) {
@@ -4923,18 +4995,57 @@
       if (mz) mz.innerText = Math.round(state.zoomLevel * 100) + '%';
     }
 
-    // --- DOWNLOAD CONFIRMATION MODAL & TRUE JPEG EXPORT ---
+    // --- HIGH-DEFINITION (2K / 4K) EXPORT & DOWNLOAD ENGINE ---
+    function setExportScale(scale) {
+      state.exportScale = scale;
+      [1, 2, 3].forEach(s => {
+        const pill = document.getElementById(`scalePill${s}`);
+        if (pill) pill.classList.toggle('active', s === scale);
+      });
+      updateDownloadModalMeta();
+    }
+
+    function updateDownloadModalMeta() {
+      const scale = state.exportScale || 2;
+      const baseW = canvas ? canvas.width : 768;
+      const baseH = canvas ? canvas.height : 1024;
+      const expW = Math.round(baseW * scale);
+      const expH = Math.round(baseH * scale);
+
+      const dimLabel = document.getElementById('downloadDimLabel');
+      const qualityLabel = document.getElementById('downloadQualityLabel');
+      const singleBtnText = document.getElementById('downloadBtnText');
+      const allBtnText = document.getElementById('downloadAllBtnText');
+
+      if (dimLabel) dimLabel.innerText = `${expW} × ${expH} px`;
+      if (qualityLabel) {
+        if (scale === 1) qualityLabel.innerText = '95% Tiêu Chuẩn (1x)';
+        else if (scale === 2) qualityLabel.innerText = '98% 2K Cực Nét (2x)';
+        else if (scale === 3) qualityLabel.innerText = '100% 4K Siêu Nét (3x)';
+      }
+
+      const curPageNum = state.currentPage + 1;
+      const totalPages = state.totalPages || 1;
+      const scaleTag = scale === 2 ? '2K' : (scale === 3 ? '4K' : 'HD');
+
+      if (singleBtnText) {
+        singleBtnText.innerText = totalPages > 1 ? `Tải Trang ${curPageNum} (${scaleTag} .JPG)` : `Tải Ảnh ${scaleTag} (.JPG) Về Máy`;
+      }
+      if (allBtnText) {
+        allBtnText.innerText = `Tải Toàn Bộ ${totalPages} Trang (${scaleTag} .JPG)`;
+      }
+    }
+
     function confirmDownloadImage() {
       if (!canvas) return;
       if (typeof closeMobileSheet === 'function') closeMobileSheet();
 
+      if (!state.exportScale) state.exportScale = 2; // Default 2K Cực Nét
+
       const modal = document.getElementById('downloadConfirmModal');
       const previewImg = document.getElementById('downloadPreviewImg');
       const pageLabel = document.getElementById('downloadPageLabel');
-      const dimLabel = document.getElementById('downloadDimLabel');
-      const singleBtnText = document.getElementById('downloadBtnText');
       const btnAll = document.getElementById('btnDownloadAllJpg');
-      const allBtnText = document.getElementById('downloadAllBtnText');
       const shareBtn = document.getElementById('btnDownloadShare');
 
       const curPageNum = state.currentPage + 1;
@@ -4943,21 +5054,18 @@
       if (pageLabel) {
         pageLabel.innerText = `Trang ${curPageNum} / ${totalPages}`;
       }
-      if (dimLabel) {
-        dimLabel.innerText = `${canvas.width} × ${canvas.height} px`;
-      }
-      if (singleBtnText) {
-        singleBtnText.innerText = totalPages > 1 ? `Tải Trang ${curPageNum} (.JPG)` : `Tải Ảnh (.JPG) Về Máy`;
-      }
+
+      // Sync active state of scale pills
+      [1, 2, 3].forEach(s => {
+        const pill = document.getElementById(`scalePill${s}`);
+        if (pill) pill.classList.toggle('active', s === state.exportScale);
+      });
+
+      updateDownloadModalMeta();
 
       // If multiple pages, show batch download button
       if (btnAll) {
-        if (totalPages > 1) {
-          btnAll.style.display = 'flex';
-          if (allBtnText) allBtnText.innerText = `Tải Toàn Bộ ${totalPages} Trang (.JPG)`;
-        } else {
-          btnAll.style.display = 'none';
-        }
+        btnAll.style.display = totalPages > 1 ? 'flex' : 'none';
       }
 
       // Generate preview thumbnail
@@ -4998,7 +5106,18 @@
 
     function executeDownloadJpg() {
       if (!canvas) return;
-      const fileName = `chep-tay-trang-${state.currentPage + 1}.jpg`;
+      const scale = state.exportScale || 2;
+      const curPage = state.currentPage + 1;
+      const fileName = `chep-tay-trang-${curPage}.jpg`;
+
+      const off = document.createElement('canvas');
+      off.width = Math.round(canvas.width * scale);
+      off.height = Math.round(canvas.height * scale);
+      const offCtx = off.getContext('2d');
+
+      renderPageToContext(offCtx, off.width, off.height, state.currentPage, scale);
+
+      const quality = scale >= 3 ? 0.98 : (scale >= 2 ? 0.96 : 0.95);
 
       const doSave = (blob) => {
         if (!blob) {
@@ -5018,11 +5137,12 @@
           URL.revokeObjectURL(url);
         }, 10000);
         closeDownloadModal();
-        showToast(`Đã tải ảnh ${fileName} về máy thành công!`);
+        const scaleName = scale === 2 ? '2K Cực Nét' : (scale === 3 ? '4K Siêu Nét' : 'Chuẩn');
+        showToast(`Đã tải ảnh ${scaleName} (${off.width}×${off.height}px) thành công!`);
       };
 
-      if (canvas.toBlob) {
-        canvas.toBlob(doSave, 'image/jpeg', 0.95);
+      if (off.toBlob) {
+        off.toBlob(doSave, 'image/jpeg', quality);
       } else {
         fallbackDownload(fileName);
       }
@@ -5041,7 +5161,17 @@
 
     async function executeShareJpg() {
       if (!canvas) return;
-      const fileName = `chep-tay-trang-${state.currentPage + 1}.jpg`;
+      const scale = state.exportScale || 2;
+      const curPage = state.currentPage + 1;
+      const fileName = `chep-tay-trang-${curPage}.jpg`;
+
+      const off = document.createElement('canvas');
+      off.width = Math.round(canvas.width * scale);
+      off.height = Math.round(canvas.height * scale);
+      const offCtx = off.getContext('2d');
+
+      renderPageToContext(offCtx, off.width, off.height, state.currentPage, scale);
+      const quality = scale >= 3 ? 0.98 : (scale >= 2 ? 0.96 : 0.95);
 
       const performShare = async (blob) => {
         if (!blob) {
@@ -5054,10 +5184,10 @@
             await navigator.share({
               files: [file],
               title: fileName,
-              text: `Ảnh chép tay trang ${state.currentPage + 1}`
+              text: `Ảnh chép tay trang ${curPage} (${off.width}×${off.height}px)`
             });
             closeDownloadModal();
-            showToast('Đã chia sẻ / lưu ảnh vào máy thành công!');
+            showToast('Đã lưu ảnh vào máy thành công!');
           } else {
             executeDownloadJpg();
           }
@@ -5069,8 +5199,8 @@
         }
       };
 
-      if (canvas.toBlob) {
-        canvas.toBlob(performShare, 'image/jpeg', 0.95);
+      if (off.toBlob) {
+        off.toBlob(performShare, 'image/jpeg', quality);
       } else {
         executeDownloadJpg();
       }
@@ -5079,18 +5209,29 @@
     async function executeDownloadAllJpg() {
       if (!canvas || !state.totalPages) return;
       const total = state.totalPages;
-      const originalPage = state.currentPage;
+      const scale = state.exportScale || 2;
+      const scaleName = scale === 2 ? '2K Cực Nét' : (scale === 3 ? '4K Siêu Nét' : 'Chuẩn');
       closeDownloadModal();
-      showToast(`Đang chuẩn bị tải toàn bộ ${total} trang ảnh .JPG...`);
+      showToast(`Đang kết xuất ${total} trang ảnh ${scaleName}...`);
+
+      const originalPage = state.currentPage;
 
       for (let p = 0; p < total; p++) {
         state.currentPage = p;
-        render();
-        await new Promise(r => setTimeout(r, 120));
+        renderCanvas();
+        await new Promise(r => setTimeout(r, 80));
 
         await new Promise(resolve => {
           const fileName = `chep-tay-trang-${p + 1}.jpg`;
-          canvas.toBlob((blob) => {
+          const off = document.createElement('canvas');
+          off.width = Math.round(canvas.width * scale);
+          off.height = Math.round(canvas.height * scale);
+          const offCtx = off.getContext('2d');
+
+          renderPageToContext(offCtx, off.width, off.height, p, scale);
+          const quality = scale >= 3 ? 0.98 : (scale >= 2 ? 0.96 : 0.95);
+
+          off.toBlob((blob) => {
             if (blob) {
               const url = URL.createObjectURL(blob);
               const link = document.createElement('a');
@@ -5105,15 +5246,15 @@
               }, 10000);
             }
             resolve();
-          }, 'image/jpeg', 0.95);
+          }, 'image/jpeg', quality);
         });
         await new Promise(r => setTimeout(r, 350));
       }
 
       state.currentPage = originalPage;
-      render();
+      renderCanvas();
       updatePaginationUI();
-      showToast(`Đã tải xong toàn bộ ${total} trang ảnh .JPG!`);
+      showToast(`Đã tải xong toàn bộ ${total} trang ảnh ${scaleName}!`);
     }
 
     // Alias for compatibility
@@ -5529,6 +5670,28 @@
           <img id="downloadPreviewImg" alt="Xem trước ảnh trang vở" src="">
         </div>
 
+        <!-- RESOLUTION SELECTOR: 1x, 2x Retina HD, 3x Ultra HD 4K -->
+        <div class="download-scale-picker">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="scale-picker-title">Độ Nét Khi Xuất Ảnh:</span>
+            <span style="font-size:10.5px; color:#38bdf8; font-weight:600;">Vector 2K/4K HD</span>
+          </div>
+          <div class="scale-pills-row">
+            <button type="button" class="scale-pill" id="scalePill1" onclick="setExportScale(1)">
+              <span>Chuẩn 1x</span>
+              <span class="scale-sub">768p</span>
+            </button>
+            <button type="button" class="scale-pill active" id="scalePill2" onclick="setExportScale(2)">
+              <span>2K Cực Nét ★</span>
+              <span class="scale-sub">Khuyên dùng</span>
+            </button>
+            <button type="button" class="scale-pill" id="scalePill3" onclick="setExportScale(3)">
+              <span>4K Siêu Nét</span>
+              <span class="scale-sub">In ấn A4</span>
+            </button>
+          </div>
+        </div>
+
         <div class="download-meta-grid">
           <div class="download-meta-item">
             <span class="download-meta-label">Trang Hiện Tại</span>
@@ -5540,16 +5703,16 @@
           </div>
           <div class="download-meta-item">
             <span class="download-meta-label">Chất Lượng Xuất</span>
-            <span class="download-meta-val">95% HD Siêu Nét</span>
+            <span class="download-meta-val" id="downloadQualityLabel">98% 2K Cực Nét (2x)</span>
           </div>
           <div class="download-meta-item">
             <span class="download-meta-label">Kích Thước Ảnh</span>
-            <span class="download-meta-val" id="downloadDimLabel">1024 × 1536 px</span>
+            <span class="download-meta-val" id="downloadDimLabel">1536 × 2048 px</span>
           </div>
         </div>
 
         <p style="font-size:11.5px; color:var(--text-dim); margin:0; line-height:1.45; text-align:center;">
-          Ảnh định dạng chuẩn <strong>JPEG (.jpg)</strong>, có thể xem trực tiếp trong Thư viện ảnh, chia sẻ Zalo/Messenger hoặc mang đi in ấn rõ nét.
+          Ảnh xuất ở độ phân giải siêu nét (2K/4K), giữ nguyên độ mảnh của ngòi bút và ô ly giấy viết tay, không bị vỡ hạt khi phóng to hay in ấn.
         </p>
       </div>
 
