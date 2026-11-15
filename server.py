@@ -15,7 +15,7 @@ PORT = 8088
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FONTS_DIR = os.path.join(BASE_DIR, 'fonts')
 ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
-DEFAULT_NOTEBOOK = os.path.join(ASSETS_DIR, 'notebook_default.jpg')
+DEFAULT_NOTEBOOK = os.path.join(ASSETS_DIR, 'notebook_thanhnam_spread.jpg')
 
 # Calibrated line baselines for the default notebook (768 x 1024)
 # In lined notebooks, writing sits on line[i+1] (the line underneath the text slot)
@@ -76,7 +76,7 @@ class HandwritingServerHandler(SimpleHTTPRequestHandler):
 
             # Load notebook image
             custom_bg = data.get('custom_bg', None)
-            notebook_choice = data.get('notebook_template', 'notebook_default.jpg')
+            notebook_choice = data.get('notebook_template', 'notebook_thanhnam_spread.jpg')
             if custom_bg and os.path.exists(os.path.join(ASSETS_DIR, custom_bg)):
                 bg_path = os.path.join(ASSETS_DIR, custom_bg)
             elif notebook_choice and os.path.exists(os.path.join(ASSETS_DIR, notebook_choice)):
