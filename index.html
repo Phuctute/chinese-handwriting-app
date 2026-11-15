@@ -2643,27 +2643,6 @@
         leftPage: { leftMargin: 46, rightMargin: 465, lines: HH_SPREAD_L },
         rightPage: { leftMargin: 555, rightMargin: 950, lines: HH_SPREAD_R }
       },
-      'notebook_oli_spread.jpg': {
-        name: 'Trang Đôi Ô Ly',
-        desc: 'Ô ly 4 dòng luyện chữ',
-        isSpread: true,
-        leftPage: { leftMargin: 48, rightMargin: 465, lines: TN_SPREAD_L },
-        rightPage: { leftMargin: 555, rightMargin: 950, lines: TN_SPREAD_R }
-      },
-      'notebook_tianzige_spread.jpg': {
-        name: 'Trang Đôi Điền Tự Cách',
-        desc: 'Vở ô vuông Mễ Tự luyện viết chữ Hán',
-        isSpread: true,
-        leftPage: { leftMargin: 48, rightMargin: 465, lines: TN_SPREAD_L },
-        rightPage: { leftMargin: 555, rightMargin: 950, lines: TN_SPREAD_R }
-      },
-      'notebook_warm_spread.jpg': {
-        name: 'Trang Đôi Campus Vintage',
-        desc: 'Phong cách tối giản Muji',
-        isSpread: true,
-        leftPage: { leftMargin: 45, rightMargin: 465, lines: HH_SPREAD_L },
-        rightPage: { leftMargin: 555, rightMargin: 950, lines: HH_SPREAD_R }
-      },
 
       // 7 Single Pages (Safe margins preventing overflowing outside desk/paper)
       'notebook_hongha_1.jpg': {
@@ -4012,10 +3991,12 @@
           const contour = getNotebookLineContour(rawBaseY, curX, leftM, rightM, isSpread, isRightSubpage, state.notebookTemplate, lIdx, baselines, blOffset);
           const effectiveBaseY = contour.y + lineJitterY;
 
-          const chJitterX = (prng() - 0.5) * 2.2 * mFactor;
-          const chJitterY = (prng() - 0.5) * 2.2 * mFactor;
-          const chAngle = contour.angle + (prng() - 0.5) * 0.12 * mFactor; // Follow line curve + random hand tilt
-          const chScale = 1.0 + (prng() - 0.5) * 0.08 * mFactor;
+          // Organic human handwriting jitter: subtle, natural variations (NO erratic sawtooth jumping or spinning)
+          const chJitterX = (prng() - 0.5) * 1.0 * mFactor;
+          const chJitterY = (prng() - 0.5) * 0.7 * mFactor; // Gentle baseline variance, characters sit securely on the ruled line
+          const safeCurveAngle = Math.max(-0.025, Math.min(0.025, (contour.angle || 0) * 0.35)); // Keeps characters upright without rolling along the slope
+          const chAngle = safeCurveAngle + (prng() - 0.5) * 0.035 * mFactor; // Subtle handwriting slant
+          const chScale = 1.0 + (prng() - 0.5) * 0.04 * mFactor;
 
           const rVar = Math.max(0, Math.min(255, baseR + Math.round((prng() - 0.5) * 14)));
           const gVar = Math.max(0, Math.min(255, baseG + Math.round((prng() - 0.5) * 14)));
