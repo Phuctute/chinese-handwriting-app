@@ -2321,8 +2321,6 @@
             <span class="capsule-text" id="floatingPageIndicator">Trang 1 / 1</span>
             <button class="capsule-btn" onclick="nextPage()" title="Trang tiếp">❯</button>
             <span class="capsule-divider"></span>
-            <button class="capsule-btn" id="floatingDeleteDiagBtn" onclick="clearDiagram()" style="display:none; color:#ef4444; font-weight:700; background:rgba(239,68,68,0.18); border-radius:12px; padding:2px 8px;">🗑️ Xóa Sơ Đồ</button>
-            <span class="capsule-divider" id="floatingDeleteDiagDivider" style="display:none;"></span>
             <button class="capsule-btn" onclick="fitCanvasToViewport()" title="Khớp vừa màn hình" style="font-size:11px;">Fit Vừa</button>
             <span class="capsule-divider"></span>
             <button class="capsule-btn" onclick="adjustZoom(-0.1)">−</button>
@@ -3483,17 +3481,6 @@
     function updateDiagramUIButtons() {
       const isEnabled = (state.diagram && state.diagram.enabled && state.diagram.type !== 'none');
       
-      const headDel = document.getElementById('mobileClearDiagHeaderBtn');
-      if (headDel) headDel.style.display = isEnabled ? 'inline-flex' : 'none';
-
-      const floatDel = document.getElementById('floatingDeleteDiagBtn');
-      const floatDiv = document.getElementById('floatingDeleteDiagDivider');
-      if (floatDel) floatDel.style.display = isEnabled ? 'inline-flex' : 'none';
-      if (floatDiv) floatDiv.style.display = isEnabled ? 'inline-block' : 'none';
-
-      const barDel = document.getElementById('btnBarDeleteDiag');
-      if (barDel) barDel.style.display = isEnabled ? 'flex' : 'none';
-
       const badge = document.getElementById('diagramStatusBadge');
       if (badge) {
         badge.innerText = isEnabled ? 'Đang bật' : 'Đang tắt';
