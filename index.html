@@ -1016,9 +1016,9 @@
     .pwa-modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
       z-index: 3000;
       opacity: 0;
       pointer-events: none;
@@ -1033,15 +1033,182 @@
       pointer-events: auto;
     }
     .pwa-modal-card {
-      background: rgba(36, 36, 38, 0.92);
-      backdrop-filter: blur(35px) saturate(200%);
-      -webkit-backdrop-filter: blur(35px) saturate(200%);
-      border: 0.5px solid rgba(255, 255, 255, 0.16);
+      background: rgba(36, 36, 38, 0.96);
+      border: 0.5px solid rgba(255, 255, 255, 0.18);
       border-radius: 18px;
       width: 100%;
       max-width: 400px;
       box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85);
       overflow: hidden;
+    }
+
+    /* --- DOWNLOAD CONFIRMATION MODAL (Apple iOS Dialog Style) --- */
+    .download-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      z-index: 10050;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .download-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .download-modal-card {
+      background: rgba(28, 28, 32, 0.98);
+      border: 0.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 22px;
+      width: 100%;
+      max-width: 410px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transform: scale(0.94) translateY(12px);
+      transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .download-modal-overlay.active .download-modal-card {
+      transform: scale(1) translateY(0);
+    }
+    .download-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .download-modal-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .download-modal-body {
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .download-preview-box {
+      width: 100%;
+      height: 180px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 8px;
+    }
+    .download-preview-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+    }
+    .download-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .download-meta-item {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .download-meta-label {
+      font-size: 10.5px;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+    .download-meta-val {
+      font-size: 12.5px;
+      color: #fff;
+      font-weight: 600;
+    }
+    .download-modal-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px 18px 16px 18px;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .btn-download-primary {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      color: #fff;
+      border: none;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: filter 0.2s, transform 0.1s;
+      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35);
+    }
+    .btn-download-primary:hover {
+      filter: brightness(1.1);
+    }
+    .btn-download-primary:active {
+      transform: scale(0.98);
+    }
+    .btn-download-share {
+      width: 100%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-download-share:hover {
+      background: rgba(56, 189, 248, 0.15);
+    }
+    .btn-download-cancel {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      color: var(--text-dim);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .btn-download-cancel:hover {
+      color: #fff;
     }
     .pwa-modal-header {
       display: flex;
@@ -1719,7 +1886,7 @@
       </button>
 
       <!-- Download Button -->
-      <button class="btn btn-primary" onclick="downloadCurrentPageImage()">
+      <button class="btn btn-primary" onclick="confirmDownloadImage()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
           <polyline points="7 10 12 15 17 10"/>
@@ -4756,15 +4923,202 @@
       if (mz) mz.innerText = Math.round(state.zoomLevel * 100) + '%';
     }
 
-    // Download Image
-    function downloadCurrentPageImage() {
+    // --- DOWNLOAD CONFIRMATION MODAL & TRUE JPEG EXPORT ---
+    function confirmDownloadImage() {
+      if (!canvas) return;
+      if (typeof closeMobileSheet === 'function') closeMobileSheet();
+
+      const modal = document.getElementById('downloadConfirmModal');
+      const previewImg = document.getElementById('downloadPreviewImg');
+      const pageLabel = document.getElementById('downloadPageLabel');
+      const dimLabel = document.getElementById('downloadDimLabel');
+      const singleBtnText = document.getElementById('downloadBtnText');
+      const btnAll = document.getElementById('btnDownloadAllJpg');
+      const allBtnText = document.getElementById('downloadAllBtnText');
+      const shareBtn = document.getElementById('btnDownloadShare');
+
+      const curPageNum = state.currentPage + 1;
+      const totalPages = state.totalPages || 1;
+
+      if (pageLabel) {
+        pageLabel.innerText = `Trang ${curPageNum} / ${totalPages}`;
+      }
+      if (dimLabel) {
+        dimLabel.innerText = `${canvas.width} × ${canvas.height} px`;
+      }
+      if (singleBtnText) {
+        singleBtnText.innerText = totalPages > 1 ? `Tải Trang ${curPageNum} (.JPG)` : `Tải Ảnh (.JPG) Về Máy`;
+      }
+
+      // If multiple pages, show batch download button
+      if (btnAll) {
+        if (totalPages > 1) {
+          btnAll.style.display = 'flex';
+          if (allBtnText) allBtnText.innerText = `Tải Toàn Bộ ${totalPages} Trang (.JPG)`;
+        } else {
+          btnAll.style.display = 'none';
+        }
+      }
+
+      // Generate preview thumbnail
+      try {
+        const thumbUrl = canvas.toDataURL('image/jpeg', 0.65);
+        if (previewImg) previewImg.src = thumbUrl;
+      } catch (e) {
+        console.warn('Thumbnail generation failed', e);
+      }
+
+      // Check if navigator.canShare is supported with files (iOS / Android)
+      if (shareBtn) {
+        if (navigator.canShare && typeof File !== 'undefined') {
+          try {
+            const dummyFile = new File([''], 'test.jpg', { type: 'image/jpeg' });
+            if (navigator.canShare({ files: [dummyFile] })) {
+              shareBtn.style.display = 'flex';
+            } else {
+              shareBtn.style.display = 'none';
+            }
+          } catch (err) {
+            shareBtn.style.display = 'none';
+          }
+        } else {
+          shareBtn.style.display = 'none';
+        }
+      }
+
+      if (modal) {
+        modal.classList.add('active');
+      }
+    }
+
+    function closeDownloadModal() {
+      const modal = document.getElementById('downloadConfirmModal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    function executeDownloadJpg() {
+      if (!canvas) return;
+      const fileName = `chep-tay-trang-${state.currentPage + 1}.jpg`;
+
+      const doSave = (blob) => {
+        if (!blob) {
+          fallbackDownload(fileName);
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        link.href = url;
+        link.download = fileName;
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+          link.remove();
+          URL.revokeObjectURL(url);
+        }, 10000);
+        closeDownloadModal();
+        showToast(`Đã tải ảnh ${fileName} về máy thành công!`);
+      };
+
+      if (canvas.toBlob) {
+        canvas.toBlob(doSave, 'image/jpeg', 0.95);
+      } else {
+        fallbackDownload(fileName);
+      }
+    }
+
+    function fallbackDownload(fileName) {
       const link = document.createElement('a');
-      link.download = `chep-tay-trang-${state.currentPage + 1}.jpg`;
+      link.download = fileName;
       link.href = canvas.toDataURL('image/jpeg', 0.95);
       document.body.appendChild(link);
       link.click();
-      setTimeout(() => link.remove(), 100);
-      showToast('Đã tải ảnh vở về máy thành công!');
+      setTimeout(() => link.remove(), 200);
+      closeDownloadModal();
+      showToast(`Đã tải ảnh ${fileName} về máy thành công!`);
+    }
+
+    async function executeShareJpg() {
+      if (!canvas) return;
+      const fileName = `chep-tay-trang-${state.currentPage + 1}.jpg`;
+
+      const performShare = async (blob) => {
+        if (!blob) {
+          executeDownloadJpg();
+          return;
+        }
+        try {
+          const file = new File([blob], fileName, { type: 'image/jpeg' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: fileName,
+              text: `Ảnh chép tay trang ${state.currentPage + 1}`
+            });
+            closeDownloadModal();
+            showToast('Đã chia sẻ / lưu ảnh vào máy thành công!');
+          } else {
+            executeDownloadJpg();
+          }
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.warn('Share error, downloading instead:', err);
+            executeDownloadJpg();
+          }
+        }
+      };
+
+      if (canvas.toBlob) {
+        canvas.toBlob(performShare, 'image/jpeg', 0.95);
+      } else {
+        executeDownloadJpg();
+      }
+    }
+
+    async function executeDownloadAllJpg() {
+      if (!canvas || !state.totalPages) return;
+      const total = state.totalPages;
+      const originalPage = state.currentPage;
+      closeDownloadModal();
+      showToast(`Đang chuẩn bị tải toàn bộ ${total} trang ảnh .JPG...`);
+
+      for (let p = 0; p < total; p++) {
+        state.currentPage = p;
+        render();
+        await new Promise(r => setTimeout(r, 120));
+
+        await new Promise(resolve => {
+          const fileName = `chep-tay-trang-${p + 1}.jpg`;
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.style.display = 'none';
+              link.href = url;
+              link.download = fileName;
+              document.body.appendChild(link);
+              link.click();
+              setTimeout(() => {
+                link.remove();
+                URL.revokeObjectURL(url);
+              }, 10000);
+            }
+            resolve();
+          }, 'image/jpeg', 0.95);
+        });
+        await new Promise(r => setTimeout(r, 350));
+      }
+
+      state.currentPage = originalPage;
+      render();
+      updatePaginationUI();
+      showToast(`Đã tải xong toàn bộ ${total} trang ảnh .JPG!`);
+    }
+
+    // Alias for compatibility
+    function downloadCurrentPageImage() {
+      confirmDownloadImage();
     }
 
     // PWA Install prompt handling
@@ -5107,7 +5461,7 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
         <span>Vở</span>
       </button>
-      <button class="mobile-bar-btn btn-bar-download" id="btnBar_download" onclick="downloadCurrentPageImage()" title="Tải ảnh trang vở về máy">
+      <button class="mobile-bar-btn btn-bar-download" id="btnBar_download" onclick="confirmDownloadImage()" title="Tải ảnh trang vở về máy">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span>Tải</span>
       </button>
@@ -5154,6 +5508,84 @@
     </div>
   </div>
 
+
+  <!-- DOWNLOAD CONFIRMATION MODAL -->
+  <div class="download-modal-overlay" id="downloadConfirmModal" onclick="closeDownloadModal()">
+    <div class="download-modal-card" onclick="event.stopPropagation()">
+      <div class="download-modal-header">
+        <div class="download-modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2.2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Xác Nhận Tải Ảnh Vở</span>
+        </div>
+        <button class="mobile-sheet-close" onclick="closeDownloadModal()" title="Đóng">✕</button>
+      </div>
+
+      <div class="download-modal-body">
+        <div class="download-preview-box">
+          <img id="downloadPreviewImg" alt="Xem trước ảnh trang vở" src="">
+        </div>
+
+        <div class="download-meta-grid">
+          <div class="download-meta-item">
+            <span class="download-meta-label">Trang Hiện Tại</span>
+            <span class="download-meta-val" id="downloadPageLabel">Trang 1 / 1</span>
+          </div>
+          <div class="download-meta-item">
+            <span class="download-meta-label">Định Dạng Tệp</span>
+            <span class="download-meta-val" style="color:#38bdf8;">Ảnh JPG (.jpg)</span>
+          </div>
+          <div class="download-meta-item">
+            <span class="download-meta-label">Chất Lượng Xuất</span>
+            <span class="download-meta-val">95% HD Siêu Nét</span>
+          </div>
+          <div class="download-meta-item">
+            <span class="download-meta-label">Kích Thước Ảnh</span>
+            <span class="download-meta-val" id="downloadDimLabel">1024 × 1536 px</span>
+          </div>
+        </div>
+
+        <p style="font-size:11.5px; color:var(--text-dim); margin:0; line-height:1.45; text-align:center;">
+          Ảnh định dạng chuẩn <strong>JPEG (.jpg)</strong>, có thể xem trực tiếp trong Thư viện ảnh, chia sẻ Zalo/Messenger hoặc mang đi in ấn rõ nét.
+        </p>
+      </div>
+
+      <div class="download-modal-footer">
+        <button class="btn-download-primary" id="btnDownloadSingleJpg" onclick="executeDownloadJpg()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span id="downloadBtnText">Tải Ảnh (.JPG) Về Máy</span>
+        </button>
+
+        <button class="btn-download-primary" id="btnDownloadAllJpg" onclick="executeDownloadAllJpg()" style="display:none; background:linear-gradient(135deg, #4f46e5, #6366f1); box-shadow:0 4px 12px rgba(99,102,241,0.35);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+          <span id="downloadAllBtnText">Tải Toàn Bộ Các Trang (.JPG)</span>
+        </button>
+
+        <button class="btn-download-share" id="btnDownloadShare" onclick="executeShareJpg()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+            <polyline points="16 6 12 2 8 6"/>
+            <line x1="12" y1="2" x2="12" y2="15"/>
+          </svg>
+          <span>Lưu vào Thư Viện Ảnh (iOS / Android)</span>
+        </button>
+
+        <button class="btn-download-cancel" onclick="closeDownloadModal()">
+          ✕ Hủy Bỏ
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- AI DIAGRAM & TABLE SCAN STUDIO MODAL -->
   <div class="ai-studio-overlay" id="aiDiagramStudioModal" onclick="if(event.target===this)closeAiDiagramStudio()">
