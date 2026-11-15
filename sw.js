@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v5.5-photorealistic-spreads-4only';
+const CACHE_NAME = 'cheptay-v5.6-distinct-spreads-clean-ui';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

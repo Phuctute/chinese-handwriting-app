@@ -2011,31 +2011,11 @@
 
           <!-- Quick Action Tools -->
           <div class="quick-toolbar">
-            <button class="tool-chip" onclick="document.getElementById('ocrFileInput').click()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              Quét ảnh (OCR)
-            </button>
-            <input type="file" id="ocrFileInput" accept="image/*" style="display:none;" onchange="handleOcrUpload(this.files[0])">
-
-            <button class="tool-chip" onclick="toggleTradSimp()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-              Phồn ⇄ Giản
-            </button>
-
             <button class="tool-chip" onclick="insertStrikeSnippet()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="20" y2="12"/><path d="m16 6-4-2-4 2"/><path d="m8 18 4 2 4-2"/></svg>
               ~~Gạch xóa~~
             </button>
-
-            <button class="tool-chip" onclick="toggleSkipLine()" id="btnSkipLine">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>
-              Cách dòng: Tắt
-            </button>
-
-            <button class="tool-chip" onclick="clearText()" style="margin-left:auto; color:#fca5a5;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-              Xóa
-            </button>
+            <input type="file" id="ocrFileInput" accept="image/*" style="display:none;" onchange="handleOcrUpload(this.files[0])">
           </div>
         </div>
 
@@ -2453,6 +2433,17 @@
               <input type="range" id="messinessSlider" min="0" max="90" value="45" oninput="updateMessiness(this.value)">
             </div>
           </div>
+
+          <!-- Line Skip in Nét & Kiểu Chữ -->
+          <div class="form-row" style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <span class="form-label" style="font-weight:600; font-size:13px;">Viết cách 1 dòng kẻ:</span>
+              <div style="font-size:11px; color:var(--text-dim);">Tự động chừa 1 dòng trống xen kẽ giữa các dòng</div>
+            </div>
+            <button class="btn btn-secondary" id="btnSkipLineDesktop" onclick="toggleSkipLine()" style="padding:6px 14px; font-size:12px; font-weight:600;">
+              📝 Đang Tắt
+            </button>
+          </div>
         </div>
 
         <!-- Margin & Line Controls (Căn lề trên dưới đẩy lên/xuống) -->
@@ -2782,28 +2773,28 @@
       // === 4 MẪU TRANG ĐÔI KẺ NGANG CHỤP THỰC TẾ TRÊN BÀN HỌC (CHUẨN 100% DÒNG KẺ) ===
       'notebook_thanhnam_spread.jpg': {
         name: 'Trang Đôi Thành Nam (Tiêu chuẩn)',
-        desc: 'Vở kẻ ngang chụp thực tế trên bàn gỗ, chuẩn từng dòng',
-        isSpread: true,
-        leftPage: { leftMargin: 55, rightMargin: 480, lines: SPREAD_LINES },
-        rightPage: { leftMargin: 565, rightMargin: 960, lines: SPREAD_LINES }
-      },
-      'notebook_thanhnam_spread_warm.jpg': {
-        name: 'Trang Đôi Thành Nam (Ấm Vintage)',
-        desc: 'Giấy vàng ngà chống mỏi mắt chụp thật dưới đèn bàn',
+        desc: 'Vở học sinh kinh điển, bìa hồng bàn gỗ tự nhiên',
         isSpread: true,
         leftPage: { leftMargin: 55, rightMargin: 480, lines: SPREAD_LINES },
         rightPage: { leftMargin: 565, rightMargin: 960, lines: SPREAD_LINES }
       },
       'notebook_hongha_spread.jpg': {
-        name: 'Trang Đôi Hồng Hà (Kẻ Ngang)',
-        desc: 'Vở Hồng Hà bãi bằng có biểu tượng thời tiết, thứ ngày & logo',
+        name: 'Trang Đôi Hồng Hà (Bãi Bằng)',
+        desc: 'Icon thời tiết, thứ ngày & logo Hồng Hà bàn thông sáng',
+        isSpread: true,
+        leftPage: { leftMargin: 55, rightMargin: 480, lines: SPREAD_LINES },
+        rightPage: { leftMargin: 565, rightMargin: 960, lines: SPREAD_LINES }
+      },
+      'notebook_thanhnam_spread_warm.jpg': {
+        name: 'Trang Đôi Vàng Vintage (Chống Lóa)',
+        desc: 'Giấy vàng hổ phách chống mỏi mắt trên bàn gỗ sẫm cổ điển',
         isSpread: true,
         leftPage: { leftMargin: 55, rightMargin: 480, lines: SPREAD_LINES },
         rightPage: { leftMargin: 565, rightMargin: 960, lines: SPREAD_LINES }
       },
       'notebook_thanhnam_spread_clean.jpg': {
-        name: 'Trang Đôi Bãi Bằng (Trắng Sáng)',
-        desc: 'Giấy bãi bằng trắng tinh sạch sẽ chụp thật trên bàn học',
+        name: 'Trang Đôi Trắng Tinh (Hiện Đại)',
+        desc: 'Giấy trắng tinh khiết 92% ISO trên bàn làm việc hiện đại',
         isSpread: true,
         leftPage: { leftMargin: 55, rightMargin: 480, lines: SPREAD_LINES },
         rightPage: { leftMargin: 565, rightMargin: 960, lines: SPREAD_LINES }
@@ -4808,19 +4799,19 @@
 
     function toggleSkipLine() {
       state.skipLine = !state.skipLine;
-      const b = document.getElementById('btnSkipLine');
-      if (b) {
-        b.innerText = state.skipLine ? 'Cách dòng: Bật' : 'Cách dòng: Tắt';
-        b.classList.toggle('active', state.skipLine);
+      const bDesktop = document.getElementById('btnSkipLineDesktop');
+      if (bDesktop) {
+        bDesktop.innerText = state.skipLine ? '📝 Đang BẬT' : '📝 Đang TẮT';
+        bDesktop.classList.toggle('active', state.skipLine);
       }
-      const mb = document.getElementById('mBtnSkipLine');
-      if (mb) {
-        mb.innerText = state.skipLine ? '📝 Đang bật Cách Dòng' : '📝 Đang tắt Cách Dòng';
-        mb.classList.toggle('active', state.skipLine);
+      const mSwitch = document.getElementById('mSkipLine');
+      if (mSwitch) {
+        mSwitch.checked = state.skipLine;
       }
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
+      showToast(state.skipLine ? '📝 Đã BẬT viết cách dòng' : '📝 Đã TẮT viết cách dòng');
     }
 
     function toggleTradSimp() {
@@ -5337,6 +5328,13 @@
               <span class="ios-switch-track"></span>
             </label>
           </div>
+          <div class="ios-switch-row" style="margin-top:10px;">
+            <span class="ios-switch-label">Viết cách 1 dòng kẻ (Dãn dòng)</span>
+            <label class="ios-switch">
+              <input type="checkbox" id="mSkipLine" ${state.skipLine ? 'checked' : ''} onchange="toggleSkipLine();">
+              <span class="ios-switch-track"></span>
+            </label>
+          </div>
         `;
       } else if (type === 'margin') {
         if (title) title.innerHTML = '📏 Căn Dòng & Lề Vở';
@@ -5365,12 +5363,9 @@
             </div>
             <input type="range" class="range-slider" min="0" max="8" value="${state.bottomMarginLines}" oninput="updateBottomMargin(this.value); const mel = document.getElementById('mBottomMarginVal'); if(mel) mel.innerText = this.value + ' dòng';">
           </div>
-          <div style="display:flex; gap:8px; margin-top:10px;">
-            <button class="btn btn-secondary" onclick="toggleSkipLine(); const b = document.getElementById('mBtnSkipLine'); if(b) b.innerText = state.skipLine ? '📝 Đang bật Cách Dòng' : '📝 Đang tắt Cách Dòng';" id="mBtnSkipLine" style="flex:1; justify-content:center;">
-              ${state.skipLine ? '📝 Đang bật Cách Dòng' : '📝 Đang tắt Cách Dòng'}
-            </button>
-            <button class="btn btn-secondary" onclick="resetMargins();" style="padding:6px 12px; font-size:12px;">
-              ↺ Đặt lại lề
+          <div style="margin-top:14px;">
+            <button class="btn btn-secondary" onclick="resetMargins();" style="width:100%; justify-content:center; padding:10px; font-size:13px; font-weight:600;">
+              ↺ Đặt lại lề mặc định
             </button>
           </div>
         `;
