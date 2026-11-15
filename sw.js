@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v5.7-pure-white-rectified-lines';
+const CACHE_NAME = 'cheptay-v5.8-symmetric-spreads-perfect-lines';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -14,8 +14,8 @@ const ASSETS_TO_CACHE = [
   './assets/notebook_campus_spread.jpg',
   './assets/notebook_thanhnam_left.jpg',
   './assets/notebook_hongha_2.jpg',
-  './assets/notebook_oli.jpg',
-  './assets/notebook_tianzige.jpg',
+  './assets/notebook_clean_single.jpg',
+  './assets/notebook_campus_single.jpg',
   './fonts/JasonHandwriting5.ttf',
   './fonts/JasonHandwriting3.ttf'
 ];
