@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v5.9.3-organic-natural-flow';
+const CACHE_NAME = 'cheptay-v5.9.4-ai-exact-line-calibration';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const ASSETS_TO_CACHE = [
   './assets/icon-192.png',
   './assets/icon-512.png',
   './assets/apple-touch-icon.png',
+  './assets/ai_calibrated_lines.json',
   './assets/notebook_thanhnam_spread.jpg',
   './assets/notebook_thanhnam_spread2.jpg',
   './assets/notebook_hongha_spread.jpg',
