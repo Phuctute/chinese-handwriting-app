@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v5.9.6-flawless-ocr';
+const CACHE_NAME = 'cheptay-v5.9.7-exact-line-tracking';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
