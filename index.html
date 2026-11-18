@@ -2601,7 +2601,7 @@
     // (100% horizontal alignment, zero drift, zero cutting across lines)
     // ========================================================
     const SPREAD_LINES = [68, 89, 110, 132, 153, 174, 195, 216, 238, 259, 280, 301, 322, 344, 365, 386, 407, 428, 450, 471, 492, 513, 534, 556, 577, 598, 619, 640, 662, 683, 704, 725];
-    const TARGET_TN_SINGLE = [93, 118, 143, 168, 194, 220, 246, 273, 299, 327, 354, 382, 410, 438, 466, 494, 522, 551, 580, 609, 638, 668, 698, 729, 759, 790, 820, 850, 880, 910, 940, 971];
+    const TARGET_TN_SINGLE = [94, 122, 150, 178, 206, 234, 262, 290, 318, 346, 374, 402, 430, 458, 486, 514, 542, 570, 598, 626, 654, 682, 710, 738, 766, 794, 822, 850, 878, 906, 934, 962];
     const TARGET_HH_SINGLE = [98, 126, 154, 182, 211, 269, 298, 328, 358, 389, 420, 451, 483, 514, 546, 578, 611, 645, 679, 713, 748, 783, 817, 852, 887, 922, 957];
 
     function getNotebookLineContour(baseY, x, leftM, rightM, isSpread, isRightSubpage, templateKey, lIdx, baselines, blOffset) {
@@ -2687,7 +2687,7 @@
     // GLOBAL APPLICATION STATE
     // ========================================================
     const state = {
-      notebookTemplate: 'notebook_thanhnam_spread.jpg',
+      notebookTemplate: 'notebook_thanhnam_left.jpg',
       spreadWriteMode: 'both',
       text: '',
       fontSize: 20, // 20px for natural handwriting weight
@@ -2768,7 +2768,13 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '5.8.5';
+    const APP_VERSION = '5.9.0';
+    if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
+      localStorage.setItem('cheptay_app_ver', APP_VERSION);
+      if ('caches' in window) {
+        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))));
+      }
+    }
     function getAssetUrl(url) {
       if (!url) return '';
       return url + (url.includes('?') ? '&' : '?') + 'v=' + APP_VERSION;
