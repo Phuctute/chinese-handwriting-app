@@ -2012,7 +2012,15 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="20" y2="12"/><path d="m16 6-4-2-4 2"/><path d="m8 18 4 2 4-2"/></svg>
               ~~Gạch xóa~~
             </button>
+            <button class="tool-chip" onclick="document.getElementById('diagramFileInput').click()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              🖼️ Chèn ảnh sơ đồ
+            </button>
+            <button class="tool-chip" id="btnRemoveDiagram" onclick="removeDiagram()" style="display:none; color:#f87171;">
+              ✕ Xóa sơ đồ
+            </button>
             <input type="file" id="ocrFileInput" accept="image/*" style="display:none;" onchange="handleOcrUpload(this.files[0])">
+            <input type="file" id="diagramFileInput" accept="image/*" style="display:none;" onchange="handleDiagramImageUpload(this.files[0])">
           </div>
         </div>
 
@@ -2561,7 +2569,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '5.9.8';
+    const APP_VERSION = '5.9.9';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -2613,38 +2621,38 @@
     // (100% authentic photographic lines with exact perspective curvature)
     // ========================================================
     const TN_LEFT_LINES = [
-      { y100: 95, slope: -0.04000 },
-      { y100: 120, slope: -0.03818 },
-      { y100: 145, slope: -0.03636 },
-      { y100: 170, slope: -0.03455 },
-      { y100: 195, slope: -0.03273 },
-      { y100: 221, slope: -0.03091 },
-      { y100: 247, slope: -0.02909 },
-      { y100: 274, slope: -0.02909 },
-      { y100: 300, slope: -0.02545 },
-      { y100: 327, slope: -0.02364 },
-      { y100: 354, slope: -0.02182 },
-      { y100: 382, slope: -0.02000 },
-      { y100: 409, slope: -0.01636 },
-      { y100: 437, slope: -0.01455 },
-      { y100: 465, slope: -0.01091 },
-      { y100: 494, slope: -0.00909 },
-      { y100: 522, slope: -0.00545 },
-      { y100: 551, slope: -0.00364 },
-      { y100: 580, slope: 0.00000 },
-      { y100: 609, slope: 0.00364 },
-      { y100: 638, slope: 0.00727 },
-      { y100: 667, slope: 0.01091 },
-      { y100: 697, slope: 0.01273 },
-      { y100: 726, slope: 0.01636 },
-      { y100: 756, slope: 0.02000 },
-      { y100: 786, slope: 0.02182 },
-      { y100: 816, slope: 0.02545 },
-      { y100: 846, slope: 0.02727 },
-      { y100: 877, slope: 0.02909 },
-      { y100: 907, slope: 0.03091 },
-      { y100: 938, slope: 0.03455 },
-      { y100: 970, slope: 0.03455 }
+      { y100: 95.0, slope: -0.02113 },
+      { y100: 119.9, slope: -0.01855 },
+      { y100: 144.9, slope: -0.01290 },
+      { y100: 170.0, slope: -0.01548 },
+      { y100: 195.0, slope: -0.01419 },
+      { y100: 221.0, slope: -0.01065 },
+      { y100: 247.0, slope: -0.00532 },
+      { y100: 273.7, slope: -0.00468 },
+      { y100: 300.0, slope: -0.00145 },
+      { y100: 327.0, slope: -0.00113 },
+      { y100: 354.0, slope: -0.00258 },
+      { y100: 381.3, slope: -0.00452 },
+      { y100: 409.0, slope: -0.00371 },
+      { y100: 437.0, slope: -0.00387 },
+      { y100: 465.0, slope: -0.00371 },
+      { y100: 494.0, slope: -0.00371 },
+      { y100: 522.0, slope: -0.00194 },
+      { y100: 551.0, slope: -0.00161 },
+      { y100: 580.0, slope: 0.00000 },
+      { y100: 609.0, slope: 0.00113 },
+      { y100: 638.0, slope: 0.00290 },
+      { y100: 667.0, slope: 0.00500 },
+      { y100: 697.0, slope: 0.00645 },
+      { y100: 726.0, slope: 0.00839 },
+      { y100: 756.0, slope: 0.00952 },
+      { y100: 786.0, slope: 0.01081 },
+      { y100: 816.0, slope: 0.01242 },
+      { y100: 846.0, slope: 0.01468 },
+      { y100: 877.0, slope: 0.01677 },
+      { y100: 907.0, slope: 0.01758 },
+      { y100: 938.1, slope: 0.01774 },
+      { y100: 970.0, slope: 0.01774 }
     ];
     const SPREAD_LINES_L = [77, 96, 114, 133, 152, 172, 191, 210, 230, 249, 269, 288, 308, 327, 347, 367, 387, 407, 427, 447, 467, 488, 508, 529, 549, 570, 591, 612, 633, 655, 678, 701];
     const SPREAD_LINES_R = [73, 93, 112, 131, 150, 169, 188, 207, 226, 245, 264, 283, 302, 321, 340, 359, 378, 397, 417, 437, 457, 477, 497, 518, 539, 559, 580, 601, 622, 643, 665, 687];
@@ -2658,7 +2666,7 @@
       .then(data => {
         window.AI_CALIBRATED_LINES = data;
         console.log('AI calibrated lines loaded successfully.');
-        if (typeof render === 'function') render();
+        if (typeof renderCanvas === 'function') renderCanvas();
       })
       .catch(err => console.warn('Could not load AI calibrated lines:', err));
 
@@ -2696,8 +2704,8 @@
             }
           }
           const p = Math.max(0, Math.min(1, (x - leftM) / Math.max(1, rightM - leftM)));
-          const handWave = Math.sin(p * Math.PI * 3.2 + (lIdx || 0) * 1.5) * 0.35;
-          return { y: y - 2 + blOffset + handWave, angle: angle };
+          const handWave = Math.sin(p * Math.PI * 3.2 + (lIdx || 0) * 1.5) * 0.25;
+          return { y: y + blOffset + handWave, angle: angle };
         }
       }
 
@@ -2705,33 +2713,27 @@
       const p = Math.max(0, Math.min(1, (x - leftM) / width));
 
       // Organic micro-wave (nhịp thở cổ tay tự nhiên uốn theo dòng kẻ)
-      const handWave = Math.sin(p * Math.PI * 3.2 + (lIdx || 0) * 1.5) * 0.45;
+      const handWave = Math.sin(p * Math.PI * 3.2 + (lIdx || 0) * 1.5) * 0.35;
 
       // 1. Single Page: Trang Đơn Trái Thành Nam (có lề đỏ trái)
       if (templateKey === 'notebook_thanhnam_left.jpg') {
         const lineData = TN_LEFT_LINES[lIdx] || { y100: baseY, slope: -0.015 };
-        const bow = Math.sin(p * Math.PI) * (-4.5);
-        const y = lineData.y100 + lineData.slope * (x - 100) + bow + handWave;
-        const angle = lineData.slope + (-4.5 * Math.PI / width) * Math.cos(p * Math.PI);
-        return { y: y - 2 + blOffset, angle: angle };
+        const y = lineData.y100 + lineData.slope * (x - 100) + handWave;
+        return { y: y + blOffset, angle: lineData.slope };
       }
 
       // 2. Single Page: Trang Đơn Phải Thành Nam (có lề đỏ phải)
       if (templateKey === 'notebook_thanhnam_right.jpg' || templateKey === 'notebook_hongha_2.jpg') {
-        const bow = Math.sin(p * Math.PI) * (-3.0);
-        const tilt = (p - 0.5) * 4.0;
-        const y = baseY + bow + tilt + handWave;
-        const angle = (4.0 / width) + (-3.0 * Math.PI / width) * Math.cos(p * Math.PI);
-        return { y: y - 2 + blOffset, angle: angle };
+        return { y: baseY + blOffset + handWave, angle: 0 };
       }
 
       // 3. Single Pages: Trang Đơn Cận Cảnh & Tone Ấm (độ cong phối cảnh góc chụp cận)
       if (templateKey === 'notebook_thanhnam_single2.jpg' || templateKey === 'notebook_thanhnam_single3.jpg' ||
           templateKey === 'notebook_clean_single.jpg' || templateKey === 'notebook_campus_single.jpg') {
-        const bow = Math.sin(p * Math.PI) * (-22.0);
+        const bow = Math.sin(p * Math.PI) * (-16.0);
         const y = baseY + bow + handWave;
-        const angle = (-22.0 * Math.PI / width) * Math.cos(p * Math.PI);
-        return { y: y - 2 + blOffset, angle: angle };
+        const angle = (-16.0 * Math.PI / width) * Math.cos(p * Math.PI);
+        return { y: y + blOffset, angle: angle };
       }
 
       // 4. Double Spreads: Trang Đôi Thành Nam (Bàn Gỗ & Toàn Cảnh)
@@ -2741,12 +2743,12 @@
           // Trang trái: võng lên gáy giữa
           const curve = - 11.0 * p - 8.0 * Math.sin(p * Math.PI);
           const angle = (-11.0 / width) - (8.0 * Math.PI / width) * Math.cos(p * Math.PI);
-          return { y: baseY + curve - 2 + blOffset + handWave, angle: angle };
+          return { y: baseY + curve + blOffset + handWave, angle: angle };
         } else {
           // Trang phải: dốc tự nhiên xuống mép ngoài
           const curve = 16.0 * p + 6.0 * Math.sin(p * Math.PI);
           const angle = (16.0 / width) + (6.0 * Math.PI / width) * Math.cos(p * Math.PI);
-          return { y: baseY + curve - 2 + blOffset + handWave, angle: angle };
+          return { y: baseY + curve + blOffset + handWave, angle: angle };
         }
       }
 
@@ -2755,15 +2757,15 @@
         if (!isRightSubpage) {
           const curve = - 9.0 * p - 6.5 * Math.sin(p * Math.PI);
           const angle = (-9.0 / width) - (6.5 * Math.PI / width) * Math.cos(p * Math.PI);
-          return { y: baseY + curve - 2 + blOffset + handWave, angle: angle };
+          return { y: baseY + curve + blOffset + handWave, angle: angle };
         } else {
           const curve = 13.0 * p + 5.5 * Math.sin(p * Math.PI);
           const angle = (13.0 / width) + (5.5 * Math.PI / width) * Math.cos(p * Math.PI);
-          return { y: baseY + curve - 2 + blOffset + handWave, angle: angle };
+          return { y: baseY + curve + blOffset + handWave, angle: angle };
         }
       }
 
-      return { y: baseY - 2 + blOffset + handWave, angle: 0 };
+      return { y: baseY + blOffset + handWave, angle: 0 };
     }
 
     // ========================================================
@@ -4165,7 +4167,7 @@
         const lineItem = lineTokensList[lIdx];
         if (!lineItem || lineItem.isSkipLine || lineItem.isDiagramPlaceholder || lineItem.isMarginPlaceholder) continue;
 
-        const rawBaseY = baselines[lIdx] - 1 + blOffset;
+        const rawBaseY = baselines[lIdx] + blOffset;
         const lineJitterY = (prng() - 0.5) * 1.4 * mFactor;
 
         let curX = leftM + (lineItem.isStart ? (fontSize * 1.6) : (prng() * 4 * mFactor));
@@ -4317,7 +4319,24 @@
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
-      if (d.type === 'sketch' && d.sketchCanvas) {
+      if (d.type === 'image' && d.image) {
+        ctx.globalCompositeOperation = 'multiply';
+        const imgAspect = d.image.width / d.image.height;
+        const boxAspect = boxW / boxH;
+        let drawW, drawH, offX, offY;
+        if (imgAspect > boxAspect) {
+          drawW = boxW;
+          drawH = boxW / imgAspect;
+          offX = boxX;
+          offY = startY + (boxH - drawH) / 2;
+        } else {
+          drawH = boxH;
+          drawW = boxH * imgAspect;
+          offX = boxX + (boxW - drawW) / 2;
+          offY = startY;
+        }
+        ctx.drawImage(d.image, offX, offY, drawW, drawH);
+      } else if (d.type === 'sketch' && d.sketchCanvas) {
         const cW = d.sketchCanvas.width;
         const cH = d.sketchCanvas.height;
         const scale = Math.min(boxW / cW, boxH / cH);
@@ -5028,6 +5047,65 @@
       }
     }
 
+    // Custom Diagram Photo Upload Handler
+    function handleDiagramImageUpload(file) {
+      if (!file) return;
+      const dInput = document.getElementById('diagramFileInput');
+      if (dInput) dInput.value = '';
+
+      showToast('Đang nạp ảnh sơ đồ vào trang vở...');
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          state.diagram.image = img;
+          state.diagram.enabled = true;
+          state.diagram.type = 'image';
+          state.diagram.startLine = 1;
+          state.diagram.lineSpan = 10;
+          const btnRem = document.getElementById('btnRemoveDiagram');
+          if (btnRem) btnRem.style.display = 'inline-flex';
+          paginateText();
+          renderCanvas();
+          switchMobileView('preview');
+          showToast('✨ Đã chèn ảnh sơ đồ vào vở! Chữ tự động né vùng sơ đồ.');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeDiagram() {
+      state.diagram.enabled = false;
+      state.diagram.image = null;
+      state.diagram.type = 'none';
+      const btnRem = document.getElementById('btnRemoveDiagram');
+      if (btnRem) btnRem.style.display = 'none';
+      paginateText();
+      renderCanvas();
+      showToast('Đã xóa sơ đồ khỏi trang!');
+    }
+
+    function loadSampleHanddrawnDiagram() {
+      showToast('Đang nạp sơ đồ bút bi mẫu...');
+      const img = new Image();
+      img.onload = () => {
+        state.diagram.image = img;
+        state.diagram.enabled = true;
+        state.diagram.type = 'image';
+        state.diagram.startLine = 1;
+        state.diagram.lineSpan = 12;
+        const btnRem = document.getElementById('btnRemoveDiagram');
+        if (btnRem) btnRem.style.display = 'inline-flex';
+        paginateText();
+        renderCanvas();
+        switchMobileView('preview');
+        openMobileSheet('diagram');
+        showToast('✨ Đã chèn sơ đồ Thủy triều vẽ tay vào vở!');
+      };
+      img.src = getAssetUrl('assets/so_do_chep_but_bi_xanh.jpg');
+    }
+
     // Zoom & Canvas View Controls (Default auto-fit to screen width on mobile)
     function adjustZoom(delta) {
       state.zoomLevel = Math.max(0.20, Math.min(2.5, Math.round((state.zoomLevel + delta) * 100) / 100));
@@ -5509,6 +5587,45 @@
           </button>
         `;
         body.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px;">${tplCardsHtml}</div>`;
+      } else if (type === 'diagram') {
+        if (title) title.innerHTML = '🖼️ Chèn Sơ Đồ Vào Vở';
+        const hasDiag = state.diagram && state.diagram.enabled;
+        body.innerHTML = `
+          <div style="margin-bottom:12px;">
+            <button class="btn btn-primary" onclick="document.getElementById('diagramFileInput').click()" style="width:100%; justify-content:center; padding:12px; font-size:13px; font-weight:600; gap:8px;">
+              📁 Tải ảnh sơ đồ từ máy (Chụp hoặc ảnh ChatGPT)
+            </button>
+          </div>
+          <div style="margin-bottom:14px;">
+            <button class="btn btn-secondary" onclick="loadSampleHanddrawnDiagram()" style="width:100%; justify-content:center; padding:11px; font-size:13px; font-weight:600; gap:8px; border-color:var(--brand-primary); color:var(--brand-primary); background:rgba(37,99,235,0.06);">
+              📝 Chèn sơ đồ mẫu: Thủy triều bút bi xanh
+            </button>
+          </div>
+          ${hasDiag ? `
+            <div style="background:rgba(255,255,255,0.04); border:1px solid var(--border-color); border-radius:10px; padding:12px; margin-bottom:14px;">
+              <div style="font-size:13px; font-weight:600; margin-bottom:10px; color:var(--text-main);">⚙️ Điều chỉnh vị trí sơ đồ:</div>
+              <div style="margin-bottom:12px;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+                  <span>Dòng bắt đầu:</span><strong id="mDiagStartVal">Dòng ${state.diagram.startLine + 1}</strong>
+                </div>
+                <input type="range" class="range-slider" min="0" max="25" value="${state.diagram.startLine}" oninput="state.diagram.startLine = parseInt(this.value); paginateText(); renderCanvas(); document.getElementById('mDiagStartVal').innerText = 'Dòng ' + (parseInt(this.value) + 1);">
+              </div>
+              <div style="margin-bottom:12px;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+                  <span>Độ cao (số dòng chiếm):</span><strong id="mDiagSpanVal">${state.diagram.lineSpan} dòng</strong>
+                </div>
+                <input type="range" class="range-slider" min="4" max="22" value="${state.diagram.lineSpan}" oninput="state.diagram.lineSpan = parseInt(this.value); paginateText(); renderCanvas(); document.getElementById('mDiagSpanVal').innerText = this.value + ' dòng';">
+              </div>
+              <button class="btn btn-secondary" onclick="removeDiagram(); openMobileSheet('diagram');" style="width:100%; justify-content:center; color:#f87171; border-color:rgba(239,68,68,0.3); padding:10px; font-size:12px; font-weight:600;">
+                ✕ Xóa sơ đồ khỏi trang vở
+              </button>
+            </div>
+          ` : `
+            <div style="font-size:12px; color:var(--text-dim); line-height:1.5; background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; border:1px dashed var(--border-color);">
+              💡 <strong>Mẹo:</strong> Sau khi tải ảnh sơ đồ, ảnh sẽ tự động hòa mực bút bi vào trang vở (chế độ Multiply không viền trắng), và toàn bộ chữ viết tay bên dưới sẽ tự động dạt xuống dưới né sơ đồ.
+            </div>
+          `}
+        `;
       }
 
       overlay.classList.add('active');
@@ -5650,6 +5767,10 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         <span>Quét OCR</span>
       </button>
+      <button class="mobile-bar-btn" onclick="document.getElementById('diagramFileInput').click()" title="Chèn ảnh sơ đồ">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>Chèn Sơ Đồ</span>
+      </button>
       <button class="mobile-bar-btn" onclick="toggleTradSimp()" title="Đổi Phồn / Giản thể">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
         <span>Phồn ⇄ Giản</span>
@@ -5681,6 +5802,10 @@
       <button class="mobile-bar-btn" id="btnBar_margin" onclick="toggleMobileSheet('margin')" title="Căn lề và bám dòng ô vở">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 6H3"/><path d="M21 12H3"/><path d="M21 18H3"/><path d="M8 3v18"/><path d="M16 3v18"/></svg>
         <span>Căn</span>
+      </button>
+      <button class="mobile-bar-btn" id="btnBar_diagram" onclick="toggleMobileSheet('diagram')" title="Chèn ảnh sơ đồ">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>Sơ Đồ</span>
       </button>
 
       <button class="mobile-bar-btn" id="btnBar_template" onclick="toggleMobileSheet('template')" title="Đổi mẫu trang vở">
