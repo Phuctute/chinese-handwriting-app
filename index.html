@@ -2573,7 +2573,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.2.0';
+    const APP_VERSION = '6.2.1';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -3938,8 +3938,26 @@
           const isPrevDigitOrAscii = /[\d\w]/.test(prevChar);
           const isNextDigit = /\d/.test(nextChar);
 
-          // Smart context-aware punctuation for numbers and Latin text
-          if (rawChar === '.') {
+          const SUBSCRIPT_MAP = {
+            '₀':'0', '₁':'1', '₂':'2', '₃':'3', '₄':'4', '₅':'5', '₆':'6', '₇':'7', '₈':'8', '₉':'9',
+            '₊':'+', '₋':'-', '₌':'=', '₍':'(', '₎':')',
+            'ₐ':'a', 'ₑ':'e', 'ₒ':'o', 'ₓ':'x', 'ₕ':'h', 'ₖ':'k', 'ₗ':'l', 'ₘ':'m', 'ₙ':'n', 'ₚ':'p', 'ₛ':'s', 'ₜ':'t'
+          };
+          const SUPERSCRIPT_MAP = {
+            '⁰':'0', '¹':'1', '²':'2', '³':'3', '⁴':'4', '⁵':'5', '⁶':'6', '⁷':'7', '⁸':'8', '⁹':'9',
+            '⁺':'+', '⁻':'-', '⁼':'=', '⁽':'(', '⁾':')', 'ⁿ':'n', 'ⁱ':'i'
+          };
+
+          let isSub = false;
+          let isSuper = false;
+
+          if (SUBSCRIPT_MAP[rawChar]) {
+            ch = SUBSCRIPT_MAP[rawChar];
+            isSub = true;
+          } else if (SUPERSCRIPT_MAP[rawChar]) {
+            ch = SUPERSCRIPT_MAP[rawChar];
+            isSuper = true;
+          } else if (rawChar === '.') {
             ch = (isPrevDigitOrAscii || isNextDigit) ? '.' : '。';
           } else if (rawChar === ',') {
             ch = (isPrevDigitOrAscii && isNextDigit) ? ',' : '，';
@@ -3961,7 +3979,7 @@
             tokens.push({ char: wrongCh, isCrossedOut: true });
           }
 
-          tokens.push({ char: ch, isCrossedOut: inStrike });
+          tokens.push({ char: ch, isCrossedOut: inStrike, isSubscript: isSub, isSuperscript: isSuper });
         }
 
         let currentChars = [];
@@ -3971,7 +3989,8 @@
 
         for (let tok of tokens) {
           const ch = tok.char;
-          const charW = getCharAdvanceWidth(ch, state.fontSize);
+          const effFontSize = (tok.isSubscript || tok.isSuperscript) ? state.fontSize * 0.62 : state.fontSize;
+          const charW = getCharAdvanceWidth(ch, effFontSize);
 
           if (curW + charW > activeMaxW) {
             if (punctuationNoStart.has(ch) && currentChars.length > 0 && (curW + charW <= activeMaxW + 8)) {
@@ -4216,7 +4235,10 @@
 
         for (let tok of lineItem.chars) {
           const ch = tok.char;
-          const charAdvance = getCharAdvanceWidth(ch, fontSize);
+          const isSub = !!tok.isSubscript;
+          const isSuper = !!tok.isSuperscript;
+          const effFontSize = (isSub || isSuper) ? fontSize * 0.62 : fontSize;
+          const charAdvance = getCharAdvanceWidth(ch, effFontSize);
 
           // STRICT SAFETY MARGIN CHECK: Never allow writing past right margin or onto desk/spine!
           if (curX + charAdvance > rightM - 4) {
@@ -4232,27 +4254,41 @@
           const contour = getNotebookLineContour(rawBaseY, curX, leftM, rightM, isSpread, isRightSubpage, state.notebookTemplate, lIdx, baselines, blOffset);
           const effectiveBaseY = contour.y + lineJitterY;
 
-          // Organic human handwriting jitter: subtle, natural variations
+          // Organic human handwriting jitter:
+          // Sub-pixel position variation so repeated letters/digits NEVER look photocopied
           const isAscii = ch.charCodeAt(0) < 128;
-          // For Latin words & numbers, reduce individual character wobble so letters stay cohesive on the baseline
-          const wobbleMult = isAscii ? 0.38 : 1.0;
-          const chJitterX = (prng() - 0.5) * 1.0 * mFactor * wobbleMult;
-          const chJitterY = (prng() - 0.5) * 0.65 * mFactor * wobbleMult;
+          const wobbleMult = (isSub || isSuper) ? 0.35 : (isAscii ? 0.65 : 1.0);
+          const chJitterX = (prng() - 0.5) * 1.1 * mFactor * wobbleMult;
+          const chJitterY = (prng() - 0.5) * 0.7 * mFactor * wobbleMult;
           const safeCurveAngle = Math.max(-0.14, Math.min(0.14, contour.angle || 0));
-          const chAngle = safeCurveAngle + (prng() - 0.5) * 0.028 * mFactor * wobbleMult;
-          const chScale = (isAscii ? 0.95 : 1.0) + (prng() - 0.5) * 0.03 * mFactor * wobbleMult;
+          const chAngle = safeCurveAngle + (prng() - 0.5) * 0.035 * mFactor * wobbleMult;
 
-          const rVar = Math.max(0, Math.min(255, baseR + Math.round((prng() - 0.5) * 14)));
-          const gVar = Math.max(0, Math.min(255, baseG + Math.round((prng() - 0.5) * 14)));
-          const bVar = Math.max(0, Math.min(255, baseB + Math.round((prng() - 0.5) * 14)));
-          const alphaVar = 0.85 + prng() * 0.13;
+          // Anisotropic organic micro-stretching (varying width vs height independently)
+          const baseScale = isSub || isSuper ? 1.0 : (isAscii ? 0.96 : 1.0);
+          const stretchX = baseScale * (1.0 + (prng() - 0.5) * 0.10 * mFactor);
+          const stretchY = baseScale * (1.0 + (prng() - 0.5) * 0.08 * mFactor);
+          const shearX = (prng() - 0.5) * 0.05 * mFactor; // Subtle pen stroke slant variation
+
+          // Subscript / Superscript vertical placement
+          let subSuperShiftY = 0;
+          if (isSub) {
+            subSuperShiftY = fontSize * 0.22; // Subscript sits near ruled line
+          } else if (isSuper) {
+            subSuperShiftY = -fontSize * 0.40; // Superscript floats above
+          }
+
+          const rVar = Math.max(0, Math.min(255, baseR + Math.round((prng() - 0.5) * 16)));
+          const gVar = Math.max(0, Math.min(255, baseG + Math.round((prng() - 0.5) * 16)));
+          const bVar = Math.max(0, Math.min(255, baseB + Math.round((prng() - 0.5) * 16)));
+          const alphaVar = 0.83 + prng() * 0.15;
 
           ctx.save();
-          ctx.translate(curX + charAdvance / 2 + chJitterX, effectiveBaseY + chJitterY);
+          ctx.translate(curX + charAdvance / 2 + chJitterX, effectiveBaseY + chJitterY + subSuperShiftY);
           ctx.rotate(chAngle);
-          ctx.scale(chScale, chScale);
+          ctx.transform(1, 0, shearX, 1, 0, 0);
+          ctx.scale(stretchX, stretchY);
 
-          ctx.font = `${fontSize}px "${fontName}", cursive`;
+          ctx.font = `${effFontSize}px "${fontName}", cursive`;
           ctx.fillStyle = `rgba(${rVar}, ${gVar}, ${bVar}, ${alphaVar})`;
           ctx.textBaseline = 'alphabetic';
           ctx.fillText(ch, -charAdvance / 2, 0);

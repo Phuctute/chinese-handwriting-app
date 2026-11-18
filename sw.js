@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.2.0-font-preload-spread-fix';
+const CACHE_NAME = 'cheptay-v6.2.1-subscript-organic-variation';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
