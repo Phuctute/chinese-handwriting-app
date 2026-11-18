@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v5.9.2-original-photos-exact-alignment';
+const CACHE_NAME = 'cheptay-v5.9.3-organic-natural-flow';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

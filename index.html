@@ -2638,27 +2638,69 @@
     const SPREAD_LINES_R = [73, 93, 112, 131, 150, 169, 188, 207, 226, 245, 264, 283, 302, 321, 340, 359, 378, 397, 417, 437, 457, 477, 497, 518, 539, 559, 580, 601, 622, 643, 665, 687];
 
     function getNotebookLineContour(baseY, x, leftM, rightM, isSpread, isRightSubpage, templateKey, lIdx, baselines, blOffset) {
+      const width = Math.max(1, rightM - leftM);
+      const p = Math.max(0, Math.min(1, (x - leftM) / width));
+
+      // Organic micro-wave (nhịp thở cổ tay tự nhiên uốn theo dòng kẻ)
+      const handWave = Math.sin(p * Math.PI * 3.2 + (lIdx || 0) * 1.5) * 0.45;
+
+      // 1. Single Page: Trang Đơn Trái Thành Nam (có lề đỏ trái)
       if (templateKey === 'notebook_thanhnam_left.jpg') {
-        const lineData = TN_LEFT_LINES[lIdx];
-        if (lineData) {
-          const y = lineData.y100 + lineData.slope * (x - 100);
-          return { y: y - 2 + blOffset, angle: lineData.slope };
-        }
+        const lineData = TN_LEFT_LINES[lIdx] || { y100: baseY, slope: -0.015 };
+        const bow = Math.sin(p * Math.PI) * (-4.5);
+        const y = lineData.y100 + lineData.slope * (x - 100) + bow + handWave;
+        const angle = lineData.slope + (-4.5 * Math.PI / width) * Math.cos(p * Math.PI);
+        return { y: y - 2 + blOffset, angle: angle };
       }
-      if (isSpread) {
-        const width = Math.max(1, rightM - leftM);
-        const progress = Math.max(0, Math.min(1, (x - leftM) / width));
+
+      // 2. Single Page: Trang Đơn Phải Thành Nam (có lề đỏ phải)
+      if (templateKey === 'notebook_thanhnam_right.jpg' || templateKey === 'notebook_hongha_2.jpg') {
+        const bow = Math.sin(p * Math.PI) * (-3.0);
+        const tilt = (p - 0.5) * 4.0;
+        const y = baseY + bow + tilt + handWave;
+        const angle = (4.0 / width) + (-3.0 * Math.PI / width) * Math.cos(p * Math.PI);
+        return { y: y - 2 + blOffset, angle: angle };
+      }
+
+      // 3. Single Pages: Trang Đơn Cận Cảnh & Tone Ấm (độ cong phối cảnh góc chụp cận)
+      if (templateKey === 'notebook_thanhnam_single2.jpg' || templateKey === 'notebook_thanhnam_single3.jpg' ||
+          templateKey === 'notebook_clean_single.jpg' || templateKey === 'notebook_campus_single.jpg') {
+        const bow = Math.sin(p * Math.PI) * (-22.0);
+        const y = baseY + bow + handWave;
+        const angle = (-22.0 * Math.PI / width) * Math.cos(p * Math.PI);
+        return { y: y - 2 + blOffset, angle: angle };
+      }
+
+      // 4. Double Spreads: Trang Đôi Thành Nam (Bàn Gỗ & Toàn Cảnh)
+      if (templateKey === 'notebook_thanhnam_spread.jpg' || templateKey === 'notebook_thanhnam_spread2.jpg' ||
+          templateKey === 'notebook_thanhnam_spread_clean.jpg') {
         if (!isRightSubpage) {
-          const arch = Math.sin(progress * Math.PI) * 6.5;
-          const angle = (6.5 * Math.PI / width) * Math.cos(progress * Math.PI);
-          return { y: baseY + arch - 2 + blOffset, angle: angle };
+          // Trang trái: võng lên gáy giữa
+          const curve = - 11.0 * p - 8.0 * Math.sin(p * Math.PI);
+          const angle = (-11.0 / width) - (8.0 * Math.PI / width) * Math.cos(p * Math.PI);
+          return { y: baseY + curve - 2 + blOffset + handWave, angle: angle };
         } else {
-          const arch = Math.sin(progress * Math.PI) * 12.5;
-          const angle = (12.5 * Math.PI / width) * Math.cos(progress * Math.PI);
-          return { y: baseY + arch - 2 + blOffset, angle: angle };
+          // Trang phải: dốc tự nhiên xuống mép ngoài
+          const curve = 16.0 * p + 6.0 * Math.sin(p * Math.PI);
+          const angle = (16.0 / width) + (6.0 * Math.PI / width) * Math.cos(p * Math.PI);
+          return { y: baseY + curve - 2 + blOffset + handWave, angle: angle };
         }
       }
-      return { y: baseY - 2 + blOffset, angle: 0 };
+
+      // 5. Double Spreads: Campus Klong & Hồng Hà Bãi Bằng
+      if (isSpread) {
+        if (!isRightSubpage) {
+          const curve = - 9.0 * p - 6.5 * Math.sin(p * Math.PI);
+          const angle = (-9.0 / width) - (6.5 * Math.PI / width) * Math.cos(p * Math.PI);
+          return { y: baseY + curve - 2 + blOffset + handWave, angle: angle };
+        } else {
+          const curve = 13.0 * p + 5.5 * Math.sin(p * Math.PI);
+          const angle = (13.0 / width) + (5.5 * Math.PI / width) * Math.cos(p * Math.PI);
+          return { y: baseY + curve - 2 + blOffset + handWave, angle: angle };
+        }
+      }
+
+      return { y: baseY - 2 + blOffset + handWave, angle: 0 };
     }
 
     // ========================================================
@@ -2822,7 +2864,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '5.9.2';
+    const APP_VERSION = '5.9.3';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -4095,7 +4137,7 @@
           // Organic human handwriting jitter: subtle, natural variations (NO erratic sawtooth jumping or spinning)
           const chJitterX = (prng() - 0.5) * 1.0 * mFactor;
           const chJitterY = (prng() - 0.5) * 0.7 * mFactor; // Gentle baseline variance, characters sit securely on the ruled line
-          const safeCurveAngle = Math.max(-0.025, Math.min(0.025, (contour.angle || 0) * 0.35)); // Keeps characters upright without rolling along the slope
+          const safeCurveAngle = Math.max(-0.14, Math.min(0.14, contour.angle || 0)); // Rotates naturally with line curve
           const chAngle = safeCurveAngle + (prng() - 0.5) * 0.035 * mFactor; // Subtle handwriting slant
           const chScale = 1.0 + (prng() - 0.5) * 0.04 * mFactor;
 
