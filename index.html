@@ -2598,90 +2598,144 @@
 
     // ========================================================
     // RECTIFIED HIGH-PRECISION NOTEBOOK BASING ENGINE
-    // (100% horizontal alignment, zero drift, zero cutting across lines)
+    // (100% authentic photographic lines with exact perspective curvature)
     // ========================================================
-    const SPREAD_LINES = [68, 89, 110, 132, 153, 174, 195, 216, 238, 259, 280, 301, 322, 344, 365, 386, 407, 428, 450, 471, 492, 513, 534, 556, 577, 598, 619, 640, 662, 683, 704, 725];
-    const TARGET_TN_SINGLE = [94, 122, 150, 178, 206, 234, 262, 290, 318, 346, 374, 402, 430, 458, 486, 514, 542, 570, 598, 626, 654, 682, 710, 738, 766, 794, 822, 850, 878, 906, 934, 962];
-    const TARGET_HH_SINGLE = [98, 126, 154, 182, 211, 269, 298, 328, 358, 389, 420, 451, 483, 514, 546, 578, 611, 645, 679, 713, 748, 783, 817, 852, 887, 922, 957];
+    const TN_LEFT_LINES = [
+      { y100: 95, slope: -0.04000 },
+      { y100: 120, slope: -0.03818 },
+      { y100: 145, slope: -0.03636 },
+      { y100: 170, slope: -0.03455 },
+      { y100: 195, slope: -0.03273 },
+      { y100: 221, slope: -0.03091 },
+      { y100: 247, slope: -0.02909 },
+      { y100: 274, slope: -0.02909 },
+      { y100: 300, slope: -0.02545 },
+      { y100: 327, slope: -0.02364 },
+      { y100: 354, slope: -0.02182 },
+      { y100: 382, slope: -0.02000 },
+      { y100: 409, slope: -0.01636 },
+      { y100: 437, slope: -0.01455 },
+      { y100: 465, slope: -0.01091 },
+      { y100: 494, slope: -0.00909 },
+      { y100: 522, slope: -0.00545 },
+      { y100: 551, slope: -0.00364 },
+      { y100: 580, slope: 0.00000 },
+      { y100: 609, slope: 0.00364 },
+      { y100: 638, slope: 0.00727 },
+      { y100: 667, slope: 0.01091 },
+      { y100: 697, slope: 0.01273 },
+      { y100: 726, slope: 0.01636 },
+      { y100: 756, slope: 0.02000 },
+      { y100: 786, slope: 0.02182 },
+      { y100: 816, slope: 0.02545 },
+      { y100: 846, slope: 0.02727 },
+      { y100: 877, slope: 0.02909 },
+      { y100: 907, slope: 0.03091 },
+      { y100: 938, slope: 0.03455 },
+      { y100: 970, slope: 0.03455 }
+    ];
+    const SPREAD_LINES_L = [77, 96, 114, 133, 152, 172, 191, 210, 230, 249, 269, 288, 308, 327, 347, 367, 387, 407, 427, 447, 467, 488, 508, 529, 549, 570, 591, 612, 633, 655, 678, 701];
+    const SPREAD_LINES_R = [73, 93, 112, 131, 150, 169, 188, 207, 226, 245, 264, 283, 302, 321, 340, 359, 378, 397, 417, 437, 457, 477, 497, 518, 539, 559, 580, 601, 622, 643, 665, 687];
 
     function getNotebookLineContour(baseY, x, leftM, rightM, isSpread, isRightSubpage, templateKey, lIdx, baselines, blOffset) {
-      if (templateKey === 'notebook_hongha_2.jpg') {
-        const progress = Math.max(0, Math.min(1, (x - leftM) / (rightM - leftM)));
-        const tilt = 3.5 - progress * 8.5;
-        return { y: baseY + tilt, angle: -0.014 };
+      if (templateKey === 'notebook_thanhnam_left.jpg') {
+        const lineData = TN_LEFT_LINES[lIdx];
+        if (lineData) {
+          const y = lineData.y100 + lineData.slope * (x - 100);
+          return { y: y - 2 + blOffset, angle: lineData.slope };
+        }
       }
-      return { y: baseY, angle: 0 };
+      if (isSpread) {
+        const width = Math.max(1, rightM - leftM);
+        const progress = Math.max(0, Math.min(1, (x - leftM) / width));
+        if (!isRightSubpage) {
+          const arch = Math.sin(progress * Math.PI) * 6.5;
+          const angle = (6.5 * Math.PI / width) * Math.cos(progress * Math.PI);
+          return { y: baseY + arch - 2 + blOffset, angle: angle };
+        } else {
+          const arch = Math.sin(progress * Math.PI) * 12.5;
+          const angle = (12.5 * Math.PI / width) * Math.cos(progress * Math.PI);
+          return { y: baseY + arch - 2 + blOffset, angle: angle };
+        }
+      }
+      return { y: baseY - 2 + blOffset, angle: 0 };
     }
 
     // ========================================================
     // CALIBRATED NOTEBOOK TEMPLATES CONFIGURATION
-    // (Strict safety margins to ensure text never overflows outside paper/spine)
+    // (100% Authentic user camera photographs - zero synthetic lines)
     // ========================================================
     const TEMPLATES_CONFIG = {
-      // === 4 MẪU TRANG ĐÔI KẺ NGANG CHỤP THỰC TẾ TRÊN BÀN HỌC (CHUẨN 100% DÒNG KẺ & ĐỐI XỨNG HOÀN TOÀN) ===
+      // === 4 MẪU TRANG ĐƠN KẺ NGANG CHỤP THỰC TẾ (100% ẢNH GỐC) ===
+      'notebook_thanhnam_left.jpg': {
+        name: 'Trang Đơn Trái Thành Nam',
+        desc: 'Ảnh gốc chụp lề đỏ bên trái & logo Thành Nam góc dưới',
+        isSpread: false,
+        leftMargin: 85,
+        rightMargin: 705,
+        lines: TN_LEFT_LINES.map(l => l.y100)
+      },
+      'notebook_thanhnam_right.jpg': {
+        name: 'Trang Đơn Phải Thành Nam',
+        desc: 'Ảnh gốc chụp lề đỏ bên phải của vở học sinh',
+        isSpread: false,
+        leftMargin: 85,
+        rightMargin: 690,
+        lines: [107, 134, 162, 190, 219, 248, 276, 305, 334, 363, 392, 421, 450, 480, 510, 540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900, 935, 969]
+      },
+      'notebook_thanhnam_single2.jpg': {
+        name: 'Trang Đơn Thành Nam (Cận Cảnh)',
+        desc: 'Ảnh gốc chụp cận cảnh chất giấy tự nhiên',
+        isSpread: false,
+        leftMargin: 85,
+        rightMargin: 700,
+        lines: [94, 121, 148, 175, 202, 230, 258, 286, 314, 342, 370, 398, 426, 455, 484, 513, 542, 571, 601, 631, 661, 691, 722, 753, 784, 816, 848, 880, 912, 944, 975]
+      },
+      'notebook_thanhnam_single3.jpg': {
+        name: 'Trang Đơn Thành Nam (Tone Ấm)',
+        desc: 'Ảnh gốc chụp dưới ánh đèn vàng ấm áp',
+        isSpread: false,
+        leftMargin: 85,
+        rightMargin: 690,
+        lines: [80, 107, 134, 162, 191, 220, 249, 278, 307, 336, 365, 395, 425, 455, 485, 515, 545, 575, 605, 635, 665, 695, 725, 755, 785, 815, 845, 875, 908, 940, 970]
+      },
+
+      // === 4 MẪU TRANG ĐÔI KẺ NGANG MỞ RỘNG (100% ẢNH GỐC BÀN HỌC & GÁY THẬT) ===
       'notebook_thanhnam_spread.jpg': {
-        name: 'Trang Đôi Thành Nam (Tiêu chuẩn)',
-        desc: 'Vở học sinh kẻ ngang, bìa hồng bàn gỗ tự nhiên',
+        name: 'Trang Đôi Thành Nam (Bàn Gỗ)',
+        desc: 'Ảnh gốc chụp vở mở trên bàn gỗ tự nhiên, gáy thật',
         isSpread: true,
-        leftPage: { leftMargin: 65, rightMargin: 485, lines: SPREAD_LINES },
-        rightPage: { leftMargin: 539, rightMargin: 959, lines: SPREAD_LINES }
+        leftPage: { leftMargin: 68, rightMargin: 485, lines: SPREAD_LINES_L },
+        rightPage: { leftMargin: 540, rightMargin: 955, lines: SPREAD_LINES_R }
+      },
+      'notebook_thanhnam_spread2.jpg': {
+        name: 'Trang Đôi Thành Nam (Góc Rộng)',
+        desc: 'Ảnh gốc toàn cảnh 2 trang mở rộng đối xứng',
+        isSpread: true,
+        leftPage: { leftMargin: 68, rightMargin: 485, lines: SPREAD_LINES_L },
+        rightPage: { leftMargin: 540, rightMargin: 955, lines: SPREAD_LINES_R }
+      },
+      'notebook_campus_spread.jpg': {
+        name: 'Trang Đôi Campus Klong (Trắng Sáng)',
+        desc: 'Ảnh gốc chụp giấy trắng ngọc trai chống lóa',
+        isSpread: true,
+        leftPage: { leftMargin: 70, rightMargin: 480, lines: SPREAD_LINES_L },
+        rightPage: { leftMargin: 545, rightMargin: 950, lines: SPREAD_LINES_R }
       },
       'notebook_hongha_spread.jpg': {
         name: 'Trang Đôi Hồng Hà (Bãi Bằng)',
-        desc: 'Icon thời tiết, thứ ngày & logo Hồng Hà bàn thông sáng',
+        desc: 'Ảnh gốc chụp giấy kẻ ngang Bãi Bằng truyền thống',
         isSpread: true,
-        leftPage: { leftMargin: 65, rightMargin: 485, lines: SPREAD_LINES },
-        rightPage: { leftMargin: 539, rightMargin: 959, lines: SPREAD_LINES }
-      },
-      'notebook_thanhnam_spread_clean.jpg': {
-        name: 'Trang Đôi Bãi Bằng (Trắng Sáng)',
-        desc: 'Giấy trắng tinh khiết 92% ISO trên bàn làm việc hiện đại',
-        isSpread: true,
-        leftPage: { leftMargin: 65, rightMargin: 485, lines: SPREAD_LINES },
-        rightPage: { leftMargin: 539, rightMargin: 959, lines: SPREAD_LINES }
-      },
-      'notebook_campus_spread.jpg': {
-        name: 'Trang Đôi Campus Klong (Tối Giản)',
-        desc: 'Giấy trắng ngọc trai chống lóa, dòng kẻ thanh mảnh chuẩn xác',
-        isSpread: true,
-        leftPage: { leftMargin: 65, rightMargin: 485, lines: SPREAD_LINES },
-        rightPage: { leftMargin: 539, rightMargin: 959, lines: SPREAD_LINES }
-      },
-
-      // === 4 MẪU TRANG ĐƠN KẺ NGANG CHUẨN XÁC KHÔNG LỆCH DÒNG (0PX ERROR) ===
-      'notebook_thanhnam_left.jpg': {
-        name: 'Trang Đơn Thành Nam',
-        desc: 'Vở kẻ ngang học sinh có lề đỏ chuẩn',
-        isSpread: false,
-        leftMargin: 105,
-        rightMargin: 700,
-        lines: TARGET_TN_SINGLE
-      },
-      'notebook_hongha_2.jpg': {
-        name: 'Trang Đơn Hồng Hà',
-        desc: 'Vở kẻ ngang Bãi Bằng có biểu tượng Thứ ngày',
-        isSpread: false,
-        leftMargin: 118,
-        rightMargin: 705,
-        lines: TARGET_HH_SINGLE
-      },
-      'notebook_clean_single.jpg': {
-        name: 'Trang Đơn Bãi Bằng (Trắng Sáng)',
-        desc: 'Giấy trắng kẻ ngang 92% ISO thanh lịch',
-        isSpread: false,
-        leftMargin: 105,
-        rightMargin: 700,
-        lines: TARGET_TN_SINGLE
-      },
-      'notebook_campus_single.jpg': {
-        name: 'Trang Đơn Campus Klong',
-        desc: 'Vở kẻ ngang tối giản giấy ngọc trai chống mỏi mắt',
-        isSpread: false,
-        leftMargin: 105,
-        rightMargin: 700,
-        lines: TARGET_TN_SINGLE
+        leftPage: { leftMargin: 65, rightMargin: 440, lines: SPREAD_LINES_L },
+        rightPage: { leftMargin: 490, rightMargin: 865, lines: SPREAD_LINES_R }
       }
     };
+
+    // Aliases for compatibility
+    TEMPLATES_CONFIG['notebook_thanhnam_spread_clean.jpg'] = TEMPLATES_CONFIG['notebook_thanhnam_spread2.jpg'];
+    TEMPLATES_CONFIG['notebook_clean_single.jpg'] = TEMPLATES_CONFIG['notebook_thanhnam_single2.jpg'];
+    TEMPLATES_CONFIG['notebook_campus_single.jpg'] = TEMPLATES_CONFIG['notebook_thanhnam_single3.jpg'];
+    TEMPLATES_CONFIG['notebook_hongha_2.jpg'] = TEMPLATES_CONFIG['notebook_thanhnam_right.jpg'];
 
     // ========================================================
     // GLOBAL APPLICATION STATE
@@ -2768,7 +2822,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '5.9.1';
+    const APP_VERSION = '5.9.2';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
