@@ -2915,7 +2915,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '5.9.4';
+    const APP_VERSION = '5.9.5';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -3146,7 +3146,9 @@
       showToast('🤖 AI đang phân tích ảnh và trích xuất cấu trúc bảng/sơ đồ...');
 
       try {
-        const worker = await Tesseract.createWorker(['chi_tra', 'chi_sim', 'vie']);
+        const worker = await Tesseract.createWorker(['chi_tra', 'chi_sim', 'vie'], 1, {
+          langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0_fast'
+        });
         const ret = await worker.recognize(file);
         await worker.terminate();
 
@@ -3553,7 +3555,9 @@
       }
 
       try {
-        const worker = await Tesseract.createWorker(['chi_tra', 'chi_sim', 'vie']);
+        const worker = await Tesseract.createWorker(['chi_tra', 'chi_sim', 'vie'], 1, {
+          langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0_fast'
+        });
         const ret = await worker.recognize(file);
         await worker.terminate();
 
@@ -4892,16 +4896,105 @@
       showToast('Đã nạp bài tập mẫu!');
     }
 
-    // OCR via Tesseract.js
+    // Image Pre-processing for reliable, lightning-fast OCR on mobile
+    async function preprocessImageForOcr(file) {
+      return new Promise((resolve) => {
+        let isDone = false;
+        const done = (result) => {
+          if (!isDone) {
+            isDone = true;
+            resolve(result);
+          }
+        };
+        const timer = setTimeout(() => done(file), 4000);
+
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+          clearTimeout(timer);
+          try {
+            const maxDim = 1500;
+            let w = img.width;
+            let h = img.height;
+            if (w > maxDim || h > maxDim) {
+              if (w > h) {
+                h = Math.round((h * maxDim) / w);
+                w = maxDim;
+              } else {
+                w = Math.round((w * maxDim) / h);
+                h = maxDim;
+              }
+            }
+            const c = document.createElement('canvas');
+            c.width = w;
+            c.height = h;
+            const ctx = c.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            try {
+              const id = ctx.getImageData(0, 0, w, h);
+              const d = id.data;
+              for (let i = 0; i < d.length; i += 4) {
+                const gray = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+                const v = gray > 135 ? Math.min(255, gray * 1.15) : Math.max(0, gray * 0.75);
+                d[i] = v;
+                d[i + 1] = v;
+                d[i + 2] = v;
+              }
+              ctx.putImageData(id, 0, 0);
+            } catch(e) {}
+            c.toBlob((blob) => {
+              URL.revokeObjectURL(url);
+              done(blob || file);
+            }, 'image/jpeg', 0.90);
+          } catch(e) {
+            URL.revokeObjectURL(url);
+            done(file);
+          }
+        };
+        img.onerror = () => {
+          clearTimeout(timer);
+          URL.revokeObjectURL(url);
+          done(file);
+        };
+        img.src = url;
+      });
+    }
+
+    // High-reliability OCR via Tesseract.js Fast Models & Progress Indicator
     async function handleOcrUpload(file) {
       if (!file) return;
-      showToast('Đang nhận diện chữ Hán từ ảnh...');
+      const ocrInput = document.getElementById('ocrFileInput');
+      if (ocrInput) ocrInput.value = '';
+
+      showToast('Đang tối ưu ảnh để nhận diện...');
+      let processedBlob = file;
       try {
-        const worker = await Tesseract.createWorker(['chi_tra', 'chi_sim']);
-        const ret = await worker.recognize(file);
+        processedBlob = await preprocessImageForOcr(file);
+
+        showToast('Đang nạp dữ liệu nhận diện chữ Hán...');
+        const worker = await Tesseract.createWorker('chi_tra+chi_sim', 1, {
+          workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js',
+          corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5/tesseract-core.wasm.js',
+          langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0_fast',
+          logger: m => {
+            if (m.status === 'loading language traineddata') {
+              const pct = Math.round((m.progress || 0) * 100);
+              showToast(`Đang tải dữ liệu chữ (${pct}%)...`);
+            } else if (m.status === 'recognizing text') {
+              const pct = Math.round((m.progress || 0) * 100);
+              showToast(`Đang nhận diện chữ Hán (${pct}%)...`);
+            }
+          }
+        });
+
+        const ret = await worker.recognize(processedBlob);
         await worker.terminate();
 
-        const cleaned = ret.data.text.trim();
+        let cleaned = ret.data && ret.data.text ? ret.data.text.trim() : '';
+        // Remove spaces between Chinese characters for clean prose
+        cleaned = cleaned.replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2');
+        cleaned = cleaned.replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2');
+
         if (cleaned) {
           textInput.value = cleaned;
           state.text = cleaned;
@@ -4910,11 +5003,29 @@
           renderCanvas();
           showToast('Quét chữ hoàn tất!');
         } else {
-          showToast('Không tìm thấy chữ Hán trong ảnh');
+          showToast('Không tìm thấy chữ Hán trong ảnh!');
         }
       } catch (err) {
-        console.error(err);
-        showToast('Lỗi nhận diện ảnh!');
+        console.warn('OCR primary error, trying fallback:', err);
+        try {
+          showToast('Đang thử lại với bộ quét dự phòng...');
+          const ret = await Tesseract.recognize(processedBlob || file, 'chi_tra', {
+            langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0_fast'
+          });
+          const cleaned = ret.data && ret.data.text ? ret.data.text.trim() : '';
+          if (cleaned) {
+            textInput.value = cleaned;
+            state.text = cleaned;
+            updateCharCount();
+            paginateText();
+            renderCanvas();
+            showToast('Quét chữ hoàn tất!');
+            return;
+          }
+        } catch (err2) {
+          console.error('OCR Fallback error:', err2);
+        }
+        showToast('Lỗi nhận diện ảnh! Vui lòng chụp rõ nét hơn.');
       }
     }
 

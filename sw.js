@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v5.9.4-ai-exact-line-calibration';
+const CACHE_NAME = 'cheptay-v5.9.5-high-reliability-ocr';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -53,6 +53,12 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const req = event.request;
+
+  // Only handle same-origin requests; allow external CDNs (Tesseract, wasm, tessdata) to stream directly
+  if (!req.url.startsWith(self.location.origin)) {
+    return;
+  }
+
   // For navigation & HTML, try network first to ensure latest updates
   if (req.mode === 'navigate' || req.headers.get('accept')?.includes('text/html')) {
     event.respondWith(
