@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.1.0-diagram-text-restyler';
+const CACHE_NAME = 'cheptay-v6.1.1-latin-number-opt';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

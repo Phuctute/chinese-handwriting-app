@@ -2572,7 +2572,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.1.0';
+    const APP_VERSION = '6.1.1';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -2595,19 +2595,39 @@
       return rawLines;
     }
 
-    function getCharAdvanceWidth(ch, fontSize) {
+    let measureCanvasCtx = null;
+    const charWidthCache = new Map();
+
+    function getCharAdvanceWidth(ch, fontSize, fontName) {
       if (!ch) return 0;
+      const font = fontName || (typeof state !== 'undefined' ? state.font : 'JasonHandwriting5');
+      const key = ch + '_' + fontSize + '_' + font;
+      if (charWidthCache.has(key)) return charWidthCache.get(key);
+
+      let w;
       const code = ch.charCodeAt(0);
       if (code < 128) {
-        if ('ilI.,:;!\'|'.indexOf(ch) !== -1) return fontSize * 0.32;
-        if ('mwMW'.indexOf(ch) !== -1) return fontSize * 0.78;
-        if (ch === ' ') return fontSize * 0.38;
-        return fontSize * 0.52;
+        if (!measureCanvasCtx) {
+          measureCanvasCtx = document.createElement('canvas').getContext('2d');
+        }
+        measureCanvasCtx.font = fontSize + 'px "' + font + '", cursive';
+        const measured = measureCanvasCtx.measureText(ch).width;
+        if (ch === ' ') {
+          w = fontSize * 0.28;
+        } else if (ch === '.' || ch === ',') {
+          w = Math.max(fontSize * 0.22, measured + 1.2);
+        } else if (code >= 48 && code <= 57) { // Digits 0-9
+          w = Math.max(fontSize * 0.38, measured + 0.8);
+        } else {
+          w = Math.max(fontSize * 0.25, measured + 0.5);
+        }
+      } else if ('，。、；：！？）》」』”’'.indexOf(ch) !== -1) {
+        w = fontSize * 0.62;
+      } else {
+        w = fontSize * 1.02;
       }
-      if ('，。、；：！？）》」』”’'.indexOf(ch) !== -1) {
-        return fontSize * 0.65;
-      }
-      return fontSize * 1.04;
+      charWidthCache.set(key, w);
+      return w;
     }
 
     function mulberry32(a) {
@@ -3912,8 +3932,28 @@
             continue;
           }
           const rawChar = clean[i];
-          const PUNC_MAP = { ',': '，', '.': '。', ':': '：', ';': '；', '!': '！', '?': '？', '(': '（', ')': '）', '[': '【', ']': '】' };
-          const ch = PUNC_MAP[rawChar] || rawChar;
+          const prevChar = i > 0 ? clean[i - 1] : '';
+          const nextChar = i < clean.length - 1 ? clean[i + 1] : '';
+
+          let ch = rawChar;
+          const isPrevDigitOrAscii = /[\d\w]/.test(prevChar);
+          const isNextDigit = /\d/.test(nextChar);
+
+          // Smart context-aware punctuation for numbers and Latin text
+          if (rawChar === '.') {
+            ch = (isPrevDigitOrAscii || isNextDigit) ? '.' : '。';
+          } else if (rawChar === ',') {
+            ch = (isPrevDigitOrAscii && isNextDigit) ? ',' : '，';
+          } else if (rawChar === ':') {
+            ch = (isPrevDigitOrAscii && isNextDigit) ? ':' : ' : ';
+          } else if (rawChar === '(') {
+            ch = '(';
+          } else if (rawChar === ')') {
+            ch = ')';
+          } else {
+            const PUNC_MAP = { ';': '；', '!': '！', '?': '？', '[': '【', ']': '】' };
+            ch = PUNC_MAP[rawChar] || rawChar;
+          }
           charCounterGlobal++;
 
           if (state.autoTypo && !inStrike && charCounterGlobal % 58 === 0 && '，。、；：'.indexOf(ch) === -1) {
@@ -4193,12 +4233,15 @@
           const contour = getNotebookLineContour(rawBaseY, curX, leftM, rightM, isSpread, isRightSubpage, state.notebookTemplate, lIdx, baselines, blOffset);
           const effectiveBaseY = contour.y + lineJitterY;
 
-          // Organic human handwriting jitter: subtle, natural variations (NO erratic sawtooth jumping or spinning)
-          const chJitterX = (prng() - 0.5) * 1.0 * mFactor;
-          const chJitterY = (prng() - 0.5) * 0.7 * mFactor; // Gentle baseline variance, characters sit securely on the ruled line
-          const safeCurveAngle = Math.max(-0.14, Math.min(0.14, contour.angle || 0)); // Rotates naturally with line curve
-          const chAngle = safeCurveAngle + (prng() - 0.5) * 0.035 * mFactor; // Subtle handwriting slant
-          const chScale = 1.0 + (prng() - 0.5) * 0.04 * mFactor;
+          // Organic human handwriting jitter: subtle, natural variations
+          const isAscii = ch.charCodeAt(0) < 128;
+          // For Latin words & numbers, reduce individual character wobble so letters stay cohesive on the baseline
+          const wobbleMult = isAscii ? 0.38 : 1.0;
+          const chJitterX = (prng() - 0.5) * 1.0 * mFactor * wobbleMult;
+          const chJitterY = (prng() - 0.5) * 0.65 * mFactor * wobbleMult;
+          const safeCurveAngle = Math.max(-0.14, Math.min(0.14, contour.angle || 0));
+          const chAngle = safeCurveAngle + (prng() - 0.5) * 0.028 * mFactor * wobbleMult;
+          const chScale = (isAscii ? 0.95 : 1.0) + (prng() - 0.5) * 0.03 * mFactor * wobbleMult;
 
           const rVar = Math.max(0, Math.min(255, baseR + Math.round((prng() - 0.5) * 14)));
           const gVar = Math.max(0, Math.min(255, baseG + Math.round((prng() - 0.5) * 14)));
