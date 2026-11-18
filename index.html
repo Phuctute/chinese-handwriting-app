@@ -2,7 +2,8 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+      <link rel="preload" href="fonts/JasonHandwriting5.woff2" as="font" type="font/woff2" crossorigin>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Chép Tay AI - Vở Viết Tay Chữ Hán Thông Minh</title>
   <meta name="description" content="Chuyển văn bản tiếng Trung thành chữ viết tay tự nhiên uốn theo dòng kẻ vở học sinh, vẽ lại sơ đồ và bảng thông minh không đè dòng.">
 
@@ -2572,7 +2573,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.1.2';
+    const APP_VERSION = '6.2.0';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -2677,6 +2678,8 @@
       { y100: 938.1, slope: 0.01774 },
       { y100: 970.0, slope: 0.01774 }
     ];
+        const HONGHA_SPREAD_LINES_L = [106, 128, 148, 165, 183, 200, 218, 235, 252, 270, 287, 304, 322, 340, 357, 375, 393, 411, 429, 447, 465, 483, 502, 521, 539, 558, 577, 596, 616, 635, 655, 675];
+    const HONGHA_SPREAD_LINES_R = [107, 129, 148, 165, 182, 199, 217, 234, 251, 269, 285, 303, 321, 339, 356, 374, 392, 410, 429, 446, 465, 483, 501, 520, 539, 557, 576, 595, 615, 634, 654, 674];
     const SPREAD_LINES_L = [77, 96, 114, 133, 152, 172, 191, 210, 230, 249, 269, 288, 308, 327, 347, 367, 387, 407, 427, 447, 467, 488, 508, 529, 549, 570, 591, 612, 633, 655, 678, 701];
     const SPREAD_LINES_R = [73, 93, 112, 131, 150, 169, 188, 207, 226, 245, 264, 283, 302, 321, 340, 359, 378, 397, 417, 437, 457, 477, 497, 518, 539, 559, 580, 601, 622, 643, 665, 687];
 
@@ -2849,15 +2852,15 @@
         name: 'Trang Đôi Campus Klong (Trắng Sáng)',
         desc: 'Ảnh gốc chụp giấy trắng ngọc trai chống lóa',
         isSpread: true,
-        leftPage: { leftMargin: 70, rightMargin: 480, lines: SPREAD_LINES_L },
-        rightPage: { leftMargin: 545, rightMargin: 950, lines: SPREAD_LINES_R }
+        leftPage: { leftMargin: 65, rightMargin: 460, lines: SPREAD_LINES_L },
+        rightPage: { leftMargin: 535, rightMargin: 940, lines: SPREAD_LINES_R }
       },
       'notebook_hongha_spread.jpg': {
         name: 'Trang Đôi Hồng Hà (Bãi Bằng)',
         desc: 'Ảnh gốc chụp giấy kẻ ngang Bãi Bằng truyền thống',
         isSpread: true,
-        leftPage: { leftMargin: 65, rightMargin: 440, lines: SPREAD_LINES_L },
-        rightPage: { leftMargin: 490, rightMargin: 865, lines: SPREAD_LINES_R }
+        leftPage: { leftMargin: 55, rightMargin: 425, lines: HONGHA_SPREAD_LINES_L },
+        rightPage: { leftMargin: 495, rightMargin: 865, lines: HONGHA_SPREAD_LINES_R }
       }
     };
 

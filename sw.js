@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.1.2-empty-default';
+const CACHE_NAME = 'cheptay-v6.2.0-font-preload-spread-fix';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -25,6 +25,8 @@ const ASSETS_TO_CACHE = [
   './assets/notebook_hongha_2.jpg',
   './assets/notebook_clean_single.jpg',
   './assets/notebook_campus_single.jpg',
+  './fonts/JasonHandwriting5.woff2',
+  './fonts/JasonHandwriting3.woff2',
   './fonts/JasonHandwriting5.ttf',
   './fonts/JasonHandwriting3.ttf'
 ];
