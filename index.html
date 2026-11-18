@@ -2601,10 +2601,15 @@
     // (100% horizontal alignment, zero drift, zero cutting across lines)
     // ========================================================
     const SPREAD_LINES = [68, 89, 110, 132, 153, 174, 195, 216, 238, 259, 280, 301, 322, 344, 365, 386, 407, 428, 450, 471, 492, 513, 534, 556, 577, 598, 619, 640, 662, 683, 704, 725];
-    const TARGET_TN_SINGLE = [94, 122, 150, 179, 207, 235, 263, 291, 320, 348, 376, 404, 432, 461, 489, 517, 545, 573, 602, 630, 658, 686, 715, 743, 771, 799, 827, 856, 884, 912, 940, 968];
-    const TARGET_HH_SINGLE = [159, 191, 223, 255, 286, 318, 350, 382, 414, 446, 477, 509, 541, 573, 605, 637, 668, 700, 732, 764, 796, 828, 859, 891, 923, 955];
+    const TARGET_TN_SINGLE = [88, 112, 139, 163, 187, 216, 240, 267, 295, 323, 351, 379, 408, 436, 464, 493, 521, 550, 579, 609, 639, 669, 700, 731, 761, 792, 823, 853, 884, 914, 944, 974];
+    const TARGET_HH_SINGLE = [98, 126, 154, 182, 211, 269, 298, 328, 358, 389, 420, 451, 483, 514, 546, 578, 611, 645, 679, 713, 748, 783, 817, 852, 887, 922, 957];
 
     function getNotebookLineContour(baseY, x, leftM, rightM, isSpread, isRightSubpage, templateKey, lIdx, baselines, blOffset) {
+      if (templateKey === 'notebook_hongha_2.jpg') {
+        const progress = Math.max(0, Math.min(1, (x - leftM) / (rightM - leftM)));
+        const tilt = 3.5 - progress * 8.5;
+        return { y: baseY + tilt, angle: -0.014 };
+      }
       return { y: baseY, angle: 0 };
     }
 

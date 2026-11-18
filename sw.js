@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v5.8.5-seamless-real-photo-spreads';
+const CACHE_NAME = 'cheptay-v5.8.6-pristine-camera-photo-singles';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
