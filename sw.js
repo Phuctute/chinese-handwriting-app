@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.0.0-ballpoint-diagram-sketch';
+const CACHE_NAME = 'cheptay-v6.1.0-diagram-text-restyler';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -10,6 +10,8 @@ const ASSETS_TO_CACHE = [
   './assets/apple-touch-icon.png',
   './assets/ai_calibrated_lines.json',
   './assets/so_do_ve_tay_but_bi_xanh.jpg',
+  './assets/so_do_sgk_goc.jpg',
+  './assets/so_do_chatgpt_but_bi.jpg',
   './assets/so_do_chep_but_bi_xanh.jpg',
   './assets/notebook_thanhnam_spread.jpg',
   './assets/notebook_thanhnam_spread2.jpg',
