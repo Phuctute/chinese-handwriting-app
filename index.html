@@ -2562,6 +2562,21 @@
   <!-- SCRIPT ENGINE -->
   <script>
     // ========================================================
+    // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
+    // ========================================================
+    const APP_VERSION = '5.9.6';
+    if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
+      localStorage.setItem('cheptay_app_ver', APP_VERSION);
+      if ('caches' in window) {
+        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))));
+      }
+    }
+    function getAssetUrl(url) {
+      if (!url) return '';
+      return url + (url.includes('?') ? '&' : '?') + 'v=' + APP_VERSION;
+    }
+
+    // ========================================================
     // ROOT SCOPE ESSENTIAL HELPERS & PSEUDO-RANDOM GENERATOR
     // ========================================================
     function getActivePageLines(rawLines) {
@@ -2912,20 +2927,7 @@
     const ctx = canvas.getContext('2d');
     const textInput = document.getElementById('textInput');
 
-    // ========================================================
-    // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
-    // ========================================================
-    const APP_VERSION = '5.9.5';
-    if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
-      localStorage.setItem('cheptay_app_ver', APP_VERSION);
-      if ('caches' in window) {
-        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))));
-      }
-    }
-    function getAssetUrl(url) {
-      if (!url) return '';
-      return url + (url.includes('?') ? '&' : '?') + 'v=' + APP_VERSION;
-    }
+
 
     async function clearAppCacheAndReload() {
       showToast('🔄 Đang xóa cache và tải lại mẫu mới...');
