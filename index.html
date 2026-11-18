@@ -2572,7 +2572,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.1.1';
+    const APP_VERSION = '6.1.2';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -3046,12 +3046,8 @@
       state.notebookImg.onload = () => {
         canvas.width = state.notebookImg.width;
         canvas.height = state.notebookImg.height;
-        if (!state.text) {
-          loadSample('taohuayuan');
-        } else {
-          paginateText();
-          renderCanvas();
-        }
+        paginateText();
+        renderCanvas();
         // Set default zoom to 40% as requested
         state.zoomLevel = 0.40;
         applyZoom();
