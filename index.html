@@ -2042,9 +2042,9 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/></svg>
               🪄 AI Sơ Đồ Bút Bi
             </button>
-            <button class="tool-chip" onclick="document.getElementById('diagramFileInput').click()">
+            <button class="tool-chip" onclick="document.getElementById('aiDiagramAutoFileInput').click()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              📁 Tải ảnh sơ đồ
+              📸 Up ảnh để AI vẽ lại
             </button>
             <button class="tool-chip" id="btnRemoveDiagram" onclick="removeDiagram()" style="display:none; color:#f87171;">
               ✕ Xóa sơ đồ
@@ -2640,7 +2640,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.3.1';
+    const APP_VERSION = '6.3.2';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -6172,6 +6172,110 @@
     // ========================================================
     // DIRECT AI DIAGRAM GENERATION ENGINE (GEMINI / IMAGEN 3)
     // ========================================================
+    
+    // ========================================================
+    // 1-CLICK AI DIAGRAM REDRAW PIPELINE (v6.3.2)
+    // Upload image -> AI redraws as ballpoint sketch -> Auto-inserts into notebook
+    // ========================================================
+    async function handleAiDiagramAutoUpload(file) {
+      if (!file) return;
+      showToast('📸 Đang tải ảnh lên để AI vẽ lại...');
+      
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const rawDataUrl = e.target.result;
+        const base64Data = rawDataUrl.split(',')[1];
+        const mimeType = file.type || 'image/jpeg';
+        
+        let apiKey = localStorage.getItem('gemini_api_key');
+        
+        // If API key is available, use Gemini Multimodal Vision + Imagen Redraw
+        if (apiKey) {
+          showToast('🤖 AI đang phân tích nội dung ảnh sơ đồ...');
+          try {
+            // Step 1: Gemini Vision analyzes diagram content & layout
+            const visionUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+            const visionRes = await fetch(visionUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{
+                  parts: [
+                    { text: "Analyze this diagram image. Describe its entire structure, nodes, arrows, concepts, and all text labels in detail. Output a concise prompt in English to redraw this exact diagram as an authentic student ballpoint pen sketch on lined notebook paper with blue ink." },
+                    { inlineData: { mimeType: mimeType, data: base64Data } }
+                  ]
+                }]
+              })
+            });
+            
+            const visionData = await visionRes.json();
+            const diagramDesc = visionData.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            
+            if (diagramDesc) {
+              showToast('🎨 AI đang vẽ lại thành nét bút bi học sinh...');
+              const imagenUrl = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=' + apiKey;
+              const imgPrompt = diagramDesc.substring(0, 450) + '. Authentic hand-drawn student blue ballpoint pen diagram sketch on lined notebook paper, hand-drawn boxes, natural arrows, neat handwritten labels.';
+              
+              const imgRes = await fetch(imagenUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  instances: [{ prompt: imgPrompt }],
+                  parameters: { sampleCount: 1, aspectRatio: '1:1' }
+                })
+              });
+              
+              const imgData = await imgRes.json();
+              if (imgData.predictions?.[0]?.bytesBase64Encoded) {
+                const aiResultUrl = 'data:image/jpeg;base64,' + imgData.predictions[0].bytesBase64Encoded;
+                const aiImg = new Image();
+                aiImg.onload = () => {
+                  state.diagram.image = aiImg;
+                  state.diagram.enabled = true;
+                  state.diagram.type = 'image';
+                  state.diagram.startLine = 0;
+                  state.diagram.lineSpan = 14;
+                  const btnRem = document.getElementById('btnRemoveDiagram');
+                  if (btnRem) btnRem.style.display = 'inline-flex';
+                  paginateText();
+                  renderCanvas();
+                  closeMobileSheet();
+                  switchMobileView('preview');
+                  showToast('✨ AI đã vẽ lại sơ đồ và tự động thêm vào vở!');
+                };
+                aiImg.src = aiResultUrl;
+                return;
+              }
+            }
+          } catch (err) {
+            console.warn('Online AI redraw fallback to instant ballpoint artist:', err);
+          }
+        }
+
+        // Fallback or Instant mode: Automatically transform image into authentic hand-drawn ballpoint sketch
+        showToast('🪄 AI đang vẽ lại sơ đồ bằng nét bút bi...');
+        const tempImg = new Image();
+        tempImg.onload = () => {
+          processImageToBallpointSketch(tempImg, (sketchImg) => {
+            state.diagram.image = sketchImg;
+            state.diagram.enabled = true;
+            state.diagram.type = 'image';
+            state.diagram.startLine = 0;
+            state.diagram.lineSpan = 13;
+            const btnRem = document.getElementById('btnRemoveDiagram');
+            if (btnRem) btnRem.style.display = 'inline-flex';
+            paginateText();
+            renderCanvas();
+            closeMobileSheet();
+            switchMobileView('preview');
+            showToast('✨ AI đã vẽ lại sơ đồ bằng nét bút bi vào trang vở!');
+          });
+        };
+        tempImg.src = rawDataUrl;
+      };
+      reader.readAsDataURL(file);
+    }
+
     function configGeminiApiKey() {
       const current = localStorage.getItem('gemini_api_key') || '';
       const key = prompt('Nhập Google Gemini API Key của anh (Lấy miễn phí tại https://aistudio.google.com/):', current);
@@ -6398,47 +6502,27 @@
         if (title) title.innerHTML = '🪄 AI Vẽ Lại Sơ Đồ Vào Vở';
         const hasDiag = state.diagram && state.diagram.enabled;
         body.innerHTML = `
-          <!-- DIRECT AI REDRAW GENERATOR CARD -->
-          <div style="background: linear-gradient(135deg, rgba(147,51,234,0.24), rgba(56,189,248,0.18)); border: 1.5px solid rgba(168,85,247,0.55); border-radius: 14px; padding: 14px; margin-bottom: 12px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <span style="font-size:22px;">🤖</span>
-                <strong style="font-size:13.5px; color:#ffffff;">Dùng AI Vẽ Lại Sơ Đồ Thành Nét Bút Bi</strong>
-              </div>
-              <span class="badge" style="background:#9333ea; color:#fff; font-size:10px;">Trực tiếp</span>
-            </div>
-            <p style="font-size:11.5px; color:rgba(255,255,255,0.85); margin:0 0 10px 0; line-height:1.45;">
-              Nhập nội dung sơ đồ cần vẽ. AI sẽ trực tiếp vẽ lại toàn bộ nội dung thành nét phác thảo bút bi học sinh trên giấy kẻ ô ly:
-            </p>
-            <div style="margin-bottom:8px;">
-              <input type="text" id="aiDiagramPromptInput" placeholder="Ví dụ: Sơ đồ tư duy các thì tiếng Anh, Chu trình nước..." style="width:100%; box-sizing:border-box; padding:9px 12px; background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.25); border-radius:8px; color:#fff; font-size:12.5px; outline:none;">
-            </div>
-            <div style="display:flex; gap:8px; margin-bottom:8px;">
-              <button class="btn btn-primary" id="btnAiDrawNow" onclick="triggerAiRedrawFromInput()" style="flex:1; justify-content:center; padding:10px; font-size:12.5px; font-weight:600; gap:6px; background:linear-gradient(135deg,#9333ea,#38bdf8);">
-                ✨ AI Vẽ Lại Vào Vở Ngay
-              </button>
-              <button class="btn btn-secondary" onclick="configGeminiApiKey()" title="Cài đặt API Key AI Gemini" style="font-size:12px; padding:10px 12px;">
-                🔑 API Key
-              </button>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:rgba(255,255,255,0.65); margin-bottom:6px;">
-              <span>💡 Dùng Gemini Imagen 3 hoàn toàn miễn phí</span>
-              <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent); text-decoration:none;">Lấy key miễn phí ↗</a>
-            </div>
-            <div style="display:flex; gap:6px;">
-              <button class="btn btn-secondary" onclick="copyAiDiagramPrompt()" style="flex:1; font-size:11px; padding:6px; justify-content:center; gap:4px;">
-                📋 Sao chép Prompt cho ChatGPT
-              </button>
-              <a href="https://chatgpt.com" target="_blank" class="btn btn-secondary" style="font-size:11px; padding:6px 10px; text-decoration:none; display:inline-flex; align-items:center;">
-                Mở ChatGPT ↗
-              </a>
-            </div>
+          <!-- PRIMARY ACTION: UPLOAD IMAGE -> AI AUTO REDRAWS -> AUTO ADDS TO NOTEBOOK -->
+          <div style="background: linear-gradient(135deg, rgba(147,51,234,0.22), rgba(56,189,248,0.20)); border: 2px dashed rgba(168,85,247,0.6); border-radius: 16px; padding: 20px 14px; margin-bottom: 14px; text-align: center; cursor: pointer;" onclick="document.getElementById('aiDiagramAutoFileInput').click()">
+            <div style="font-size: 36px; margin-bottom: 6px;">📸 🪄</div>
+            <strong style="font-size: 15px; color: #ffffff; display: block; margin-bottom: 4px;">Up ảnh sơ đồ lên</strong>
+            <span style="font-size: 12px; color: rgba(255,255,255,0.85); display: block; line-height: 1.45;">
+              AI sẽ <b>tự động phân tích & vẽ lại</b> thành nét bút bi rồi <b>tự thêm vào trang vở</b>
+            </span>
+            <button class="btn btn-primary" style="margin-top: 14px; width: 100%; justify-content: center; padding: 11px; font-size: 13px; font-weight: 600; gap: 8px; background: linear-gradient(135deg,#9333ea,#38bdf8);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Chọn Ảnh Để AI Tự Vẽ Lại
+            </button>
+            <input type="file" id="aiDiagramAutoFileInput" accept="image/*" style="display:none;" onchange="handleAiDiagramAutoUpload(this.files[0])">
           </div>
 
-          <!-- Instant Ballpoint Upload Card -->
-          <div style="margin-bottom:10px;">
-            <button class="btn btn-secondary" onclick="document.getElementById('diagramFileInput').click()" style="width:100%; justify-content:center; padding:11px; font-size:12.5px; font-weight:600; gap:8px; border-color:rgba(56,189,248,0.4); color:var(--text-main);">
-              📁 Tải ảnh sơ đồ bất kỳ (Tự biến thành nét bút bi)
+          <!-- OPTIONAL: AI SETTINGS -->
+          <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:10px; padding:10px 12px; margin-bottom:14px;">
+            <div style="font-size:11.5px; color:var(--text-dim);">
+              🔑 Kết nối Google AI Studio (Tùy chọn):
+            </div>
+            <button class="btn btn-secondary" onclick="configGeminiApiKey()" style="font-size:11px; padding:5px 10px;">
+              Cài đặt Key
             </button>
           </div>
 

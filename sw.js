@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.3.1-real-ai-diagram-engine';
+const CACHE_NAME = 'cheptay-v6.3.2-1click-ai-redraw-pipeline';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
