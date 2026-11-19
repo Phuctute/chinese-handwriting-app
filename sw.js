@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.2.1-subscript-organic-variation';
+const CACHE_NAME = 'cheptay-v6.2.2-organic-handwriting-lively';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
