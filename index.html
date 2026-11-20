@@ -2641,7 +2641,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.3.3';
+    const APP_VERSION = '6.3.4';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -4249,16 +4249,16 @@
 
         for (let tok of tokens) {
           let charW;
+          const ch = tok.char || '';
           if (tok.type === 'frac') {
             charW = getFracAdvanceWidth(tok.num, tok.den, state.fontSize, state.font);
           } else {
-            const ch = tok.char;
             const effFontSize = (tok.isSubscript || tok.isSuperscript) ? state.fontSize * 0.62 : state.fontSize;
             charW = getCharAdvanceWidth(ch, effFontSize);
           }
 
           if (curW + charW > activeMaxW) {
-            if (punctuationNoStart.has(ch) && currentChars.length > 0 && (curW + charW <= activeMaxW + 8)) {
+            if (ch && punctuationNoStart.has(ch) && currentChars.length > 0 && (curW + charW <= activeMaxW + 8)) {
               currentChars.push(tok);
               parsedLines.push({ isStart: isStart, chars: currentChars });
               currentChars = [];

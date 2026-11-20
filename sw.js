@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.3.3-fix-mobile-template-blackscreen';
+const CACHE_NAME = 'cheptay-v6.3.4-fix-margin-pagination-wrap';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
