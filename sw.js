@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.3.2-1click-ai-redraw-pipeline';
+const CACHE_NAME = 'cheptay-v6.3.3-fix-mobile-template-blackscreen';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -82,14 +82,14 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
         }
         return res;
-      }).catch(() => caches.match(req))
+      }).catch(() => caches.match(req, { ignoreSearch: true }))
     );
     return;
   }
 
   // For static assets, try cache first, then network
   event.respondWith(
-    caches.match(req).then((cached) => {
+    caches.match(req, { ignoreSearch: true }).then((cached) => {
       if (cached) return cached;
       return fetch(req).then((res) => {
         if (res && res.status === 200 && req.method === 'GET' && !req.url.startsWith('chrome-extension')) {

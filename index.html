@@ -690,6 +690,7 @@
     }
     .canvas-wrapper {
       position: relative;
+      background: #faf7ee;
       box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75), 0 2px 8px rgba(0, 0, 0, 0.5);
       border-radius: 4px;
       overflow: hidden;
@@ -2640,7 +2641,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.3.2';
+    const APP_VERSION = '6.3.3';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -3188,19 +3189,108 @@
       }
     });
 
-    function loadNotebookImage(src) {
-      state.notebookImg = new Image();
-      state.notebookImg.crossOrigin = 'anonymous';
-      state.notebookImg.src = getAssetUrl(src);
-      state.notebookImg.onload = () => {
-        canvas.width = state.notebookImg.width;
-        canvas.height = state.notebookImg.height;
+    function createFallbackNotebookImage(filename) {
+      const cfg = TEMPLATES_CONFIG[filename] || TEMPLATES_CONFIG['notebook_thanhnam_left.jpg'];
+      const fbCanvas = document.createElement('canvas');
+      const isSpread = !!cfg.isSpread;
+      fbCanvas.width = isSpread ? 1024 : 768;
+      fbCanvas.height = isSpread ? 768 : 1024;
+      const fbCtx = fbCanvas.getContext('2d');
+
+      // Paper base
+      fbCtx.fillStyle = '#faf7ee';
+      fbCtx.fillRect(0, 0, fbCanvas.width, fbCanvas.height);
+
+      // Subtle horizontal lines
+      fbCtx.strokeStyle = 'rgba(70, 110, 180, 0.22)';
+      fbCtx.lineWidth = 1;
+
+      const lines = isSpread ? 
+        [...(cfg.leftPage?.lines || []), ...(cfg.rightPage?.lines || [])] : 
+        (cfg.lines || []);
+
+      const baselines = getActivePageLines(lines);
+      baselines.forEach(y => {
+        fbCtx.beginPath();
+        fbCtx.moveTo(isSpread ? 60 : (cfg.leftMargin || 85), y);
+        fbCtx.lineTo(isSpread ? 960 : (cfg.rightMargin || 700), y);
+        fbCtx.stroke();
+      });
+
+      // Red vertical margin line
+      fbCtx.strokeStyle = 'rgba(230, 60, 60, 0.35)';
+      fbCtx.lineWidth = 1.2;
+      fbCtx.beginPath();
+      fbCtx.moveTo(cfg.leftMargin || 85, 0);
+      fbCtx.lineTo(cfg.leftMargin || 85, fbCanvas.height);
+      fbCtx.stroke();
+
+      const img = new Image();
+      img.onload = () => {
+        state.notebookImg = img;
+        canvas.width = fbCanvas.width;
+        canvas.height = fbCanvas.height;
         paginateText();
         renderCanvas();
-        // Set default zoom to 40% as requested
-        state.zoomLevel = 0.40;
-        applyZoom();
+        if (window.innerWidth <= 991 || document.body.classList.contains('view-preview')) {
+          fitCanvasToViewport();
+        } else {
+          state.zoomLevel = 0.40;
+          applyZoom();
+        }
       };
+      img.src = fbCanvas.toDataURL('image/jpeg', 0.85);
+    }
+
+    function loadNotebookImage(src) {
+      const filename = src.replace(/^assets\//, '').split('?')[0];
+
+      // If the actually loaded image already matches filename, just refresh canvas
+      if (state.notebookImg && state.notebookImg.complete && state.loadedTemplateKey === filename && state.notebookImg.naturalWidth > 0) {
+        canvas.width = state.notebookImg.naturalWidth;
+        canvas.height = state.notebookImg.naturalHeight;
+        paginateText();
+        renderCanvas();
+        if (window.innerWidth <= 991 || document.body.classList.contains('view-preview')) {
+          fitCanvasToViewport();
+        } else {
+          applyZoom();
+        }
+        return;
+      }
+
+      const newImg = new Image();
+      let triedNoCors = false;
+
+      newImg.onload = () => {
+        state.notebookImg = newImg;
+        state.loadedTemplateKey = filename;
+        canvas.width = newImg.naturalWidth || newImg.width || 768;
+        canvas.height = newImg.naturalHeight || newImg.height || 1024;
+        paginateText();
+        renderCanvas();
+        if (window.innerWidth <= 991 || document.body.classList.contains('view-preview')) {
+          fitCanvasToViewport();
+        } else {
+          state.zoomLevel = 0.40;
+          applyZoom();
+        }
+      };
+
+      newImg.onerror = () => {
+        if (!triedNoCors) {
+          triedNoCors = true;
+          console.warn('CORS image load failed, retrying without crossOrigin:', src);
+          newImg.crossOrigin = null;
+          newImg.src = getAssetUrl(src);
+          return;
+        }
+        console.error('Failed to load notebook image asset:', src);
+        createFallbackNotebookImage(filename);
+      };
+
+      newImg.crossOrigin = 'anonymous';
+      newImg.src = getAssetUrl(src);
     }
 
     // ========================================================
@@ -3219,7 +3309,7 @@
         card.onclick = () => selectTemplate(filename);
 
         card.innerHTML = `
-          <img src="${getAssetUrl('assets/' + filename)}" class="template-preview" alt="${cfg.name}" loading="lazy">
+          <img crossorigin="anonymous" src="${getAssetUrl('assets/' + filename)}" class="template-preview" alt="${cfg.name}" loading="lazy">
           <div class="template-meta">
             <div class="template-title">${cfg.name}</div>
             <div class="template-sub">${cfg.isSpread ? 'Trang Đôi' : 'Trang Đơn'} • ${cfg.desc}</div>
@@ -6482,7 +6572,7 @@
           const isAct = state.notebookTemplate === filename;
           tplCardsHtml += `
             <div class="template-card ${isAct ? 'active' : ''}" onclick="setMobileTemplate('${filename}', this)" style="display:flex; flex-direction:row; align-items:center; gap:10px; padding:8px;">
-              <img src="${getAssetUrl('assets/' + filename)}" style="width:50px; height:50px; object-fit:contain; background:#141721; border-radius:6px; flex-shrink:0;">
+              <img crossorigin="anonymous" src="${getAssetUrl('assets/' + filename)}" style="width:50px; height:50px; object-fit:contain; background:#141721; border-radius:6px; flex-shrink:0;">
               <div style="flex:1; min-width:0;">
                 <div style="font-size:13px; font-weight:600; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${cfg.name}</div>
                 <div style="font-size:11px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${cfg.isSpread ? 'Trang Đôi 3D' : 'Trang Đơn'} • ${cfg.desc}</div>
@@ -6618,7 +6708,6 @@
     }
     function setMobileTemplate(filename, elem) {
       selectTemplate(filename);
-      fitCanvasToViewport();
       if (elem && elem.parentElement) {
         elem.parentElement.querySelectorAll('.template-card').forEach(b => {
           b.classList.remove('active');
