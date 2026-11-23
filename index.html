@@ -63,6 +63,21 @@
       src: url('fonts/JasonHandwriting7.ttf') format('truetype');
       font-display: swap;
     }
+    @font-face {
+      font-family: 'LongCang';
+      src: url('fonts/LongCang.ttf') format('truetype');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'ZhiMangXing';
+      src: url('fonts/ZhiMangXing.ttf') format('truetype');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'KleeOne';
+      src: url('fonts/KleeOne.ttf') format('truetype');
+      font-display: swap;
+    }
 
     :root {
       /* Apple iOS HIG Dark Mode Palette */
@@ -2484,8 +2499,11 @@
             <span class="form-label">Kiểu chữ viết tay:</span>
             <select class="form-select" id="fontSelector" onchange="setFont(this.value)">
               <option value="JasonHandwriting5" selected>Jason 5 (Tự nhiên ★)</option>
+              <option value="LongCang">Long Cang (Nguệch ngoạc thật ★)</option>
+              <option value="ZhiMangXing">Zhi Mang Xing (Tốc ký phóng khoáng ★)</option>
+              <option value="KleeOne">Klee One (Bút chì học sinh)</option>
+              <option value="JasonHandwriting4">Jason 4 (Tốc ký nhẹ)</option>
               <option value="JasonHandwriting3">Jason 3 (Nắn nót)</option>
-              <option value="JasonHandwriting4">Jason 4 (Tốc ký)</option>
               <option value="JasonHandwriting1">Jason 1 (Đều tay)</option>
               <option value="JasonHandwriting2">Jason 2 (Thanh mảnh)</option>
               <option value="JasonHandwriting6">Jason 6 (Bút gel)</option>
@@ -2641,7 +2659,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.3.4';
+    const APP_VERSION = '6.3.5';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -5196,13 +5214,26 @@
       updateDiagramUIButtons();
     }
 
+    const FONT_DISPLAY_NAMES = {
+      'JasonHandwriting5': 'Jason 5 (Tự nhiên ★)',
+      'LongCang': 'Long Cang (Nguệch ngoạc thật ★)',
+      'ZhiMangXing': 'Zhi Mang Xing (Tốc ký phóng khoáng ★)',
+      'KleeOne': 'Klee One (Bút chì học sinh)',
+      'JasonHandwriting4': 'Jason 4 (Tốc ký nhẹ)',
+      'JasonHandwriting3': 'Jason 3 (Nắn nót)',
+      'JasonHandwriting1': 'Jason 1 (Đều tay)',
+      'JasonHandwriting2': 'Jason 2 (Thanh mảnh)',
+      'JasonHandwriting6': 'Jason 6 (Bút gel)',
+      'JasonHandwriting7': 'Jason 7 (Nét đậm)'
+    };
+
     function setFont(fontName) {
       state.font = fontName;
       const sel = document.getElementById('fontSelector');
       if (sel && sel.value !== fontName) sel.value = fontName;
       paginateText();
       renderCanvas();
-      showToast('Đã đổi font: ' + fontName);
+      showToast('Đã đổi font: ' + (FONT_DISPLAY_NAMES[fontName] || fontName));
     }
 
     function updateFontSize(val) {
@@ -6488,12 +6519,15 @@
             <label class="form-label" style="margin-bottom:6px; display:block;">Font chữ viết tay:</label>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
               <button class="btn btn-secondary ${state.font === 'JasonHandwriting5' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting5', this)" style="font-size:12px; justify-content:center;">Jason 5 (Tự nhiên ★)</button>
+              <button class="btn btn-secondary ${state.font === 'LongCang' ? 'active' : ''}" onclick="setMobileFont('LongCang', this)" style="font-size:12px; justify-content:center;">Long Cang (Nguệch ngoạc ★)</button>
+              <button class="btn btn-secondary ${state.font === 'ZhiMangXing' ? 'active' : ''}" onclick="setMobileFont('ZhiMangXing', this)" style="font-size:12px; justify-content:center;">Zhi Mang Xing (Tốc ký ★)</button>
+              <button class="btn btn-secondary ${state.font === 'KleeOne' ? 'active' : ''}" onclick="setMobileFont('KleeOne', this)" style="font-size:12px; justify-content:center;">Klee One (Bút chì)</button>
+              <button class="btn btn-secondary ${state.font === 'JasonHandwriting4' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting4', this)" style="font-size:12px; justify-content:center;">Jason 4 (Tốc ký nhẹ)</button>
               <button class="btn btn-secondary ${state.font === 'JasonHandwriting3' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting3', this)" style="font-size:12px; justify-content:center;">Jason 3 (Nắn nót)</button>
-              <button class="btn btn-secondary ${state.font === 'JasonHandwriting4' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting4', this)" style="font-size:12px; justify-content:center;">Jason 4 (Tốc ký)</button>
               <button class="btn btn-secondary ${state.font === 'JasonHandwriting1' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting1', this)" style="font-size:12px; justify-content:center;">Jason 1 (Đều tay)</button>
               <button class="btn btn-secondary ${state.font === 'JasonHandwriting2' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting2', this)" style="font-size:12px; justify-content:center;">Jason 2 (Thanh mảnh)</button>
               <button class="btn btn-secondary ${state.font === 'JasonHandwriting6' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting6', this)" style="font-size:12px; justify-content:center;">Jason 6 (Bút gel)</button>
-              <button class="btn btn-secondary ${state.font === 'JasonHandwriting7' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting7', this)" style="font-size:12px; justify-content:center; grid-column:span 2;">Jason 7 (Nét đậm)</button>
+              <button class="btn btn-secondary ${state.font === 'JasonHandwriting7' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting7', this)" style="font-size:12px; justify-content:center;">Jason 7 (Nét đậm)</button>
             </div>
           </div>
           <div style="margin-bottom:14px;">
