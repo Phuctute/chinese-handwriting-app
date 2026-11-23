@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.3.5-more-authentic-handwriting-fonts';
+const CACHE_NAME = 'cheptay-v6.3.6-performance-optimized';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

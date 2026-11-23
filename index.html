@@ -2659,7 +2659,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.3.5';
+    const APP_VERSION = '6.3.6';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -2757,6 +2757,7 @@
       const font = fontName || (typeof state !== 'undefined' ? state.font : 'JasonHandwriting5');
       const key = ch + '_' + fontSize + '_' + font;
       if (charWidthCache.has(key)) return charWidthCache.get(key);
+      if (charWidthCache.size > 8000) charWidthCache.clear();
 
       let w;
       const code = ch.charCodeAt(0);
@@ -3188,12 +3189,16 @@
         }, 150);
       }
 
-      // Listen for text input
+      // Listen for text input (coalesced 60fps for silky IME composition)
       textInput.addEventListener('input', () => {
         state.text = textInput.value;
         updateCharCount();
-        paginateText();
-        renderCanvas();
+        if (typeof scheduleRender === 'function') {
+          scheduleRender(true);
+        } else {
+          paginateText();
+          renderCanvas();
+        }
       });
 
       // Init sketchpad
@@ -5227,65 +5232,86 @@
       'JasonHandwriting7': 'Jason 7 (Nét đậm)'
     };
 
+    // Coalesced 60/120fps Rendering Scheduler
+    let renderRafId = null;
+    let pendingRepaginate = false;
+
+    function scheduleRender(needsPagination = true) {
+      if (needsPagination) pendingRepaginate = true;
+      if (renderRafId) return;
+      renderRafId = requestAnimationFrame(() => {
+        if (pendingRepaginate) {
+          paginateText();
+          pendingRepaginate = false;
+        }
+        renderCanvas();
+        updateDiagramUIButtons();
+        renderRafId = null;
+      });
+    }
+
     function setFont(fontName) {
       state.font = fontName;
       const sel = document.getElementById('fontSelector');
       if (sel && sel.value !== fontName) sel.value = fontName;
-      paginateText();
-      renderCanvas();
-      showToast('Đã đổi font: ' + (FONT_DISPLAY_NAMES[fontName] || fontName));
+
+      const doRender = () => {
+        paginateText();
+        renderCanvas();
+        showToast('Đã đổi font: ' + (FONT_DISPLAY_NAMES[fontName] || fontName));
+      };
+
+      if (document.fonts && document.fonts.load) {
+        document.fonts.load(`${state.fontSize}px "${fontName}"`).then(() => {
+          doRender();
+        }).catch(() => {
+          doRender();
+        });
+      } else {
+        doRender();
+      }
     }
 
     function updateFontSize(val) {
       state.fontSize = parseInt(val);
       const dEl = document.getElementById('fontSizeVal'); if (dEl) dEl.innerText = val + 'px';
       const mEl = document.getElementById('mFontSizeVal'); if (mEl) mEl.innerText = val + 'px';
-      paginateText();
-      renderCanvas();
-      updateDiagramUIButtons();
+      scheduleRender(true);
     }
 
     function updateMessiness(val) {
       state.messiness = parseInt(val);
       const dEl = document.getElementById('messinessVal'); if (dEl) dEl.innerText = val + '%';
       const mEl = document.getElementById('mMessinessVal'); if (mEl) mEl.innerText = val + '%';
-      renderCanvas();
-      updateDiagramUIButtons();
+      scheduleRender(false);
     }
 
     function updateBaselineOffset(val) {
       state.baselineOffset = parseInt(val);
       const dEl = document.getElementById('baselineVal'); if (dEl) dEl.innerText = val + 'px';
       const mEl = document.getElementById('mBaselineVal'); if (mEl) mEl.innerText = val + 'px';
-      renderCanvas();
-      updateDiagramUIButtons();
+      scheduleRender(false);
     }
 
     function updateMarginOffset(val) {
       state.marginOffset = parseInt(val);
       const dEl = document.getElementById('marginVal'); if (dEl) dEl.innerText = val + 'px';
       const mEl = document.getElementById('mMarginVal'); if (mEl) mEl.innerText = val + 'px';
-      paginateText();
-      renderCanvas();
-      updateDiagramUIButtons();
+      scheduleRender(true);
     }
 
     function updateTopMargin(val) {
       state.topMarginLines = parseInt(val);
       const dEl = document.getElementById('topMarginVal'); if (dEl) dEl.innerText = val + ' dòng';
       const mEl = document.getElementById('mTopMarginVal'); if (mEl) mEl.innerText = val + ' dòng';
-      paginateText();
-      renderCanvas();
-      updateDiagramUIButtons();
+      scheduleRender(true);
     }
 
     function updateBottomMargin(val) {
       state.bottomMarginLines = parseInt(val);
       const dEl = document.getElementById('bottomMarginVal'); if (dEl) dEl.innerText = val + ' dòng';
       const mEl = document.getElementById('mBottomMarginVal'); if (mEl) mEl.innerText = val + ' dòng';
-      paginateText();
-      renderCanvas();
-      updateDiagramUIButtons();
+      scheduleRender(true);
     }
 
     function toggleSkipLine() {
