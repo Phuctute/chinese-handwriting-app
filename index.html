@@ -73,8 +73,13 @@
       src: url('fonts/ZhiMangXing.ttf') format('truetype');
       font-display: swap;
     }
+        @font-face {
+      font-family: 'LiuJianMaoCao';
+      src: url('fonts/LiuJianMaoCao.ttf') format('truetype');
+      font-display: swap;
+    }
     @font-face {
-      font-family: 'KleeOne';
+      font-family: 'KleeOne'
       src: url('fonts/KleeOne.ttf') format('truetype');
       font-display: swap;
     }
@@ -2499,6 +2504,7 @@
             <span class="form-label">Kiểu chữ viết tay:</span>
             <select class="form-select" id="fontSelector" onchange="setFont(this.value)">
               <option value="JasonHandwriting5" selected>Jason 5 (Tự nhiên ★)</option>
+              <option value="LiuJianMaoCao">Liu Jian (Tốc ký cực ẩu ★)</option>
               <option value="LongCang">Long Cang (Nguệch ngoạc thật ★)</option>
               <option value="ZhiMangXing">Zhi Mang Xing (Tốc ký phóng khoáng ★)</option>
               <option value="KleeOne">Klee One (Bút chì học sinh)</option>
@@ -2659,7 +2665,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.3.6';
+    const APP_VERSION = '6.3.7';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -4576,7 +4582,7 @@
           const rhythmJitter = (prng() - 0.5) * 0.8 * mFactor;
 
           if (ch === ' ') {
-            curX += charAdvance;
+            curX += charAdvance + (prng() - 0.5) * 2.8 * mFactor;
             continue;
           }
 
@@ -4585,30 +4591,37 @@
           // Organic human handwriting jitter:
           // Natural human pen dynamics so letters & numbers have lively, authentic flow
           const isAscii = ch.charCodeAt(0) < 128;
-          const wobbleMult = (isSub || isSuper) ? 0.45 : (isAscii ? 0.95 : 1.0);
-          const chJitterX = (prng() - 0.5) * 1.5 * mFactor * wobbleMult;
-          const chJitterY = (prng() - 0.5) * 1.2 * mFactor * wobbleMult;
-          const safeCurveAngle = Math.max(-0.14, Math.min(0.14, contour.angle || 0));
-          const chAngle = safeCurveAngle + (prng() - 0.5) * 0.065 * mFactor * wobbleMult;
+          const wobbleMult = (isSub || isSuper) ? 0.5 : (isAscii ? 1.05 : 1.0);
 
-          // Anisotropic organic micro-stretching (varying width, height & pen slant dynamically)
+          // 1. Lively Human Baseline Jitter (độ nhảy dòng, chồi sụt tự nhiên của người viết ẩu):
+          const chJitterY = (prng() - 0.5) * 5.4 * mFactor * wobbleMult;
+          const chJitterX = (prng() - 0.5) * 3.8 * mFactor * wobbleMult;
+
+          // 2. Dynamic Slant & Tilt (độ nghiêng ngả lộn xộn theo quán tính tay người):
+          const naturalSlantBias = -0.03 * mFactor; // subtle natural speed slant
+          const safeCurveAngle = Math.max(-0.16, Math.min(0.16, contour.angle || 0));
+          const chAngle = safeCurveAngle + naturalSlantBias + (prng() - 0.5) * 0.22 * mFactor * wobbleMult;
+
+          // 3. Asymmetric Scaling (chữ to chữ nhỏ bất đối xứng, biến dạng khi viết nhanh):
           const baseScale = isSub || isSuper ? 1.0 : (isAscii ? 0.96 : 1.0);
-          const stretchX = baseScale * (1.0 + (prng() - 0.5) * 0.16 * mFactor);
-          const stretchY = baseScale * (1.0 + (prng() - 0.5) * 0.14 * mFactor);
-          const shearX = (prng() - 0.5) * 0.085 * mFactor; // Natural pen stroke slant variation
+          const stretchX = baseScale * (1.0 + (prng() - 0.5) * 0.32 * mFactor);
+          const stretchY = baseScale * (1.0 + (prng() - 0.5) * 0.26 * mFactor);
+          const shearX = (prng() - 0.5) * 0.22 * mFactor; // Pen stroke slant variation
 
           // Subscript / Superscript vertical placement
           let subSuperShiftY = 0;
           if (isSub) {
-            subSuperShiftY = fontSize * 0.22; // Subscript sits near ruled line
+            subSuperShiftY = fontSize * 0.22;
           } else if (isSuper) {
-            subSuperShiftY = -fontSize * 0.40; // Superscript floats above
+            subSuperShiftY = -fontSize * 0.40;
           }
 
-          const rVar = Math.max(0, Math.min(255, baseR + Math.round((prng() - 0.5) * 16)));
-          const gVar = Math.max(0, Math.min(255, baseG + Math.round((prng() - 0.5) * 16)));
-          const bVar = Math.max(0, Math.min(255, baseB + Math.round((prng() - 0.5) * 16)));
-          const alphaVar = 0.83 + prng() * 0.15;
+          // 4. Authentic Ballpoint Pen Ink Pressure & Bleed (đậm nhạt & gợn nét bút bi):
+          const pressure = prng();
+          const rVar = Math.max(0, Math.min(255, baseR + Math.round((prng() - 0.5) * 24)));
+          const gVar = Math.max(0, Math.min(255, baseG + Math.round((prng() - 0.5) * 24)));
+          const bVar = Math.max(0, Math.min(255, baseB + Math.round((prng() - 0.5) * 24)));
+          const alphaVar = 0.76 + pressure * 0.22; // 0.76 to 0.98 realistic ink opacity
 
           ctx.save();
           ctx.translate(curX + charAdvance / 2 + chJitterX, effectiveBaseY + chJitterY + subSuperShiftY);
@@ -4616,10 +4629,22 @@
           ctx.transform(1, 0, shearX, 1, 0, 0);
           ctx.scale(stretchX, stretchY);
 
+          // Organic ink bleed on paper:
+          if (mFactor > 0.15) {
+            ctx.shadowColor = `rgba(${rVar}, ${gVar}, ${bVar}, ${0.28 * mFactor})`;
+            ctx.shadowBlur = 0.75 * mFactor;
+          }
+
           ctx.font = `${effFontSize}px "${fontName}", cursive`;
           ctx.fillStyle = `rgba(${rVar}, ${gVar}, ${bVar}, ${alphaVar})`;
           ctx.textBaseline = 'alphabetic';
           ctx.fillText(ch, -charAdvance / 2, 0);
+
+          // Random micro double-stroke edge (áp lực bi lăn bút bi thực tế)
+          if (mFactor > 0.4 && prng() < 0.26) {
+            ctx.fillStyle = `rgba(${rVar}, ${gVar}, ${bVar}, ${alphaVar * 0.35})`;
+            ctx.fillText(ch, -charAdvance / 2 + (prng() - 0.5) * 0.5, (prng() - 0.5) * 0.5);
+          }
 
           // Authentic crossed-out strikethrough effect
           if (tok.isCrossedOut) {
@@ -5221,6 +5246,7 @@
 
     const FONT_DISPLAY_NAMES = {
       'JasonHandwriting5': 'Jason 5 (Tự nhiên ★)',
+      'LiuJianMaoCao': 'Liu Jian (Tốc ký cực ẩu ★)',
       'LongCang': 'Long Cang (Nguệch ngoạc thật ★)',
       'ZhiMangXing': 'Zhi Mang Xing (Tốc ký phóng khoáng ★)',
       'KleeOne': 'Klee One (Bút chì học sinh)',
@@ -6545,6 +6571,7 @@
             <label class="form-label" style="margin-bottom:6px; display:block;">Font chữ viết tay:</label>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
               <button class="btn btn-secondary ${state.font === 'JasonHandwriting5' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting5', this)" style="font-size:12px; justify-content:center;">Jason 5 (Tự nhiên ★)</button>
+              <button class="btn btn-secondary ${state.font === 'LiuJianMaoCao' ? 'active' : ''}" onclick="setMobileFont('LiuJianMaoCao', this)" style="font-size:12px; justify-content:center; border-color:var(--accent); color:var(--accent);">Liu Jian (Cực ẩu ★)</button>
               <button class="btn btn-secondary ${state.font === 'LongCang' ? 'active' : ''}" onclick="setMobileFont('LongCang', this)" style="font-size:12px; justify-content:center;">Long Cang (Nguệch ngoạc ★)</button>
               <button class="btn btn-secondary ${state.font === 'ZhiMangXing' ? 'active' : ''}" onclick="setMobileFont('ZhiMangXing', this)" style="font-size:12px; justify-content:center;">Zhi Mang Xing (Tốc ký ★)</button>
               <button class="btn btn-secondary ${state.font === 'KleeOne' ? 'active' : ''}" onclick="setMobileFont('KleeOne', this)" style="font-size:12px; justify-content:center;">Klee One (Bút chì)</button>
@@ -6786,6 +6813,17 @@
     function applySmartPreset(presetKey) {
       document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
 
+      if (presetKey === 'messy') {
+        state.font = 'LiuJianMaoCao';
+        state.messiness = 80;
+        state.autoTypo = true;
+        const sel = document.getElementById('fontSelector'); if (sel) sel.value = 'LiuJianMaoCao';
+        const ms = document.getElementById('messinessSlider'); if (ms) ms.value = 80;
+        const mv = document.getElementById('messinessVal'); if (mv) mv.innerText = '80%';
+        scheduleRender(true);
+        showToast('Đã áp dụng: Chữ xấu & viết ẩu tự nhiên');
+        return;
+      }
       if (presetKey === 'student') {
         document.getElementById('chipPresetStudent')?.classList.add('active');
         state.font = 'JasonHandwriting5';

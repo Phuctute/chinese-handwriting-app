@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.3.6-performance-optimized';
+const CACHE_NAME = 'cheptay-v6.3.7-ultra-authentic-messy-handwriting';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -31,7 +31,8 @@ const ASSETS_TO_CACHE = [
   './fonts/JasonHandwriting3.ttf',
   './fonts/LongCang.ttf',
   './fonts/ZhiMangXing.ttf',
-  './fonts/KleeOne.ttf'
+  './fonts/KleeOne.ttf',
+  './fonts/LiuJianMaoCao.ttf'
 ];
 
 self.addEventListener('install', (event) => {
