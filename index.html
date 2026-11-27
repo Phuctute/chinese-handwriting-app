@@ -79,7 +79,7 @@
       font-display: swap;
     }
     @font-face {
-      font-family: 'KleeOne'
+      font-family: 'KleeOne';
       src: url('fonts/KleeOne.ttf') format('truetype');
       font-display: swap;
     }
@@ -889,7 +889,7 @@
     .mobile-sheet-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.12); /* Subtle dark tint, NO BLUR as requested */
+      background: rgba(0, 0, 0, 0.06); /* Ultra-light tint so live canvas stays crisp & clear above sheet */
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
       z-index: 9980;
@@ -905,7 +905,7 @@
       position: fixed;
       bottom: 64px; /* Sits cleanly above the bottom dock, NEVER covering dock buttons */
       left: 8px; right: 8px;
-      max-height: 52vh;
+      max-height: 46vh;
       background: rgba(24, 24, 28, 0.98);
       backdrop-filter: blur(35px) saturate(200%);
       -webkit-backdrop-filter: blur(35px) saturate(200%);
@@ -914,17 +914,20 @@
       box-shadow: 0 16px 48px rgba(0, 0, 0, 0.9);
       z-index: 9990; /* below bottom dock (9999) so dock buttons remain clickable */
       transform: translateY(calc(100% + 80px));
-      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease, visibility 0s linear 0.28s;
       display: flex;
       flex-direction: column;
       overflow: hidden; /* Header fixed, body scrolls */
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
     }
     .mobile-sheet.active {
       transform: translateY(0);
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease, visibility 0s;
     }
     .mobile-sheet-handle {
       width: 36px;
@@ -938,7 +941,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 18px;
+      padding: 8px 16px;
       border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
       flex-shrink: 0;
     }
@@ -1028,10 +1031,28 @@
       color: var(--text-main);
     }
     .mobile-sheet-body {
-      padding: 16px 18px 24px 18px;
+      padding: 12px 16px 18px 16px;
       overflow-y: auto;
+      overflow-x: hidden;
       flex: 1;
       -webkit-overflow-scrolling: touch;
+    }
+    .mobile-font-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      width: 100%;
+    }
+    .mobile-font-btn {
+      display: block !important;
+      width: 100%;
+      min-width: 0;
+      padding: 7px 8px !important;
+      font-size: 11.5px !important;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     /* Apple UIAlertController Style */
@@ -1090,8 +1111,9 @@
       border-radius: 22px;
       width: 100%;
       max-width: 410px;
+      max-height: 92vh;
       box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9);
-      overflow: hidden;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       transform: scale(0.94) translateY(12px);
@@ -1327,6 +1349,29 @@
       margin: 0;
     }
 
+    /* Desktop Split-Pane Viewport Lock (>= 992px) */
+    @media (min-width: 992px) {
+      .main-layout {
+        height: calc(100vh - 52px);
+        min-height: 0;
+        overflow: hidden;
+      }
+      .left-panel {
+        height: 100%;
+        overflow-y: auto;
+      }
+      .right-panel {
+        height: 100%;
+        overflow: hidden;
+      }
+      .mobile-bottom-bar,
+      .mobile-sheet,
+      .mobile-sheet-overlay,
+      .mobile-canvas-floating-header {
+        display: none !important;
+      }
+    }
+
     /* Single Unified Clean Mobile Layout (< 992px) */
     @media (max-width: 991px) {
       .app-header {
@@ -1421,13 +1466,14 @@
         pointer-events: auto;
         display: inline-flex;
         align-items: center;
-        background: rgba(28, 28, 32, 0.90) !important;
+        max-width: calc(100vw - 16px);
+        background: rgba(28, 28, 32, 0.92) !important;
         backdrop-filter: blur(25px) saturate(180%);
         -webkit-backdrop-filter: blur(25px) saturate(180%);
         border: 0.5px solid rgba(255, 255, 255, 0.18) !important;
         border-radius: 20px !important;
-        padding: 4px 10px !important;
-        gap: 3px !important;
+        padding: 4px 8px !important;
+        gap: 2px !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
       }
       .capsule-btn {
@@ -1480,16 +1526,16 @@
         border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
         z-index: 9999 !important;
         align-items: center;
-        padding: 0 10px;
-        padding-bottom: env(safe-area-inset-bottom, 6px);
+        padding: 0 6px;
+        padding-bottom: env(safe-area-inset-bottom, 4px);
         box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
       }
       .mobile-bar-mode {
         display: flex;
         width: 100%;
         align-items: center;
-        justify-content: space-around;
-        gap: 3px;
+        justify-content: space-between;
+        gap: 2px;
       }
       .mobile-bar-editor-mode {
         display: flex;
@@ -1513,14 +1559,15 @@
         background: transparent;
         border: none;
         color: rgba(240, 242, 248, 0.65);
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 500;
+        white-space: nowrap;
         cursor: pointer;
-        padding: 6px 4px;
+        padding: 6px 2px;
         border-radius: 12px;
         transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
         flex: 1;
-        min-width: 48px;
+        min-width: 0;
         -webkit-tap-highlight-color: transparent;
       }
       .mobile-bar-btn:active {
@@ -1538,8 +1585,8 @@
         transform: translateY(-1px);
       }
       .mobile-bar-btn svg {
-        width: 20px;
-        height: 20px;
+        width: 19px;
+        height: 19px;
       }
 
       .ai-studio-overlay {
@@ -1564,14 +1611,15 @@
         background: linear-gradient(135deg, #0a84ff, #0066cc) !important;
         color: #ffffff !important;
         border-radius: 20px !important;
-        padding: 9px 14px !important;
-        flex: 2.2 !important;
+        padding: 8px 11px !important;
+        flex: 0 0 auto !important;
         flex-direction: row !important;
         align-items: center !important;
         justify-content: center !important;
-        gap: 6px !important;
-        font-size: 12.5px !important;
+        gap: 4px !important;
+        font-size: 11.5px !important;
         font-weight: 600 !important;
+        white-space: nowrap !important;
         box-shadow: 0 4px 14px rgba(10, 132, 255, 0.4) !important;
         border: none !important;
       }
@@ -1605,17 +1653,20 @@
         stroke: #ef4444 !important;
       }
 
-      /* Canvas Viewport: Full Width with Centered Paper on Mobile */
+      /* Canvas Viewport: Full Width with Centered Paper & Pan Support When Zoomed on Mobile */
       .canvas-viewport {
         padding: 8px 8px 84px 8px !important;
         display: flex !important;
         flex-direction: column !important;
-        align-items: center !important;
+        align-items: flex-start !important;
         justify-content: flex-start !important;
-        overflow-x: hidden !important;
+        overflow-x: auto !important;
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
         background: #000000 !important;
+      }
+      body.mobile-sheet-open .canvas-viewport {
+        padding-bottom: 58vh !important;
       }
       .canvas-wrapper {
         box-shadow: 0 6px 28px rgba(0, 0, 0, 0.85) !important;
@@ -1961,9 +2012,9 @@
 
     <!-- Mobile Compact Page & Zoom Capsule (Shown in Preview Mode) -->
     <div class="mobile-header-capsule" id="mobileHeaderCapsule">
-      <button class="capsule-btn" onclick="prevPage()" title="Trang trước">❮</button>
+      <button class="capsule-btn" id="btnMobilePrevPage" onclick="prevPage()" title="Trang trước">❮</button>
       <span class="capsule-text" id="mobilePageIndicator">1 / 1</span>
-      <button class="capsule-btn" onclick="nextPage()" title="Trang tiếp">❯</button>
+      <button class="capsule-btn" id="btnMobileNextPage" onclick="nextPage()" title="Trang tiếp">❯</button>
       <span class="capsule-divider"></span>
       <button class="capsule-btn" onclick="adjustZoom(-0.1)">−</button>
       <span class="capsule-text" id="mobileZoomIndicator">40%</span>
@@ -2072,6 +2123,7 @@
             </button>
             <input type="file" id="ocrFileInput" accept="image/*" style="display:none;" onchange="handleOcrUpload(this.files[0])">
             <input type="file" id="diagramFileInput" accept="image/*" style="display:none;" onchange="handleDiagramImageUpload(this.files[0])">
+            <input type="file" id="aiDiagramAutoFileInput" accept="image/*" style="display:none;" onchange="handleAiDiagramAutoUpload(this.files[0])">
           </div>
 
           <!-- Expandable Quick Math Palette -->
@@ -2483,16 +2535,20 @@
           <!-- Ink Selection -->
           <div class="form-row">
             <span class="form-label">Màu mực bút viết:</span>
-            <div style="display:flex; gap:8px;">
-              <button class="btn btn-secondary" id="btnInkGel" style="flex:1;" onclick="setInkColor('gel_black')">
+            <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:6px;">
+              <button class="btn btn-secondary" id="btnInkGel" onclick="setInkColor('gel_black')">
                 <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#1c202a; margin-right:4px;"></span>
                 Gel đen
               </button>
-              <button class="btn btn-secondary active" id="btnInkBlue" style="flex:1;" onclick="setInkColor('blue')">
+              <button class="btn btn-secondary active" id="btnInkBlue" onclick="setInkColor('blue')">
                 <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#1e3a8a; margin-right:4px;"></span>
                 Bút bi xanh
               </button>
-              <button class="btn btn-secondary" id="btnInkDeep" style="flex:1;" onclick="setInkColor('deep_black')">
+              <button class="btn btn-secondary" id="btnInkPurple" onclick="setInkColor('purple')">
+                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#6b21a8; margin-right:4px;"></span>
+                Mực tím
+              </button>
+              <button class="btn btn-secondary" id="btnInkDeep" onclick="setInkColor('deep_black')">
                 <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#000; margin-right:4px;"></span>
                 Đen đậm
               </button>
@@ -2524,14 +2580,14 @@
                 <span class="form-label">Cỡ chữ:</span>
                 <span class="form-value" id="fontSizeVal">20px</span>
               </div>
-              <input type="range" id="fontSizeSlider" min="15" max="26" value="20" oninput="updateFontSize(this.value)">
+              <input type="range" id="fontSizeSlider" min="12" max="32" value="20" oninput="updateFontSize(this.value)">
             </div>
             <div class="form-row">
               <div class="form-row-header">
                 <span class="form-label">Độ ngoáy tự nhiên:</span>
                 <span class="form-value" id="messinessVal">45%</span>
               </div>
-              <input type="range" id="messinessSlider" min="0" max="90" value="45" oninput="updateMessiness(this.value)">
+              <input type="range" id="messinessSlider" min="0" max="100" value="45" oninput="updateMessiness(this.value)">
             </div>
           </div>
 
@@ -2579,7 +2635,7 @@
               <span class="form-label">Cao độ chữ trên dòng (Nâng/hạ micro):</span>
               <span class="form-value" id="baselineVal">0px</span>
             </div>
-            <input type="range" id="baselineSlider" min="-15" max="15" value="0" oninput="updateBaselineOffset(this.value)">
+            <input type="range" id="baselineSlider" min="-20" max="20" value="0" oninput="updateBaselineOffset(this.value)">
             <span style="font-size:10.5px; color:var(--text-dim);">Căn chỉnh cho nét chữ nằm khít rịt đúng trên vạch kẻ xanh của vở</span>
           </div>
 
@@ -2589,9 +2645,13 @@
               <span class="form-label">Độ rộng thụt lề 2 bên:</span>
               <span class="form-value" id="marginVal">0px</span>
             </div>
-            <input type="range" id="marginSlider" min="-20" max="20" value="0" oninput="updateMarginOffset(this.value)">
+            <input type="range" id="marginSlider" min="-40" max="40" value="0" oninput="updateMarginOffset(this.value)">
             <span style="font-size:10.5px; color:var(--text-dim);">Chữ được khóa chặt trong lề vở, không bao giờ viết thò ra ngoài hay chạm gáy</span>
           </div>
+
+          <button class="btn btn-secondary" onclick="resetMargins();" style="width:100%; justify-content:center; padding:8px; font-size:12px; font-weight:600; margin-top:4px;">
+            ↺ Đặt lại lề mặc định
+          </button>
         </div>
 
       </div>
@@ -2601,11 +2661,11 @@
     <section class="right-panel" id="rightPanel">
       <div class="canvas-toolbar">
         <div class="page-controller">
-          <button class="btn btn-secondary btn-icon" onclick="prevPage()" title="Trang trước">
+          <button class="btn btn-secondary btn-icon" id="btnPrevPage" onclick="prevPage()" title="Trang trước">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
           <span class="page-pill" id="pageIndicator">Trang 1 / 1</span>
-          <button class="btn btn-secondary btn-icon" onclick="nextPage()" title="Trang tiếp">
+          <button class="btn btn-secondary btn-icon" id="btnNextPage" onclick="nextPage()" title="Trang tiếp">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
         </div>
@@ -2625,6 +2685,7 @@
               <!-- Smart Quick Presets Bar (Instant 1-Tap Handwritting Styling) -->
         <div class="smart-presets-bar">
           <button class="preset-chip active" id="chipPresetStudent" onclick="applySmartPreset('student')">🎓 Học Sinh</button>
+          <button class="preset-chip" id="chipPresetMessy" onclick="applySmartPreset('messy')">✍️ Viết Ẩu</button>
           <button class="preset-chip" id="chipPresetFast" onclick="applySmartPreset('fast')">⚡ Tốc Ký</button>
           <button class="preset-chip" id="chipPresetSpread" onclick="applySmartPreset('spread')">📖 Trang Đôi 3D</button>
           <button class="preset-chip" id="chipPresetPurple" onclick="applySmartPreset('purple')">🟣 Mực Tím</button>
@@ -2635,9 +2696,9 @@
         <!-- Floating page and zoom control for mobile preview -->
         <div class="mobile-canvas-floating-header" id="mobileCanvasFloatingHeader">
           <div class="floating-capsule">
-            <button class="capsule-btn" onclick="prevPage()" title="Trang trước">❮</button>
+            <button class="capsule-btn" id="btnFloatPrevPage" onclick="prevPage()" title="Trang trước">❮</button>
             <span class="capsule-text" id="floatingPageIndicator">Trang 1 / 1</span>
-            <button class="capsule-btn" onclick="nextPage()" title="Trang tiếp">❯</button>
+            <button class="capsule-btn" id="btnFloatNextPage" onclick="nextPage()" title="Trang tiếp">❯</button>
             <span class="capsule-divider"></span>
             <button class="capsule-btn" onclick="fitCanvasToViewport()" title="Khớp vừa màn hình" style="font-size:11px;">Fit Vừa</button>
             <span class="capsule-divider"></span>
@@ -2665,7 +2726,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.3.7';
+    const APP_VERSION = '6.4.0';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -2691,14 +2752,31 @@
     let measureCanvasCtx = null;
     const charWidthCache = new Map();
 
-    
+    function getFontFamilyStack(fontName) {
+      const f = fontName || (typeof state !== 'undefined' ? state.font : 'JasonHandwriting5');
+      return `"${f}", "KleeOne", "JasonHandwriting5", "STKaiti", "KaiTi", "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif`;
+    }
+
+    function buildCanvasFont(fontSize, fontName, isBold = false) {
+      return `${isBold ? 'bold ' : ''}${fontSize}px ${getFontFamilyStack(fontName)}`;
+    }
+
+    function isFontFaceLoaded(fontName, fontSize = 20) {
+      if (!document.fonts || !document.fonts.check) return true;
+      try {
+        return document.fonts.check(`${fontSize}px "${fontName}"`);
+      } catch (e) {
+        return true;
+      }
+    }
+
     function getFracAdvanceWidth(num, den, fontSize, fontName) {
       if (!measureCanvasCtx) {
         measureCanvasCtx = document.createElement('canvas').getContext('2d');
       }
       const font = fontName || (typeof state !== 'undefined' ? state.font : 'JasonHandwriting5');
       const effFs = fontSize * 0.60;
-      measureCanvasCtx.font = effFs + 'px "' + font + '", cursive';
+      measureCanvasCtx.font = buildCanvasFont(effFs, font);
       const numW = measureCanvasCtx.measureText(num).width;
       const denW = measureCanvasCtx.measureText(den).width;
       return Math.max(numW, denW) + fontSize * 0.35;
@@ -2761,44 +2839,47 @@
     function getCharAdvanceWidth(ch, fontSize, fontName) {
       if (!ch) return 0;
       const font = fontName || (typeof state !== 'undefined' ? state.font : 'JasonHandwriting5');
+      const fontReady = isFontFaceLoaded(font, fontSize);
       const key = ch + '_' + fontSize + '_' + font;
-      if (charWidthCache.has(key)) return charWidthCache.get(key);
+      if (fontReady && charWidthCache.has(key)) return charWidthCache.get(key);
       if (charWidthCache.size > 8000) charWidthCache.clear();
+
+      if (!measureCanvasCtx) {
+        measureCanvasCtx = document.createElement('canvas').getContext('2d');
+      }
+      measureCanvasCtx.font = buildCanvasFont(fontSize, font);
+      const measured = measureCanvasCtx.measureText(ch).width;
 
       let w;
       const code = ch.charCodeAt(0);
       const isCjkPunc = '，。、；：！？）》」』”’'.indexOf(ch) !== -1;
       // CJK Ideographs (true Chinese characters)
-      const isCjk = (code >= 0x4E00 && code <= 0x9FFF) || 
-                    (code >= 0x3400 && code <= 0x4DBF) || 
+      const isCjk = (code >= 0x4E00 && code <= 0x9FFF) ||
+                    (code >= 0x3400 && code <= 0x4DBF) ||
                     (code >= 0xF900 && code <= 0xFAFF) ||
                     (code >= 0x2E80 && code <= 0x2FD5);
 
-      if (!isCjk && !isCjkPunc) {
-        if (!measureCanvasCtx) {
-          measureCanvasCtx = document.createElement('canvas').getContext('2d');
-        }
-        measureCanvasCtx.font = fontSize + 'px "' + font + '", cursive';
-        const measured = measureCanvasCtx.measureText(ch).width;
-        if (ch === ' ') {
-          w = fontSize * 0.28;
-        } else if (ch === '.' || ch === ',') {
-          w = Math.max(fontSize * 0.20, measured + 1.0);
-        } else if (code >= 48 && code <= 57) { // Digits 0-9
-          w = Math.max(fontSize * 0.38, measured + 0.8);
-        } else if ('+-*/=<>±×÷≠≤≥≈~¬|±'.indexOf(ch) !== -1) { // Math operators
-          w = Math.max(fontSize * 0.36, measured + 1.5);
-        } else if (ch === '°') {
-          w = Math.max(fontSize * 0.24, measured + 0.8);
-        } else {
-          w = Math.max(fontSize * 0.25, measured + 0.6);
-        }
+      if (ch === ' ') {
+        w = fontSize * 0.28;
       } else if (isCjkPunc) {
-        w = fontSize * 0.62;
+        w = Math.max(fontSize * 0.44, Math.min(fontSize * 0.96, measured + fontSize * 0.04));
+      } else if (isCjk) {
+        w = Math.max(fontSize * 0.64, Math.min(fontSize * 1.32, measured + fontSize * 0.04));
+      } else if (ch === '.' || ch === ',') {
+        w = Math.max(fontSize * 0.20, measured + 1.0);
+      } else if (code >= 48 && code <= 57) {
+        w = Math.max(fontSize * 0.38, measured + 0.8);
+      } else if ('+-*/=<>±×÷≠≤≥≈~¬|'.indexOf(ch) !== -1) {
+        w = Math.max(fontSize * 0.36, measured + 1.5);
+      } else if (ch === '°') {
+        w = Math.max(fontSize * 0.24, measured + 0.8);
       } else {
-        w = fontSize * 1.02;
+        w = Math.max(fontSize * 0.25, measured + 0.6);
       }
-      charWidthCache.set(key, w);
+
+      if (fontReady) {
+        charWidthCache.set(key, w);
+      }
       return w;
     }
 
@@ -2857,52 +2938,113 @@
     // ========================================================
     // AI AUTOMATIC NOTEBOOK LINE CALIBRATION ENGINE
     // ========================================================
+    function isValidCalibratedLineList(list) {
+      if (!Array.isArray(list) || list.length < 25) return false;
+      for (let i = 0; i < list.length; i++) {
+        const item = list[i];
+        if (!item || !Array.isArray(item.xs) || !Array.isArray(item.ys) || item.xs.length < 2) return false;
+        if (i > 0) {
+          const prevY = list[i - 1].initY ?? list[i - 1].ys[0];
+          const curY = item.initY ?? item.ys[0];
+          const gap = curY - prevY;
+          if (gap < 12 || gap > 42) return false;
+        }
+      }
+      return true;
+    }
+
+    function syncTemplatesWithCalibratedLines() {
+      if (!window.AI_CALIBRATED_LINES || typeof TEMPLATES_CONFIG === 'undefined') return;
+      for (const [tplKey, tData] of Object.entries(window.AI_CALIBRATED_LINES)) {
+        const cfg = TEMPLATES_CONFIG[tplKey];
+        if (!cfg || !tData) continue;
+        if (!tData.isSpread && Array.isArray(tData.lines)) {
+          cfg.lines = tData.lines.map(l => l.initY ?? l.ys[0]);
+        } else if (tData.isSpread && Array.isArray(tData.leftLines) && Array.isArray(tData.rightLines)) {
+          cfg.leftPage.lines = tData.leftLines.map(l => l.initY ?? l.ys[0]);
+          cfg.rightPage.lines = tData.rightLines.map(l => l.initY ?? l.ys[0]);
+        }
+      }
+    }
+
     window.AI_CALIBRATED_LINES = null;
     fetch(getAssetUrl('assets/ai_calibrated_lines.json'))
       .then(res => res.json())
       .then(data => {
-        window.AI_CALIBRATED_LINES = data;
-        console.log('AI calibrated lines loaded successfully.');
+        const cleaned = {};
+        if (data && typeof data === 'object') {
+          for (const [k, v] of Object.entries(data)) {
+            if (!v) continue;
+            if (!v.isSpread) {
+              if (isValidCalibratedLineList(v.lines)) cleaned[k] = v;
+            } else {
+              if (isValidCalibratedLineList(v.leftLines) && isValidCalibratedLineList(v.rightLines)) {
+                cleaned[k] = v;
+              }
+            }
+          }
+          // notebook_thanhnam_spread2.jpg is identical geometry to notebook_thanhnam_spread.jpg
+          if (cleaned['notebook_thanhnam_spread.jpg']) {
+            if (!cleaned['notebook_thanhnam_spread2.jpg']) {
+              cleaned['notebook_thanhnam_spread2.jpg'] = cleaned['notebook_thanhnam_spread.jpg'];
+            }
+            if (!cleaned['notebook_thanhnam_spread_clean.jpg']) {
+              cleaned['notebook_thanhnam_spread_clean.jpg'] = cleaned['notebook_thanhnam_spread.jpg'];
+            }
+          }
+        }
+        window.AI_CALIBRATED_LINES = cleaned;
+        syncTemplatesWithCalibratedLines();
+        console.log('AI calibrated lines loaded & validated:', Object.keys(cleaned));
+        if (typeof paginateText === 'function') paginateText();
         if (typeof renderCanvas === 'function') renderCanvas();
       })
       .catch(err => console.warn('Could not load AI calibrated lines:', err));
 
     function getNotebookLineContour(baseY, x, leftM, rightM, isSpread, isRightSubpage, templateKey, lIdx, baselines, blOffset) {
+      const safeBlOffset = blOffset || 0;
       // 1. AI-scanned pixel-perfect alignment (0px error on authentic photograph)
       if (window.AI_CALIBRATED_LINES && window.AI_CALIBRATED_LINES[templateKey]) {
         const tData = window.AI_CALIBRATED_LINES[templateKey];
-        let lineObj = null;
-        if (!tData.isSpread) {
-          if (tData.lines && tData.lines[lIdx]) lineObj = tData.lines[lIdx];
-        } else {
-          const lineList = isRightSubpage ? tData.rightLines : tData.leftLines;
-          if (lineList && lineList[lIdx]) lineObj = lineList[lIdx];
-        }
+        const lineList = !tData.isSpread
+          ? tData.lines
+          : (isRightSubpage ? tData.rightLines : tData.leftLines);
 
-        if (lineObj && lineObj.xs && lineObj.ys && lineObj.xs.length >= 2) {
-          const xs = lineObj.xs;
-          const ys = lineObj.ys;
-          let y = ys[0];
-          let angle = 0;
-          if (x <= xs[0]) {
-            y = ys[0];
-            angle = (ys[1] - ys[0]) / (xs[1] - xs[0]);
-          } else if (x >= xs[xs.length - 1]) {
-            y = ys[ys.length - 1];
-            angle = (ys[ys.length - 1] - ys[ys.length - 2]) / (xs[xs.length - 1] - xs[xs.length - 2]);
-          } else {
-            for (let k = 0; k < xs.length - 1; k++) {
-              if (x >= xs[k] && x <= xs[k + 1]) {
-                const frac = (x - xs[k]) / (xs[k + 1] - xs[k]);
-                y = ys[k] + frac * (ys[k + 1] - ys[k]);
-                angle = (ys[k + 1] - ys[k]) / (xs[k + 1] - xs[k]);
-                break;
+        if (Array.isArray(lineList) && lineList.length > 0) {
+          const clampedIdx = Math.min(lIdx, lineList.length - 1);
+          const extraLines = lIdx - clampedIdx;
+          const lineObj = lineList[clampedIdx];
+
+          if (lineObj && lineObj.xs && lineObj.ys && lineObj.xs.length >= 2) {
+            const xs = lineObj.xs;
+            const ys = lineObj.ys;
+            let y = ys[0];
+            let angle = 0;
+            if (x <= xs[0]) {
+              y = ys[0];
+              angle = (ys[1] - ys[0]) / (xs[1] - xs[0]);
+            } else if (x >= xs[xs.length - 1]) {
+              y = ys[ys.length - 1];
+              angle = (ys[ys.length - 1] - ys[ys.length - 2]) / (xs[xs.length - 1] - xs[xs.length - 2]);
+            } else {
+              for (let k = 0; k < xs.length - 1; k++) {
+                if (x >= xs[k] && x <= xs[k + 1]) {
+                  const frac = (x - xs[k]) / (xs[k + 1] - xs[k]);
+                  y = ys[k] + frac * (ys[k + 1] - ys[k]);
+                  angle = (ys[k + 1] - ys[k]) / (xs[k + 1] - xs[k]);
+                  break;
+                }
               }
             }
+            if (extraLines > 0 && lineList.length >= 2) {
+              const prevObj = lineList[lineList.length - 2];
+              const avgPitch = (lineObj.ys[0] - prevObj.ys[0]) || 24;
+              y += extraLines * avgPitch;
+            }
+            const p = Math.max(0, Math.min(1, (x - leftM) / Math.max(1, rightM - leftM)));
+            const handWave = Math.sin(p * Math.PI * 3.2 + (lIdx || 0) * 1.5) * 0.25;
+            return { y: y + safeBlOffset + handWave, angle: angle };
           }
-          const p = Math.max(0, Math.min(1, (x - leftM) / Math.max(1, rightM - leftM)));
-          const handWave = Math.sin(p * Math.PI * 3.2 + (lIdx || 0) * 1.5) * 0.25;
-          return { y: y + blOffset + handWave, angle: angle };
         }
       }
 
@@ -2916,12 +3058,12 @@
       if (templateKey === 'notebook_thanhnam_left.jpg') {
         const lineData = TN_LEFT_LINES[lIdx] || { y100: baseY, slope: -0.015 };
         const y = lineData.y100 + lineData.slope * (x - 100) + handWave;
-        return { y: y + blOffset, angle: lineData.slope };
+        return { y: y + safeBlOffset, angle: lineData.slope };
       }
 
       // 2. Single Page: Trang Đơn Phải Thành Nam (có lề đỏ phải)
       if (templateKey === 'notebook_thanhnam_right.jpg' || templateKey === 'notebook_hongha_2.jpg') {
-        return { y: baseY + blOffset + handWave, angle: 0 };
+        return { y: baseY + safeBlOffset + handWave, angle: 0 };
       }
 
       // 3. Single Pages: Trang Đơn Cận Cảnh & Tone Ấm (độ cong phối cảnh góc chụp cận)
@@ -2930,7 +3072,7 @@
         const bow = Math.sin(p * Math.PI) * (-16.0);
         const y = baseY + bow + handWave;
         const angle = (-16.0 * Math.PI / width) * Math.cos(p * Math.PI);
-        return { y: y + blOffset, angle: angle };
+        return { y: y + safeBlOffset, angle: angle };
       }
 
       // 4. Double Spreads: Trang Đôi Thành Nam (Bàn Gỗ & Toàn Cảnh)
@@ -2940,12 +3082,12 @@
           // Trang trái: võng lên gáy giữa
           const curve = - 11.0 * p - 8.0 * Math.sin(p * Math.PI);
           const angle = (-11.0 / width) - (8.0 * Math.PI / width) * Math.cos(p * Math.PI);
-          return { y: baseY + curve + blOffset + handWave, angle: angle };
+          return { y: baseY + curve + safeBlOffset + handWave, angle: angle };
         } else {
           // Trang phải: dốc tự nhiên xuống mép ngoài
           const curve = 16.0 * p + 6.0 * Math.sin(p * Math.PI);
           const angle = (16.0 / width) + (6.0 * Math.PI / width) * Math.cos(p * Math.PI);
-          return { y: baseY + curve + blOffset + handWave, angle: angle };
+          return { y: baseY + curve + safeBlOffset + handWave, angle: angle };
         }
       }
 
@@ -2954,15 +3096,15 @@
         if (!isRightSubpage) {
           const curve = - 9.0 * p - 6.5 * Math.sin(p * Math.PI);
           const angle = (-9.0 / width) - (6.5 * Math.PI / width) * Math.cos(p * Math.PI);
-          return { y: baseY + curve + blOffset + handWave, angle: angle };
+          return { y: baseY + curve + safeBlOffset + handWave, angle: angle };
         } else {
           const curve = 13.0 * p + 5.5 * Math.sin(p * Math.PI);
           const angle = (13.0 / width) + (5.5 * Math.PI / width) * Math.cos(p * Math.PI);
-          return { y: baseY + curve + blOffset + handWave, angle: angle };
+          return { y: baseY + curve + safeBlOffset + handWave, angle: angle };
         }
       }
 
-      return { y: baseY + blOffset + handWave, angle: 0 };
+      return { y: baseY + safeBlOffset + handWave, angle: 0 };
     }
 
     // ========================================================
@@ -2985,7 +3127,7 @@
         isSpread: false,
         leftMargin: 85,
         rightMargin: 690,
-        lines: [107, 134, 162, 190, 219, 248, 276, 305, 334, 363, 392, 421, 450, 480, 510, 540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900, 935, 969]
+        lines: [79, 107, 135, 163, 191, 220, 249, 279, 308, 339, 370, 401, 432, 464, 496, 529, 561, 594, 628, 661, 694, 728, 762, 796, 830, 863, 898, 932, 967]
       },
       'notebook_thanhnam_single2.jpg': {
         name: 'Trang Đơn Thành Nam (Cận Cảnh)',
@@ -2993,7 +3135,7 @@
         isSpread: false,
         leftMargin: 85,
         rightMargin: 700,
-        lines: [94, 121, 148, 175, 202, 230, 258, 286, 314, 342, 370, 398, 426, 455, 484, 513, 542, 571, 601, 631, 661, 691, 722, 753, 784, 816, 848, 880, 912, 944, 975]
+        lines: [94, 121, 148, 174, 201, 227, 254, 280, 307, 334, 361, 388, 415, 442, 469, 496, 523, 550, 578, 605, 633, 660, 688, 716, 745, 774, 803, 832, 862, 891, 921, 951, 980]
       },
       'notebook_thanhnam_single3.jpg': {
         name: 'Trang Đơn Thành Nam (Tone Ấm)',
@@ -3001,7 +3143,7 @@
         isSpread: false,
         leftMargin: 85,
         rightMargin: 690,
-        lines: [80, 107, 134, 162, 191, 220, 249, 278, 307, 336, 365, 395, 425, 455, 485, 515, 545, 575, 605, 635, 665, 695, 725, 755, 785, 815, 845, 875, 908, 940, 970]
+        lines: [79, 107, 135, 163, 191, 220, 249, 279, 308, 339, 370, 401, 431, 464, 496, 529, 561, 594, 628, 661, 694, 728, 761, 795, 829, 863, 898, 932, 967]
       },
 
       // === 4 MẪU TRANG ĐÔI KẺ NGANG MỞ RỘNG (100% ẢNH GỐC BÀN HỌC & GÁY THẬT) ===
@@ -3210,69 +3352,119 @@
       // Init sketchpad
       initSketchpad();
 
-      // Wait for fonts to be loaded for pristine first-frame render
+      // Wait for fonts to be loaded for pristine first-frame render & accurate width measurement
       if (document.fonts) {
         document.fonts.ready.then(() => {
+          charWidthCache.clear();
+          paginateText();
           renderCanvas();
         });
+        document.fonts.onloadingdone = () => {
+          charWidthCache.clear();
+          paginateText();
+          renderCanvas();
+        };
       }
+
+      // Responsive viewport fit & clean overlay state on resize
+      let resizeTimer = null;
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 991 && typeof closeMobileSheet === 'function') {
+          closeMobileSheet();
+        }
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (typeof fitCanvasToViewport === 'function') fitCanvasToViewport();
+        }, 80);
+      });
     });
 
-    function createFallbackNotebookImage(filename) {
+    function getTemplateDimensions(filename) {
       const cfg = TEMPLATES_CONFIG[filename] || TEMPLATES_CONFIG['notebook_thanhnam_left.jpg'];
-      const fbCanvas = document.createElement('canvas');
+      if (filename === 'notebook_hongha_spread.jpg') return { width: 925, height: 707 };
+      return cfg.isSpread ? { width: 1024, height: 768 } : { width: 768, height: 1024 };
+    }
+
+    function drawFallbackPaperLines(targetCtx, w, h, filename) {
+      const cfg = TEMPLATES_CONFIG[filename] || TEMPLATES_CONFIG['notebook_thanhnam_left.jpg'];
       const isSpread = !!cfg.isSpread;
-      fbCanvas.width = isSpread ? 1024 : 768;
-      fbCanvas.height = isSpread ? 768 : 1024;
+
+      // Subtle horizontal notebook lines
+      targetCtx.save();
+      targetCtx.strokeStyle = 'rgba(70, 110, 180, 0.24)';
+      targetCtx.lineWidth = 1;
+
+      if (isSpread) {
+        const leftLines = getActivePageLines(cfg.leftPage?.lines || []);
+        const rightLines = getActivePageLines(cfg.rightPage?.lines || []);
+        leftLines.forEach(y => {
+          targetCtx.beginPath();
+          targetCtx.moveTo(40, y);
+          targetCtx.lineTo(w * 0.48, y);
+          targetCtx.stroke();
+        });
+        rightLines.forEach(y => {
+          targetCtx.beginPath();
+          targetCtx.moveTo(w * 0.52, y);
+          targetCtx.lineTo(w - 40, y);
+          targetCtx.stroke();
+        });
+        // Book spine shadow line
+        targetCtx.strokeStyle = 'rgba(120, 110, 95, 0.25)';
+        targetCtx.beginPath();
+        targetCtx.moveTo(w / 2, 0);
+        targetCtx.lineTo(w / 2, h);
+        targetCtx.stroke();
+      } else {
+        const baselines = getActivePageLines(cfg.lines || []);
+        baselines.forEach(y => {
+          targetCtx.beginPath();
+          targetCtx.moveTo(24, y);
+          targetCtx.lineTo(w - 24, y);
+          targetCtx.stroke();
+        });
+        // Red vertical margin line
+        targetCtx.strokeStyle = 'rgba(230, 60, 60, 0.35)';
+        targetCtx.lineWidth = 1.2;
+        const redX = (filename && filename.includes('right')) ? (cfg.rightMargin || w - 78) : (cfg.leftMargin || 85);
+        targetCtx.beginPath();
+        targetCtx.moveTo(redX, 0);
+        targetCtx.lineTo(redX, h);
+        targetCtx.stroke();
+      }
+      targetCtx.restore();
+    }
+
+    function createFallbackNotebookImage(filename, reqSeq) {
+      const dims = getTemplateDimensions(filename);
+      const fbCanvas = document.createElement('canvas');
+      fbCanvas.width = dims.width;
+      fbCanvas.height = dims.height;
       const fbCtx = fbCanvas.getContext('2d');
 
-      // Paper base
+      // Warm paper base
       fbCtx.fillStyle = '#faf7ee';
       fbCtx.fillRect(0, 0, fbCanvas.width, fbCanvas.height);
-
-      // Subtle horizontal lines
-      fbCtx.strokeStyle = 'rgba(70, 110, 180, 0.22)';
-      fbCtx.lineWidth = 1;
-
-      const lines = isSpread ? 
-        [...(cfg.leftPage?.lines || []), ...(cfg.rightPage?.lines || [])] : 
-        (cfg.lines || []);
-
-      const baselines = getActivePageLines(lines);
-      baselines.forEach(y => {
-        fbCtx.beginPath();
-        fbCtx.moveTo(isSpread ? 60 : (cfg.leftMargin || 85), y);
-        fbCtx.lineTo(isSpread ? 960 : (cfg.rightMargin || 700), y);
-        fbCtx.stroke();
-      });
-
-      // Red vertical margin line
-      fbCtx.strokeStyle = 'rgba(230, 60, 60, 0.35)';
-      fbCtx.lineWidth = 1.2;
-      fbCtx.beginPath();
-      fbCtx.moveTo(cfg.leftMargin || 85, 0);
-      fbCtx.lineTo(cfg.leftMargin || 85, fbCanvas.height);
-      fbCtx.stroke();
+      drawFallbackPaperLines(fbCtx, fbCanvas.width, fbCanvas.height, filename);
 
       const img = new Image();
       img.onload = () => {
+        if (reqSeq !== undefined && reqSeq !== state.loadingSeq) return;
         state.notebookImg = img;
+        state.loadedTemplateKey = filename;
         canvas.width = fbCanvas.width;
         canvas.height = fbCanvas.height;
         paginateText();
         renderCanvas();
-        if (window.innerWidth <= 991 || document.body.classList.contains('view-preview')) {
-          fitCanvasToViewport();
-        } else {
-          state.zoomLevel = 0.40;
-          applyZoom();
-        }
+        fitCanvasToViewport();
       };
-      img.src = fbCanvas.toDataURL('image/jpeg', 0.85);
+      img.src = fbCanvas.toDataURL('image/jpeg', 0.88);
     }
 
     function loadNotebookImage(src) {
       const filename = src.replace(/^assets\//, '').split('?')[0];
+      state.loadingSeq = (state.loadingSeq || 0) + 1;
+      const mySeq = state.loadingSeq;
 
       // If the actually loaded image already matches filename, just refresh canvas
       if (state.notebookImg && state.notebookImg.complete && state.loadedTemplateKey === filename && state.notebookImg.naturalWidth > 0) {
@@ -3280,45 +3472,63 @@
         canvas.height = state.notebookImg.naturalHeight;
         paginateText();
         renderCanvas();
-        if (window.innerWidth <= 991 || document.body.classList.contains('view-preview')) {
-          fitCanvasToViewport();
-        } else {
-          applyZoom();
-        }
+        fitCanvasToViewport();
         return;
       }
 
+      // Immediately paint warm paper fallback synchronously so canvas never turns black while loading
+      const dims = getTemplateDimensions(filename);
+      state.notebookImg = null;
+      state.loadedTemplateKey = null;
+      canvas.width = dims.width;
+      canvas.height = dims.height;
+      paginateText();
+      renderCanvas();
+      fitCanvasToViewport();
+
       const newImg = new Image();
-      let triedNoCors = false;
+      const isExternal = /^https?:\/\//i.test(src) && !src.startsWith(window.location.origin);
+      let triedNoCors = !isExternal;
+      let triedPlainSrc = false;
+
+      if (isExternal) {
+        newImg.crossOrigin = 'anonymous';
+      }
 
       newImg.onload = () => {
+        if (mySeq !== state.loadingSeq) return;
+        if (!newImg.naturalWidth || !newImg.naturalHeight) {
+          createFallbackNotebookImage(filename, mySeq);
+          return;
+        }
         state.notebookImg = newImg;
         state.loadedTemplateKey = filename;
-        canvas.width = newImg.naturalWidth || newImg.width || 768;
-        canvas.height = newImg.naturalHeight || newImg.height || 1024;
+        canvas.width = newImg.naturalWidth;
+        canvas.height = newImg.naturalHeight;
         paginateText();
         renderCanvas();
-        if (window.innerWidth <= 991 || document.body.classList.contains('view-preview')) {
-          fitCanvasToViewport();
-        } else {
-          state.zoomLevel = 0.40;
-          applyZoom();
-        }
+        fitCanvasToViewport();
       };
 
       newImg.onerror = () => {
+        if (mySeq !== state.loadingSeq) return;
         if (!triedNoCors) {
           triedNoCors = true;
           console.warn('CORS image load failed, retrying without crossOrigin:', src);
-          newImg.crossOrigin = null;
+          newImg.removeAttribute('crossorigin');
           newImg.src = getAssetUrl(src);
           return;
         }
-        console.error('Failed to load notebook image asset:', src);
-        createFallbackNotebookImage(filename);
+        if (!triedPlainSrc) {
+          triedPlainSrc = true;
+          newImg.removeAttribute('crossorigin');
+          newImg.src = src;
+          return;
+        }
+        console.error('Failed to load notebook image asset, using fallback paper:', src);
+        createFallbackNotebookImage(filename, mySeq);
       };
 
-      newImg.crossOrigin = 'anonymous';
       newImg.src = getAssetUrl(src);
     }
 
@@ -3338,7 +3548,7 @@
         card.onclick = () => selectTemplate(filename);
 
         card.innerHTML = `
-          <img crossorigin="anonymous" src="${getAssetUrl('assets/' + filename)}" class="template-preview" alt="${cfg.name}" loading="lazy">
+          <img src="${getAssetUrl('assets/' + filename)}" class="template-preview" alt="${cfg.name}" loading="lazy">
           <div class="template-meta">
             <div class="template-title">${cfg.name}</div>
             <div class="template-sub">${cfg.isSpread ? 'Trang Đôi' : 'Trang Đơn'} • ${cfg.desc}</div>
@@ -3367,27 +3577,25 @@
       // Smart font sizing: compact line notebooks (all double spreads) need 15px font to prevent line overlap
       const isCompactPitch = cfg.isSpread;
       if (isCompactPitch) {
-        if (state.fontSize > 16) {
-          state.fontSize = 15;
-          const s = document.getElementById('fontSizeSlider');
-          const v = document.getElementById('fontSizeVal');
-          if (s) s.value = 15;
-          if (v) v.innerText = '15px';
-        }
+        if (state.fontSize > 16) state.fontSize = 15;
       } else {
-        if (state.fontSize < 18) {
-          state.fontSize = 20;
-          const s = document.getElementById('fontSizeSlider');
-          const v = document.getElementById('fontSizeVal');
-          if (s) s.value = 20;
-          if (v) v.innerText = '20px';
-        }
+        if (state.fontSize < 18) state.fontSize = 20;
       }
+      ['fontSizeSlider', 'mFontSizeSlider'].forEach(id => {
+        const s = document.getElementById(id);
+        if (s) s.value = state.fontSize;
+      });
+      ['fontSizeVal', 'mFontSizeVal'].forEach(id => {
+        const v = document.getElementById(id);
+        if (v) v.innerText = state.fontSize + 'px';
+      });
 
       const spreadRow = document.getElementById('spreadSideRow');
       if (spreadRow) spreadRow.style.display = cfg.isSpread ? 'flex' : 'none';
 
-      renderTemplateGallery(document.querySelector('.tool-chip.active')?.id.replace('filterTpl', '').toLowerCase() || 'all');
+      const activeFilterChip = document.querySelector('#style-tab .tool-chip.active[id^="filterTpl"]');
+      const activeFilter = activeFilterChip ? activeFilterChip.id.replace('filterTpl', '').toLowerCase() : 'all';
+      renderTemplateGallery(activeFilter);
       loadNotebookImage('assets/' + filename);
       showToast('Đã chọn mẫu: ' + cfg.name);
     }
@@ -3663,6 +3871,11 @@
     }
 
     function openAiDiagramStudio() {
+      if (window.innerWidth <= 991) {
+        switchMobileView('preview');
+        openMobileSheet('diagram');
+        return;
+      }
       if (typeof closeMobileSheet === 'function') closeMobileSheet();
       const modal = document.getElementById('aiDiagramStudioModal');
       if (modal) {
@@ -4147,42 +4360,61 @@
     // ========================================================
     // TEXT PAGINATION WITH TOP/BOTTOM MARGINS & ZERO OVERLAP
     // ========================================================
-    function paginateText() {
-      const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
+    function getPageBounds(cfg, isRightSubpage) {
+      const marginOff = state.marginOffset || 0;
       const isSpread = !!cfg.isSpread;
+      const baseLeft = isSpread
+        ? (isRightSubpage ? cfg.rightPage.leftMargin : cfg.leftPage.leftMargin)
+        : (cfg.leftMargin || 90);
+      const baseRight = isSpread
+        ? (isRightSubpage ? cfg.rightPage.rightMargin : cfg.leftPage.rightMargin)
+        : (cfg.rightMargin || 685);
+      const rawLines = isSpread
+        ? (isRightSubpage ? cfg.rightPage.lines : cfg.leftPage.lines)
+        : cfg.lines;
 
-      const leftOff = state.marginOffset || 0;
-      const rightOff = state.marginOffset || 0;
+      const minLeft = isSpread && isRightSubpage ? Math.max(baseLeft - 45, 490) : 16;
+      const maxLeft = baseRight - 90;
+      const leftM = Math.max(minLeft, Math.min(maxLeft, baseLeft + marginOff));
+      const rightM = baseRight;
+      const safePad = 14;
+      const maxW = Math.max(70, (rightM - leftM) - safePad);
+      return { leftM, rightM, maxW, rawLines };
+    }
 
-      let maxW_Left, maxW_Right, linesLeft, linesRight;
-      if (isSpread) {
-        const effLeft_L = cfg.leftPage.leftMargin + leftOff;
-        const effRight_L = cfg.leftPage.rightMargin + rightOff;
-        maxW_Left = Math.max(80, (effRight_L - effLeft_L) - 22);
-        linesLeft = getActivePageLines(cfg.leftPage.lines).length;
+    function isCjkChar(c) {
+      if (!c) return false;
+      const code = c.charCodeAt(0);
+      return (code >= 0x4E00 && code <= 0x9FFF) ||
+             (code >= 0x3400 && code <= 0x4DBF) ||
+             (code >= 0xF900 && code <= 0xFAFF);
+    }
 
-        const effLeft_R = cfg.rightPage.leftMargin + leftOff;
-        const effRight_R = cfg.rightPage.rightMargin + rightOff;
-        maxW_Right = Math.max(80, (effRight_R - effLeft_R) - 22);
-        linesRight = getActivePageLines(cfg.rightPage.lines).length;
-      } else {
-        const effLeft = (cfg.leftMargin || 90) + leftOff;
-        const effRight = (cfg.rightMargin || 685) + rightOff;
-        maxW_Left = maxW_Right = Math.max(80, (effRight - effLeft) - 24);
-        linesLeft = linesRight = getActivePageLines(cfg.lines).length;
-      }
+    function isLatinWordChar(c) {
+      if (!c) return false;
+      return /^[0-9A-Za-z\u00C0-\u024F\u1E00-\u1EFF]$/.test(c);
+    }
 
-      const punctuationNoStart = new Set('，。、；：！？）》」』”’');
-      const rawText = preprocessMathText(state.text || '');
+    function tokenizeParagraphs(rawText) {
       const paragraphs = rawText.split(/\r?\n/);
-
-      const parsedLines = [];
+      const paraList = [];
       let charCounterGlobal = 0;
 
-      for (let p of paragraphs) {
+      const SUBSCRIPT_MAP = {
+        '₀':'0', '₁':'1', '₂':'2', '₃':'3', '₄':'4', '₅':'5', '₆':'6', '₇':'7', '₈':'8', '₉':'9',
+        '₊':'+', '₋':'-', '₌':'=', '₍':'(', '₎':')',
+        'ₐ':'a', 'ₑ':'e', 'ₒ':'o', 'ₓ':'x', 'ₕ':'h', 'ₖ':'k', 'ₗ':'l', 'ₘ':'m', 'ₙ':'n', 'ₚ':'p', 'ₛ':'s', 'ₜ':'t'
+      };
+      const SUPERSCRIPT_MAP = {
+        '⁰':'0', '¹':'1', '²':'2', '³':'3', '⁴':'4', '⁵':'5', '⁶':'6', '⁷':'7', '⁸':'8', '⁹':'9',
+        '⁺':'+', '⁻':'-', '⁼':'=', '⁽':'(', '⁾':')', 'ⁿ':'n', 'ⁱ':'i'
+      };
+      const PUNC_MAP = { ';': '；', '!': '！', '?': '？', '[': '【', ']': '】' };
+
+      for (const p of paragraphs) {
         const clean = p.trim();
         if (!clean) {
-          parsedLines.push({ isStart: true, chars: [] });
+          paraList.push([]);
           continue;
         }
 
@@ -4190,13 +4422,12 @@
         let inStrike = false;
 
         for (let i = 0; i < clean.length; i++) {
-          if (clean[i] === '~' && clean[i+1] === '~') {
+          if (clean[i] === '~' && clean[i + 1] === '~') {
             inStrike = !inStrike;
             i++;
             continue;
           }
 
-          // Fractional notation support: \frac{numerator}{denominator}
           if (clean.substr(i, 6) === '\\frac{') {
             const numEnd = clean.indexOf('}{', i + 6);
             if (numEnd !== -1) {
@@ -4221,16 +4452,6 @@
           const isPrevMathOrAscii = /[\d\w\)\+\-\*\/\=\±\×\÷\≠\≤\≥\°\%\√\Δ\π\·]/.test(prevChar);
           const isNextMathOrAscii = /[\d\w\(\+\-\*\/\=\±\×\÷\≠\≤\≥\√\Δ\π\·]/.test(nextChar);
 
-          const SUBSCRIPT_MAP = {
-            '₀':'0', '₁':'1', '₂':'2', '₃':'3', '₄':'4', '₅':'5', '₆':'6', '₇':'7', '₈':'8', '₉':'9',
-            '₊':'+', '₋':'-', '₌':'=', '₍':'(', '₎':')',
-            'ₐ':'a', 'ₑ':'e', 'ₒ':'o', 'ₓ':'x', 'ₕ':'h', 'ₖ':'k', 'ₗ':'l', 'ₘ':'m', 'ₙ':'n', 'ₚ':'p', 'ₛ':'s', 'ₜ':'t'
-          };
-          const SUPERSCRIPT_MAP = {
-            '⁰':'0', '¹':'1', '²':'2', '³':'3', '⁴':'4', '⁵':'5', '⁶':'6', '⁷':'7', '⁸':'8', '⁹':'9',
-            '⁺':'+', '⁻':'-', '⁼':'=', '⁽':'(', '⁾':')', 'ⁿ':'n', 'ⁱ':'i'
-          };
-
           let isSub = false;
           let isSuper = false;
 
@@ -4244,9 +4465,9 @@
             ch = (isPrevDigitOrAscii || isNextDigit) ? '.' : '。';
           } else if (rawChar === ',') {
             if (isPrevDigitOrAscii && isNextDigit) {
-              ch = ','; // Decimal comma like 3,14
+              ch = ',';
             } else if (isPrevMathOrAscii || isNextMathOrAscii) {
-              ch = ', '; // Math parameter/coordinate comma like f(x, y)
+              ch = ', ';
             } else {
               ch = '，';
             }
@@ -4257,77 +4478,147 @@
           } else if (rawChar === ')') {
             ch = ')';
           } else {
-            const PUNC_MAP = { ';': '；', '!': '！', '?': '？', '[': '【', ']': '】' };
             ch = PUNC_MAP[rawChar] || rawChar;
           }
           charCounterGlobal++;
 
           if (state.autoTypo && !inStrike && charCounterGlobal % 58 === 0 && '，。、；：'.indexOf(ch) === -1) {
-            const wrongChars = '了的地是不人在有這我箇';
-            const wrongCh = wrongChars[charCounterGlobal % wrongChars.length];
-            tokens.push({ char: wrongCh, isCrossedOut: true });
+            if (isCjkChar(ch)) {
+              const wrongChars = '了的地是不人在有這我箇';
+              const wrongCh = wrongChars[charCounterGlobal % wrongChars.length];
+              tokens.push({ char: wrongCh, isCrossedOut: true });
+            } else if (isLatinWordChar(ch) && !isSub && !isSuper && !isLatinWordChar(prevChar)) {
+              tokens.push({ char: ch, isCrossedOut: true });
+            }
           }
 
           tokens.push({ char: ch, isCrossedOut: inStrike, isSubscript: isSub, isSuperscript: isSuper });
         }
 
-        let currentChars = [];
-        let curW = isSpread ? 20 : 30;
-        let isStart = true;
-        const activeMaxW = maxW_Left;
+        paraList.push(tokens);
+      }
 
-        for (let tok of tokens) {
-          let charW;
-          const ch = tok.char || '';
-          if (tok.type === 'frac') {
-            charW = getFracAdvanceWidth(tok.num, tok.den, state.fontSize, state.font);
-          } else {
-            const effFontSize = (tok.isSubscript || tok.isSuperscript) ? state.fontSize * 0.62 : state.fontSize;
-            charW = getCharAdvanceWidth(ch, effFontSize);
+      return paraList;
+    }
+
+    function getTokenAdvance(tok) {
+      if (tok.type === 'frac') {
+        return getFracAdvanceWidth(tok.num, tok.den, state.fontSize, state.font) + 4;
+      }
+      const effFontSize = (tok.isSubscript || tok.isSuperscript) ? state.fontSize * 0.62 : state.fontSize;
+      return getCharAdvanceWidth(tok.char || '', effFontSize, state.font);
+    }
+
+    function paginateText() {
+      const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
+      const isSpread = !!cfg.isSpread;
+      const punctuationNoStart = new Set('，。、；：！？）》」』”’.,;:!?)');
+      const rawText = preprocessMathText(state.text || '');
+      const paraList = tokenizeParagraphs(rawText);
+      const startIndent = Math.min(34, state.fontSize * 1.5);
+
+      let pIdx = 0;
+      let tIdx = 0;
+      let isParaStart = true;
+
+      function hasMoreContent() {
+        return pIdx < paraList.length;
+      }
+
+      function pullNextLineForWidth(activeMaxW) {
+        if (pIdx >= paraList.length) return null;
+        const tokens = paraList[pIdx];
+
+        // Blank paragraph line
+        if (tokens.length === 0) {
+          pIdx++;
+          tIdx = 0;
+          isParaStart = true;
+          return { isStart: true, chars: [] };
+        }
+
+        const currentChars = [];
+        let curW = isParaStart ? startIndent : 0;
+        const lineIsStart = isParaStart;
+
+        // Skip leading whitespace on wrapped continuation lines
+        if (!lineIsStart) {
+          while (tIdx < tokens.length && tokens[tIdx].char === ' ') {
+            tIdx++;
           }
+        }
 
-          if (curW + charW > activeMaxW) {
-            if (ch && punctuationNoStart.has(ch) && currentChars.length > 0 && (curW + charW <= activeMaxW + 8)) {
-              currentChars.push(tok);
-              parsedLines.push({ isStart: isStart, chars: currentChars });
-              currentChars = [];
-              curW = 0;
-              isStart = false;
+        while (tIdx < tokens.length) {
+          const tok = tokens[tIdx];
+          const ch = tok.char || '';
+
+          // Keep contiguous Latin/Vietnamese words intact on line wraps
+          if (!tok.type && isLatinWordChar(ch)) {
+            let wordEnd = tIdx + 1;
+            let wordW = getTokenAdvance(tok);
+            while (wordEnd < tokens.length && !tokens[wordEnd].type && isLatinWordChar(tokens[wordEnd].char)) {
+              wordW += getTokenAdvance(tokens[wordEnd]);
+              wordEnd++;
+            }
+
+            if (curW + wordW <= activeMaxW) {
+              for (let k = tIdx; k < wordEnd; k++) {
+                currentChars.push(tokens[k]);
+              }
+              curW += wordW;
+              tIdx = wordEnd;
               continue;
             }
-            parsedLines.push({ isStart: isStart, chars: currentChars });
-            currentChars = [];
-            curW = 0;
-            isStart = false;
+
+            // Whole word fits on a fresh line: wrap before the word instead of splitting mid-word
+            if (currentChars.length > 0 && wordW <= activeMaxW) {
+              isParaStart = false;
+              return { isStart: lineIsStart, chars: currentChars };
+            }
+          }
+
+          const charW = getTokenAdvance(tok);
+
+          if (curW + charW > activeMaxW && currentChars.length > 0) {
+            if (ch && punctuationNoStart.has(ch) && (curW + charW <= activeMaxW + 8)) {
+              currentChars.push(tok);
+              tIdx++;
+            }
+            isParaStart = false;
+            return { isStart: lineIsStart, chars: currentChars };
           }
 
           currentChars.push(tok);
           curW += charW;
+          tIdx++;
         }
 
-        if (currentChars.length > 0) {
-          parsedLines.push({ isStart: isStart, chars: currentChars });
-        }
+        // Paragraph finished
+        pIdx++;
+        tIdx = 0;
+        isParaStart = true;
+        return { isStart: lineIsStart, chars: currentChars };
       }
 
-      // Chunk lines into subpages with top/bottom margin shifts & zero-overlap diagram avoidance
+      // Chunk directly into subpages using each subpage's true maxW and line capacity
       state.allPagesLines = [];
-      const unplaced = [...parsedLines];
       let subpageIdx = 0;
 
-      while (unplaced.length > 0 || (state.diagram.enabled && subpageIdx === 0 && state.allPagesLines.length === 0)) {
+      while (hasMoreContent() || (state.diagram.enabled && subpageIdx === 0 && state.allPagesLines.length === 0)) {
         const isRightSubpage = isSpread && (subpageIdx % 2 === 1);
-        const subpageCapacity = isRightSubpage ? linesRight : linesLeft;
+        const bounds = getPageBounds(cfg, isRightSubpage);
+        const subpageCapacity = Math.max(1, getActivePageLines(bounds.rawLines).length);
+        const activeMaxW = bounds.maxW;
         const slots = new Array(subpageCapacity).fill(null);
 
         // Apply Top Margin lines (Skip lines at top)
-        const topSkip = Math.min(subpageCapacity - 2, Math.max(0, state.topMarginLines));
+        const topSkip = Math.min(Math.max(0, subpageCapacity - 2), Math.max(0, state.topMarginLines));
         for (let t = 0; t < topSkip; t++) {
           slots[t] = { isMarginPlaceholder: true, chars: [] };
         }
 
         // Apply Bottom Margin lines (Reserve lines at bottom)
-        const botSkip = Math.min(subpageCapacity - topSkip - 1, Math.max(0, state.bottomMarginLines));
+        const botSkip = Math.min(Math.max(0, subpageCapacity - topSkip - 1), Math.max(0, state.bottomMarginLines));
         for (let b = subpageCapacity - botSkip; b < subpageCapacity; b++) {
           slots[b] = { isMarginPlaceholder: true, chars: [] };
         }
@@ -4352,13 +4643,15 @@
         }
 
         let sIdx = 0;
+        let placedAnyOnSubpage = false;
         while (sIdx < subpageCapacity) {
           if (slots[sIdx] !== null) {
             sIdx++;
             continue;
           }
-          if (unplaced.length > 0) {
-            slots[sIdx] = unplaced.shift();
+          if (hasMoreContent()) {
+            slots[sIdx] = pullNextLineForWidth(activeMaxW);
+            placedAnyOnSubpage = true;
             if (state.skipLine) {
               let nextSlot = sIdx + 1;
               while (nextSlot < subpageCapacity && slots[nextSlot] !== null) {
@@ -4382,6 +4675,7 @@
         state.allPagesLines.push(slots);
         subpageIdx++;
         if (subpageIdx > 60) break;
+        if (!placedAnyOnSubpage && hasMoreContent()) break;
       }
 
       if (state.allPagesLines.length === 0) {
@@ -4417,7 +4711,26 @@
       }
       if (ind) ind.innerText = str;
       if (floatInd) floatInd.innerText = str;
-      if (mInd) mInd.innerText = `${state.currentPage + 1} / ${state.totalPages}`;
+      if (mInd) mInd.innerText = str;
+
+      const isFirst = state.currentPage <= 0;
+      const isLast = state.currentPage >= Math.max(0, state.totalPages - 1);
+      ['btnPrevPage', 'btnFloatPrevPage', 'btnMobilePrevPage'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.disabled = isFirst;
+          btn.style.opacity = isFirst ? '0.35' : '';
+          btn.style.pointerEvents = isFirst ? 'none' : '';
+        }
+      });
+      ['btnNextPage', 'btnFloatNextPage', 'btnMobileNextPage'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.disabled = isLast;
+          btn.style.opacity = isLast ? '0.35' : '';
+          btn.style.pointerEvents = isLast ? 'none' : '';
+        }
+      });
     }
 
     function prevPage() {
@@ -4425,6 +4738,8 @@
         state.currentPage--;
         updatePaginationUI();
         renderCanvas();
+        const vp = document.getElementById('viewport');
+        if (vp) vp.scrollTop = 0;
       }
     }
 
@@ -4433,6 +4748,8 @@
         state.currentPage++;
         updatePaginationUI();
         renderCanvas();
+        const vp = document.getElementById('viewport');
+        if (vp) vp.scrollTop = 0;
       }
     }
 
@@ -4445,16 +4762,23 @@
     }
 
     function renderPageToContext(targetCtx, targetW, targetH, pageIndex, scaleFactor = 1) {
-      if (!state.notebookImg || !state.notebookImg.complete) return;
-
       targetCtx.save();
       targetCtx.imageSmoothingEnabled = true;
       targetCtx.imageSmoothingQuality = 'high';
 
-      // 1. Draw notebook background
+      // 1. Always paint warm notebook paper background first so canvas can NEVER be transparent/black
       targetCtx.globalCompositeOperation = 'source-over';
-      targetCtx.clearRect(0, 0, targetW, targetH);
-      targetCtx.drawImage(state.notebookImg, 0, 0, targetW, targetH);
+      targetCtx.fillStyle = '#faf7ee';
+      targetCtx.fillRect(0, 0, targetW, targetH);
+
+      if (state.notebookImg && state.notebookImg.complete && state.notebookImg.naturalWidth > 0) {
+        targetCtx.drawImage(state.notebookImg, 0, 0, targetW, targetH);
+      } else {
+        targetCtx.save();
+        if (scaleFactor !== 1) targetCtx.scale(scaleFactor, scaleFactor);
+        drawFallbackPaperLines(targetCtx, targetW / scaleFactor, targetH / scaleFactor, state.notebookTemplate);
+        targetCtx.restore();
+      }
 
       // 2. Set ink blend mode to Multiply
       targetCtx.globalCompositeOperation = 'multiply';
@@ -4465,8 +4789,6 @@
 
       const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
       const isSpread = !!cfg.isSpread;
-      const leftOff = state.marginOffset || 0;
-      const rightOff = state.marginOffset || 0;
       const blOffset = state.baselineOffset || 0;
 
       const mFactor = state.messiness / 100.0;
@@ -4478,10 +4800,8 @@
       else if (state.inkColor === 'purple') { baseR = 107; baseG = 33; baseB = 168; }
 
       if (isSpread) {
-        const leftM_L = cfg.leftPage.leftMargin + leftOff;
-        const rightM_L = cfg.leftPage.rightMargin + rightOff;
-        const leftM_R = cfg.rightPage.leftMargin + leftOff;
-        const rightM_R = cfg.rightPage.rightMargin + rightOff;
+        const boundsL = getPageBounds(cfg, false);
+        const boundsR = getPageBounds(cfg, true);
 
         const leftSubpage = state.allPagesLines[pageIndex * 2] || [];
         const rightSubpage = state.allPagesLines[pageIndex * 2 + 1] || [];
@@ -4489,25 +4809,24 @@
         // Draw diagram on designated spread side
         if (state.diagram.enabled && pageIndex === state.diagram.page) {
           const isRight = (state.diagram.spreadSide === 'right');
-          const sideCfg = isRight ? 
-            { lines: cfg.rightPage.lines, leftMargin: leftM_R, rightMargin: rightM_R } : 
-            { lines: cfg.leftPage.lines, leftMargin: leftM_L, rightMargin: rightM_L };
+          const sideCfg = isRight ?
+            { lines: cfg.rightPage.lines, leftMargin: boundsR.leftM, rightMargin: boundsR.rightM } :
+            { lines: cfg.leftPage.lines, leftMargin: boundsL.leftM, rightMargin: boundsL.rightM };
           drawDiagramOnCanvas(targetCtx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, sideCfg);
         }
 
-        renderLineSet(targetCtx, leftSubpage, cfg.leftPage.lines, leftM_L, rightM_L, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, true, false);
-        renderLineSet(targetCtx, rightSubpage, cfg.rightPage.lines, leftM_R, rightM_R, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, true, true);
+        renderLineSet(targetCtx, leftSubpage, cfg.leftPage.lines, boundsL.leftM, boundsL.rightM, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, true, false);
+        renderLineSet(targetCtx, rightSubpage, cfg.rightPage.lines, boundsR.leftM, boundsR.rightM, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, true, true);
 
       } else {
-        const leftM = (cfg.leftMargin || 90) + leftOff;
-        const rightM = (cfg.rightMargin || 685) + rightOff;
+        const bounds = getPageBounds(cfg, false);
         const pageLines = state.allPagesLines[pageIndex] || [];
 
         if (state.diagram.enabled && pageIndex === state.diagram.page) {
-          drawDiagramOnCanvas(targetCtx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, { lines: cfg.lines, leftMargin: leftM, rightMargin: rightM });
+          drawDiagramOnCanvas(targetCtx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, { lines: cfg.lines, leftMargin: bounds.leftM, rightMargin: bounds.rightM });
         }
 
-        renderLineSet(targetCtx, pageLines, cfg.lines, leftM, rightM, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, false, false);
+        renderLineSet(targetCtx, pageLines, cfg.lines, bounds.leftM, bounds.rightM, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, false, false);
       }
 
       targetCtx.restore();
@@ -4516,34 +4835,35 @@
     function renderLineSet(ctx, lineTokensList, linesConfig, leftM, rightM, blOffset, prng, baseR, baseG, baseB, mFactor, fontSize, fontName, isSpread, isRightSubpage) {
       if (!lineTokensList || lineTokensList.length === 0) return;
       const baselines = getActivePageLines(linesConfig);
+      const startIndent = Math.min(34, fontSize * 1.5);
 
       for (let lIdx = 0; lIdx < lineTokensList.length; lIdx++) {
         if (lIdx >= baselines.length) break;
         const lineItem = lineTokensList[lIdx];
         if (!lineItem || lineItem.isSkipLine || lineItem.isDiagramPlaceholder || lineItem.isMarginPlaceholder) continue;
 
-        const rawBaseY = baselines[lIdx] + blOffset;
+        // Pass unshifted baseline so getNotebookLineContour applies blOffset exactly once
+        const rawBaseY = baselines[lIdx];
         const lineJitterY = (prng() - 0.5) * 1.4 * mFactor;
 
-        let curX = leftM + (lineItem.isStart ? (fontSize * 1.6) : (prng() * 4 * mFactor));
+        let nominalX = leftM + (lineItem.isStart ? startIndent : 0);
+        let curX = nominalX + (lineItem.isStart ? 0 : (prng() * 2.5 * mFactor));
 
         let activeRadical = null;
 
         for (let tIdx = 0; tIdx < lineItem.chars.length; tIdx++) {
           const tok = lineItem.chars[tIdx];
 
-          // Exact line curvature & normal slope calculation for this token:
-          const contour = getNotebookLineContour(rawBaseY, curX, leftM, rightM, isSpread, isRightSubpage, state.notebookTemplate, lIdx, baselines, blOffset);
-          const effectiveBaseY = contour.y + lineJitterY;
-
           // Render authentic stacked fraction
           if (tok.type === 'frac') {
             const fracW = getFracAdvanceWidth(tok.num, tok.den, fontSize, fontName);
-            if (curX + fracW > rightM - 4) break;
+            const drawX = Math.min(curX, Math.max(leftM, rightM - fracW - 2));
+            const contour = getNotebookLineContour(rawBaseY, drawX, leftM, rightM, isSpread, isRightSubpage, state.notebookTemplate, lIdx, baselines, blOffset);
+            const effectiveBaseY = contour.y + lineJitterY;
 
             const effFs = fontSize * 0.68;
             ctx.save();
-            ctx.font = `${effFs}px "${fontName}", cursive`;
+            ctx.font = buildCanvasFont(effFs, fontName);
             ctx.fillStyle = `rgba(${baseR}, ${baseG}, ${baseB}, 0.92)`;
             ctx.textBaseline = 'alphabetic';
 
@@ -4551,20 +4871,21 @@
             const denW = ctx.measureText(tok.den).width;
 
             // Draw numerator
-            ctx.fillText(tok.num, curX + (fracW - numW) / 2, effectiveBaseY - fontSize * 0.42);
+            ctx.fillText(tok.num, drawX + (fracW - numW) / 2, effectiveBaseY - fontSize * 0.42);
 
-            // Draw organic ink fraction bar
+            // Draw organic ink fraction bar (4 segments so bar always renders)
             ctx.strokeStyle = `rgba(${baseR}, ${baseG}, ${baseB}, 0.90)`;
             ctx.lineWidth = Math.max(1.2, fontSize * 0.065);
             ctx.lineCap = 'round';
             const fracBarY = effectiveBaseY - fontSize * 0.25;
-            drawOrganicLine(ctx, curX + 0.5, fracBarY, curX + fracW - 0.5, fracBarY, prng, 0.8);
+            drawOrganicLine(ctx, drawX + 0.5, fracBarY, drawX + fracW - 0.5, fracBarY, prng, 4, 0.8);
 
             // Draw denominator
-            ctx.fillText(tok.den, curX + (fracW - denW) / 2, effectiveBaseY + fontSize * 0.24);
+            ctx.fillText(tok.den, drawX + (fracW - denW) / 2, effectiveBaseY + fontSize * 0.24);
 
             ctx.restore();
-            curX += fracW + (prng() - 0.5) * 1.5 * mFactor + 4;
+            nominalX += fracW + 4;
+            curX = nominalX + (prng() - 0.5) * 1.2 * mFactor;
             continue;
           }
 
@@ -4572,41 +4893,37 @@
           const isSub = !!tok.isSubscript;
           const isSuper = !!tok.isSuperscript;
           const effFontSize = (isSub || isSuper) ? fontSize * 0.62 : fontSize;
-          const charAdvance = getCharAdvanceWidth(ch, effFontSize);
-
-          // STRICT SAFETY MARGIN CHECK: Never allow writing past right margin or onto desk/spine!
-          if (curX + charAdvance > rightM - 4) {
-            break;
-          }
-
-          const rhythmJitter = (prng() - 0.5) * 0.8 * mFactor;
+          const charAdvance = getCharAdvanceWidth(ch, effFontSize, fontName);
 
           if (ch === ' ') {
-            curX += charAdvance + (prng() - 0.5) * 2.8 * mFactor;
+            nominalX += charAdvance;
+            curX = nominalX + (prng() - 0.5) * 2.0 * mFactor;
             continue;
           }
 
-          // Contour & effectiveBaseY already calculated above
+          // Clamp safely inside right margin instead of dropping characters
+          const drawX = Math.min(curX, Math.max(leftM, rightM - charAdvance - 2));
+          const contour = getNotebookLineContour(rawBaseY, drawX, leftM, rightM, isSpread, isRightSubpage, state.notebookTemplate, lIdx, baselines, blOffset);
+          const effectiveBaseY = contour.y + lineJitterY;
 
-          // Organic human handwriting jitter:
-          // Natural human pen dynamics so letters & numbers have lively, authentic flow
+          // Organic human handwriting jitter
           const isAscii = ch.charCodeAt(0) < 128;
           const wobbleMult = (isSub || isSuper) ? 0.5 : (isAscii ? 1.05 : 1.0);
 
-          // 1. Lively Human Baseline Jitter (độ nhảy dòng, chồi sụt tự nhiên của người viết ẩu):
-          const chJitterY = (prng() - 0.5) * 5.4 * mFactor * wobbleMult;
-          const chJitterX = (prng() - 0.5) * 3.8 * mFactor * wobbleMult;
+          // 1. Lively Human Baseline Jitter
+          const chJitterY = (prng() - 0.5) * 5.0 * mFactor * wobbleMult;
+          const chJitterX = (prng() - 0.5) * 2.6 * mFactor * wobbleMult;
 
-          // 2. Dynamic Slant & Tilt (độ nghiêng ngả lộn xộn theo quán tính tay người):
-          const naturalSlantBias = -0.03 * mFactor; // subtle natural speed slant
+          // 2. Dynamic Slant & Tilt
+          const naturalSlantBias = -0.03 * mFactor;
           const safeCurveAngle = Math.max(-0.16, Math.min(0.16, contour.angle || 0));
-          const chAngle = safeCurveAngle + naturalSlantBias + (prng() - 0.5) * 0.22 * mFactor * wobbleMult;
+          const chAngle = safeCurveAngle + naturalSlantBias + (prng() - 0.5) * 0.20 * mFactor * wobbleMult;
 
-          // 3. Asymmetric Scaling (chữ to chữ nhỏ bất đối xứng, biến dạng khi viết nhanh):
+          // 3. Asymmetric Scaling
           const baseScale = isSub || isSuper ? 1.0 : (isAscii ? 0.96 : 1.0);
-          const stretchX = baseScale * (1.0 + (prng() - 0.5) * 0.32 * mFactor);
-          const stretchY = baseScale * (1.0 + (prng() - 0.5) * 0.26 * mFactor);
-          const shearX = (prng() - 0.5) * 0.22 * mFactor; // Pen stroke slant variation
+          const stretchX = baseScale * (1.0 + (prng() - 0.5) * 0.26 * mFactor);
+          const stretchY = baseScale * (1.0 + (prng() - 0.5) * 0.24 * mFactor);
+          const shearX = (prng() - 0.5) * 0.20 * mFactor;
 
           // Subscript / Superscript vertical placement
           let subSuperShiftY = 0;
@@ -4616,37 +4933,34 @@
             subSuperShiftY = -fontSize * 0.40;
           }
 
-          // 4. Authentic Ballpoint Pen Ink Pressure & Bleed (đậm nhạt & gợn nét bút bi):
+          // 4. Authentic Ballpoint Pen Ink Pressure & Bleed
           const pressure = prng();
           const rVar = Math.max(0, Math.min(255, baseR + Math.round((prng() - 0.5) * 24)));
           const gVar = Math.max(0, Math.min(255, baseG + Math.round((prng() - 0.5) * 24)));
           const bVar = Math.max(0, Math.min(255, baseB + Math.round((prng() - 0.5) * 24)));
-          const alphaVar = 0.76 + pressure * 0.22; // 0.76 to 0.98 realistic ink opacity
+          const alphaVar = 0.76 + pressure * 0.22;
 
           ctx.save();
-          ctx.translate(curX + charAdvance / 2 + chJitterX, effectiveBaseY + chJitterY + subSuperShiftY);
+          ctx.translate(drawX + charAdvance / 2 + chJitterX, effectiveBaseY + chJitterY + subSuperShiftY);
           ctx.rotate(chAngle);
           ctx.transform(1, 0, shearX, 1, 0, 0);
           ctx.scale(stretchX, stretchY);
 
-          // Organic ink bleed on paper:
           if (mFactor > 0.15) {
             ctx.shadowColor = `rgba(${rVar}, ${gVar}, ${bVar}, ${0.28 * mFactor})`;
             ctx.shadowBlur = 0.75 * mFactor;
           }
 
-          ctx.font = `${effFontSize}px "${fontName}", cursive`;
+          ctx.font = buildCanvasFont(effFontSize, fontName);
           ctx.fillStyle = `rgba(${rVar}, ${gVar}, ${bVar}, ${alphaVar})`;
           ctx.textBaseline = 'alphabetic';
           ctx.fillText(ch, -charAdvance / 2, 0);
 
-          // Random micro double-stroke edge (áp lực bi lăn bút bi thực tế)
           if (mFactor > 0.4 && prng() < 0.26) {
             ctx.fillStyle = `rgba(${rVar}, ${gVar}, ${bVar}, ${alphaVar * 0.35})`;
             ctx.fillText(ch, -charAdvance / 2 + (prng() - 0.5) * 0.5, (prng() - 0.5) * 0.5);
           }
 
-          // Authentic crossed-out strikethrough effect
           if (tok.isCrossedOut) {
             ctx.strokeStyle = `rgba(${rVar}, ${gVar}, ${bVar}, 0.88)`;
             ctx.lineWidth = 1.8;
@@ -4657,7 +4971,6 @@
             ctx.lineTo(charAdvance * 0.6, strikeY + (prng() - 0.5) * 3);
             ctx.stroke();
 
-            // Double scratch for realism
             ctx.beginPath();
             ctx.moveTo(-charAdvance * 0.55, strikeY + 2);
             ctx.lineTo(charAdvance * 0.55, strikeY - 1);
@@ -4669,9 +4982,9 @@
           // Square root overbar drawing (vinculum)
           if (ch === '√') {
             activeRadical = {
-              startX: curX + charAdvance * 0.68,
+              startX: drawX + charAdvance * 0.68,
               topY: effectiveBaseY - fontSize * 0.82,
-              endX: curX + charAdvance,
+              endX: drawX + charAdvance,
               hasParen: (lineItem.chars[tIdx + 1] && lineItem.chars[tIdx + 1].char === '('),
               parenDepth: 0
             };
@@ -4687,7 +5000,7 @@
                 activeRadical.parenDepth--;
               }
             }
-            activeRadical.endX = curX + charAdvance;
+            activeRadical.endX = drawX + charAdvance;
 
             let isEnd = false;
             if (activeRadical.hasParen) {
@@ -4704,13 +5017,15 @@
               ctx.strokeStyle = `rgba(${rVar}, ${gVar}, ${bVar}, ${alphaVar * 0.95})`;
               ctx.lineWidth = Math.max(1.15, fontSize * 0.065);
               ctx.lineCap = 'round';
-              drawOrganicLine(ctx, activeRadical.startX, activeRadical.topY, activeRadical.endX + 2.0, activeRadical.topY, prng, 1.1);
+              drawOrganicLine(ctx, activeRadical.startX, activeRadical.topY, activeRadical.endX + 2.0, activeRadical.topY, prng, 4, 1.1);
               ctx.restore();
               activeRadical = null;
             }
           }
 
-          curX += charAdvance + (prng() - 0.5) * 1.5 * mFactor;
+          // Bounded spacing jitter around nominal advance prevents random-walk drift
+          nominalX += charAdvance;
+          curX = nominalX + (prng() - 0.5) * 1.2 * mFactor;
         }
       }
     }
@@ -4853,7 +5168,7 @@
         const noteLines = d.convNote.split('\n');
         const noteX = x + w * 0.64;
         let curNY = y + 14;
-        ctx.font = `${Math.max(11, state.fontSize - 5.5)}px "${state.font}", cursive`;
+        ctx.font = buildCanvasFont(Math.max(11, state.fontSize - 5.5), state.font);
         
         noteLines.forEach((nl) => {
           const trimmed = nl.trim();
@@ -4888,13 +5203,13 @@
         const subTitle = parts[1] || '';
 
         // Main node title
-        ctx.font = `bold ${Math.max(15, state.fontSize - 1.5)}px "${state.font}", cursive`;
+        ctx.font = buildCanvasFont(Math.max(15, state.fontSize - 1.5), state.font, true);
         ctx.fillText(mainTitle, nX, nodeY);
         const mainTitleW = ctx.measureText(mainTitle).width;
 
         // English subtitle in parens
         if (subTitle) {
-          ctx.font = `${Math.max(12, state.fontSize - 5)}px "${state.font}", cursive`;
+          ctx.font = buildCanvasFont(Math.max(12, state.fontSize - 5), state.font);
           ctx.fillText(subTitle, nX - 2, nodeY + 18);
           const subTitleW = ctx.measureText(subTitle).width;
 
@@ -4913,14 +5228,14 @@
           if (i === 2 && subtexts[i]) {
             const bracketY = nodeY + 23;
             drawHanddrawnCurlyBracket(ctx, nX - 2, bracketY, nX - 2 + subTitleW + 4, bracketY, prng, 8);
-            ctx.font = `${Math.max(10.5, state.fontSize - 6.5)}px "${state.font}", cursive`;
+            ctx.font = buildCanvasFont(Math.max(10.5, state.fontSize - 6.5), state.font);
             ctx.fillText(subtexts[i], nX - 8, nodeY + 44);
           }
         }
 
         // Subtext annotation for other nodes
         if (i !== 2 && subtexts[i]) {
-          ctx.font = `${Math.max(10.5, state.fontSize - 6.5)}px "${state.font}", cursive`;
+          ctx.font = buildCanvasFont(Math.max(10.5, state.fontSize - 6.5), state.font);
           ctx.fillText(subtexts[i], nX - 2, nodeY + 36);
         }
 
@@ -4940,7 +5255,7 @@
             drawOrganicLine(ctx, arrowStartX + 4, nodeY - 8, arrowStartX - 4, nodeY - 12, prng, 2);
 
             if (topOps[i]) {
-              ctx.font = `${Math.max(11, state.fontSize - 6)}px "${state.font}", cursive`;
+              ctx.font = buildCanvasFont(Math.max(11, state.fontSize - 6), state.font);
               ctx.fillText(topOps[i], midArrowX - 35, nodeY - 26);
             }
 
@@ -4951,7 +5266,7 @@
             drawOrganicLine(ctx, arrowEndX - 7, botY + 4, arrowEndX, botY, prng, 2);
 
             if (botOps[i]) {
-              ctx.font = `${Math.max(11, state.fontSize - 6)}px "${state.font}", cursive`;
+              ctx.font = buildCanvasFont(Math.max(11, state.fontSize - 6), state.font);
               ctx.fillText(botOps[i], midArrowX - 32, botY + 16);
             }
 
@@ -4963,7 +5278,7 @@
             drawOrganicLine(ctx, arrowEndX - 7, topY + 4, arrowEndX, topY, prng, 2);
 
             if (topOps[i]) {
-              ctx.font = `${Math.max(11, state.fontSize - 6)}px "${state.font}", cursive`;
+              ctx.font = buildCanvasFont(Math.max(11, state.fontSize - 6), state.font);
               ctx.fillText(topOps[i], midArrowX - 36, topY - 8);
             }
 
@@ -4973,7 +5288,7 @@
             drawOrganicLine(ctx, arrowStartX + 7, botY + 4, arrowStartX, botY, prng, 2);
 
             if (botOps[i]) {
-              ctx.font = `${Math.max(11, state.fontSize - 6)}px "${state.font}", cursive`;
+              ctx.font = buildCanvasFont(Math.max(11, state.fontSize - 6), state.font);
               ctx.fillText(botOps[i], midArrowX - 36, botY + 16);
             }
 
@@ -4997,7 +5312,7 @@
       const rootY = y + 2;
       drawHanddrawnShadowRect(ctx, rootX, rootY, rootW, rootH, prng);
 
-      ctx.font = `bold ${Math.max(13.5, state.fontSize - 2.5)}px "${state.font}", cursive`;
+      ctx.font = buildCanvasFont(Math.max(13.5, state.fontSize - 2.5), state.font, true);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(d.treeRoot || '生態系統', rootX + rootW / 2, rootY + rootH / 2);
@@ -5024,7 +5339,7 @@
       const lCatW = Math.min(195, w * 0.44);
       const lCatX = leftCenter - lCatW / 2;
       drawHanddrawnShadowRect(ctx, lCatX, catBoxY, lCatW, catBoxH, prng);
-      ctx.font = `bold ${Math.max(12, state.fontSize - 4.5)}px "${state.font}", cursive`;
+      ctx.font = buildCanvasFont(Math.max(12, state.fontSize - 4.5), state.font, true);
       ctx.fillText(d.treeLeftCat || '非生物成分 (生命維持系統)', lCatX + 8, catBoxY + catBoxH * 0.68);
 
       // Right category box
@@ -5042,7 +5357,7 @@
       drawHanddrawnShadowRect(ctx, x, cardY, cardW, cardH, prng);
       const lLines = (d.treeLeftContent || '').split('\n').filter(l => l.trim());
       const fSize = Math.max(9.5, state.fontSize - 7.5);
-      ctx.font = `${fSize}px "${state.font}", cursive`;
+      ctx.font = buildCanvasFont(fSize, state.font);
       const lLineH = Math.min(18, (cardH - 14) / Math.max(1, lLines.length));
       lLines.forEach((line, idx) => {
         const isIndented = line.startsWith('  ') || line.startsWith('\t') || line.trim().startsWith('(');
@@ -5090,14 +5405,14 @@
       drawOrganicLine(ctx, x, y + headerH, x + w, y + headerH, prng, 8);
 
       const fSize = Math.max(13, state.fontSize - 3);
-      ctx.font = `bold ${fSize}px "${state.font}", cursive`;
+      ctx.font = buildCanvasFont(fSize, state.font, true);
       ctx.fillText(d.t2Col1 || '生詞', x + 10, y + headerH * 0.68);
       ctx.fillText(d.t2Col2 || '釋義', colSplit + 10, y + headerH * 0.68);
 
       const rows = (d.t2Rows || '').split('\n').filter(r => r.trim());
       if (rows.length > 0) {
         const rowH = (h - headerH) / rows.length;
-        ctx.font = `${Math.max(12, fSize - 1)}px "${state.font}", cursive`;
+        ctx.font = buildCanvasFont(Math.max(12, fSize - 1), state.font);
 
         rows.forEach((r, idx) => {
           const rowY = y + headerH + rowH * (idx + 1);
@@ -5123,7 +5438,7 @@
       drawOrganicLine(ctx, x, y + headerH, x + w, y + headerH, prng, 8);
 
       const fSize = Math.max(13, state.fontSize - 3);
-      ctx.font = `bold ${fSize}px "${state.font}", cursive`;
+      ctx.font = buildCanvasFont(fSize, state.font, true);
       ctx.fillText(d.t3Col1 || '漢字', x + 8, y + headerH * 0.68);
       ctx.fillText(d.t3Col2 || '拼音', c1Split + 8, y + headerH * 0.68);
       ctx.fillText(d.t3Col3 || '釋義', c2Split + 8, y + headerH * 0.68);
@@ -5131,7 +5446,7 @@
       const rows = (d.t3Rows || '').split('\n').filter(r => r.trim());
       if (rows.length > 0) {
         const rowH = (h - headerH) / rows.length;
-        ctx.font = `${Math.max(12, fSize - 1)}px "${state.font}", cursive`;
+        ctx.font = buildCanvasFont(Math.max(12, fSize - 1), state.font);
 
         rows.forEach((r, idx) => {
           const rowY = y + headerH + rowH * (idx + 1);
@@ -5155,7 +5470,7 @@
       const rootH = Math.min(36, h * 0.30);
       drawOrganicRect(ctx, cx - rootW / 2, cy - rootH / 2, rootW, rootH, prng);
 
-      ctx.font = `bold 13.5px "${state.font}", cursive`;
+      ctx.font = buildCanvasFont(13.5, state.font, true);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(d.mindmapRoot || '主題', cx, cy);
@@ -5163,7 +5478,7 @@
       const branches = (d.mindmapBranches || '').split('\n').filter(b => b.trim());
       if (branches.length > 0) {
         const branchGap = h / (branches.length + 1);
-        ctx.font = `12px "${state.font}", cursive`;
+        ctx.font = buildCanvasFont(12, state.font);
         ctx.textAlign = 'left';
 
         branches.forEach((bText, idx) => {
@@ -5192,7 +5507,7 @@
       const boxH = Math.min(48, h * 0.55);
       const boxY = y + (h - boxH) / 2;
 
-      ctx.font = `12.5px "${state.font}", cursive`;
+      ctx.font = buildCanvasFont(12.5, state.font);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
@@ -5220,11 +5535,11 @@
       drawOrganicRect(ctx, x, y, w, h, prng);
       drawOrganicLine(ctx, x + 4, y + 4, x + 4, y + h - 4, prng, 6);
 
-      ctx.font = `bold 14px "${state.font}", cursive`;
+      ctx.font = buildCanvasFont(14, state.font, true);
       ctx.fillText(d.calloutTitle || '★ Lưu ý', x + 14, y + 22);
 
       const lines = (d.calloutText || '').split('\n');
-      ctx.font = `12.5px "${state.font}", cursive`;
+      ctx.font = buildCanvasFont(12.5, state.font);
       lines.forEach((l, idx) => {
         ctx.fillText(l, x + 14, y + 44 + idx * 20);
       });
@@ -5235,9 +5550,10 @@
     // ========================================================
     function setInkColor(color) {
       state.inkColor = color;
-      ['btnInkGel', 'btnInkBlue', 'btnInkDeep'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+      ['btnInkGel', 'btnInkBlue', 'btnInkPurple', 'btnInkDeep'].forEach(id => document.getElementById(id)?.classList.remove('active'));
       if (color === 'gel_black') document.getElementById('btnInkGel')?.classList.add('active');
       if (color === 'blue') document.getElementById('btnInkBlue')?.classList.add('active');
+      if (color === 'purple') document.getElementById('btnInkPurple')?.classList.add('active');
       if (color === 'deep_black') document.getElementById('btnInkDeep')?.classList.add('active');
 
       renderCanvas();
@@ -5282,13 +5598,17 @@
       if (sel && sel.value !== fontName) sel.value = fontName;
 
       const doRender = () => {
+        charWidthCache.clear();
         paginateText();
         renderCanvas();
         showToast('Đã đổi font: ' + (FONT_DISPLAY_NAMES[fontName] || fontName));
       };
 
       if (document.fonts && document.fonts.load) {
-        document.fonts.load(`${state.fontSize}px "${fontName}"`).then(() => {
+        Promise.all([
+          document.fonts.load(`${state.fontSize}px "${fontName}"`),
+          document.fonts.load(`16px "${fontName}"`)
+        ]).then(() => {
           doRender();
         }).catch(() => {
           doRender();
@@ -5300,43 +5620,43 @@
 
     function updateFontSize(val) {
       state.fontSize = parseInt(val);
-      const dEl = document.getElementById('fontSizeVal'); if (dEl) dEl.innerText = val + 'px';
-      const mEl = document.getElementById('mFontSizeVal'); if (mEl) mEl.innerText = val + 'px';
+      ['fontSizeVal', 'mFontSizeVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + 'px'; });
+      ['fontSizeSlider', 'mFontSizeSlider'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== String(val)) el.value = val; });
       scheduleRender(true);
     }
 
     function updateMessiness(val) {
       state.messiness = parseInt(val);
-      const dEl = document.getElementById('messinessVal'); if (dEl) dEl.innerText = val + '%';
-      const mEl = document.getElementById('mMessinessVal'); if (mEl) mEl.innerText = val + '%';
+      ['messinessVal', 'mMessinessVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + '%'; });
+      ['messinessSlider', 'mMessinessSlider'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== String(val)) el.value = val; });
       scheduleRender(false);
     }
 
     function updateBaselineOffset(val) {
       state.baselineOffset = parseInt(val);
-      const dEl = document.getElementById('baselineVal'); if (dEl) dEl.innerText = val + 'px';
-      const mEl = document.getElementById('mBaselineVal'); if (mEl) mEl.innerText = val + 'px';
+      ['baselineVal', 'mBaselineVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + 'px'; });
+      ['baselineSlider', 'mBaselineSlider'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== String(val)) el.value = val; });
       scheduleRender(false);
     }
 
     function updateMarginOffset(val) {
       state.marginOffset = parseInt(val);
-      const dEl = document.getElementById('marginVal'); if (dEl) dEl.innerText = val + 'px';
-      const mEl = document.getElementById('mMarginVal'); if (mEl) mEl.innerText = val + 'px';
+      ['marginVal', 'mMarginVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + 'px'; });
+      ['marginSlider', 'mMarginSlider'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== String(val)) el.value = val; });
       scheduleRender(true);
     }
 
     function updateTopMargin(val) {
       state.topMarginLines = parseInt(val);
-      const dEl = document.getElementById('topMarginVal'); if (dEl) dEl.innerText = val + ' dòng';
-      const mEl = document.getElementById('mTopMarginVal'); if (mEl) mEl.innerText = val + ' dòng';
+      ['topMarginVal', 'mTopMarginVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + ' dòng'; });
+      ['topMarginSlider', 'mTopMarginSlider'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== String(val)) el.value = val; });
       scheduleRender(true);
     }
 
     function updateBottomMargin(val) {
       state.bottomMarginLines = parseInt(val);
-      const dEl = document.getElementById('bottomMarginVal'); if (dEl) dEl.innerText = val + ' dòng';
-      const mEl = document.getElementById('mBottomMarginVal'); if (mEl) mEl.innerText = val + ' dòng';
+      ['bottomMarginVal', 'mBottomMarginVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + ' dòng'; });
+      ['bottomMarginSlider', 'mBottomMarginSlider'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== String(val)) el.value = val; });
       scheduleRender(true);
     }
 
@@ -5350,6 +5670,10 @@
       const mSwitch = document.getElementById('mSkipLine');
       if (mSwitch) {
         mSwitch.checked = state.skipLine;
+      }
+      const chipSkip = document.getElementById('chipPresetSkip');
+      if (chipSkip) {
+        chipSkip.classList.toggle('active', state.skipLine);
       }
       paginateText();
       renderCanvas();
@@ -5617,7 +5941,7 @@
             if (btnRem) btnRem.style.display = 'inline-flex';
             paginateText();
             renderCanvas();
-            switchMobileView('preview');
+            if (window.innerWidth <= 991) switchMobileView('preview');
             showToast('✨ Đã vẽ lại sơ đồ bằng nét bút bi vào vở!');
           });
         };
@@ -5651,8 +5975,10 @@
         if (btnRem) btnRem.style.display = 'inline-flex';
         paginateText();
         renderCanvas();
-        switchMobileView('preview');
-        openMobileSheet('diagram');
+        if (window.innerWidth <= 991) {
+          switchMobileView('preview');
+          openMobileSheet('diagram');
+        }
         showToast('✨ Đã chèn sơ đồ Thủy triều vẽ tay vào vở!');
       };
       img.src = getAssetUrl('assets/so_do_ve_tay_but_bi_xanh.jpg');
@@ -5671,8 +5997,10 @@
         if (btnRem) btnRem.style.display = 'inline-flex';
         paginateText();
         renderCanvas();
-        switchMobileView('preview');
-        openMobileSheet('diagram');
+        if (window.innerWidth <= 991) {
+          switchMobileView('preview');
+          openMobileSheet('diagram');
+        }
         showToast('✨ Đã chèn sơ đồ vẽ tay bút bi chuẩn vào vở!');
       };
       img.src = getAssetUrl('assets/so_do_chatgpt_but_bi.jpg');
@@ -5834,7 +6162,7 @@
         }
 
         const fontSize = Math.max(12, Math.round(lb.h * 0.82 * (restylerState.fontScale || 1.0)));
-        ctx.font = `${fontSize}px "${restylerState.font || 'JasonHandwriting5'}", cursive`;
+        ctx.font = buildCanvasFont(fontSize, restylerState.font || 'JasonHandwriting5');
         ctx.fillStyle = fillCol;
         ctx.textBaseline = 'middle';
         ctx.fillText(lb.text, lb.x + 2, lb.y + lb.h / 2);
@@ -5930,7 +6258,7 @@
         paginateText();
         renderCanvas();
         closeDiagramRestylerModal();
-        switchMobileView('preview');
+        if (window.innerWidth <= 991) switchMobileView('preview');
         showToast('✨ Đã áp dụng sơ đồ font viết tay vào trang vở!');
       };
       img.src = dataUrl;
@@ -5946,17 +6274,19 @@
     }
     function fitCanvasToViewport() {
       const cWidth = canvas.width || 760;
+      const vp = document.getElementById('viewport');
       if (window.innerWidth <= 991) {
         const pad = 16;
-        const availW = Math.max(320, window.innerWidth - pad);
+        const vpW = (vp && vp.clientWidth > 0) ? vp.clientWidth : window.innerWidth;
+        const availW = Math.max(280, vpW - pad);
         const fitScale = availW / cWidth;
-        state.zoomLevel = Math.round(fitScale * 100) / 100;
+        state.zoomLevel = Math.round(Math.min(1.5, Math.max(0.25, fitScale)) * 100) / 100;
       } else {
-        const vp = document.getElementById('viewport');
         const pad = 32;
-        const availW = (vp ? vp.clientWidth : 800) - pad;
+        const vpW = (vp && vp.clientWidth > 0) ? vp.clientWidth : Math.max(400, window.innerWidth - 460);
+        const availW = Math.max(320, vpW - pad);
         const fitScale = availW / cWidth;
-        state.zoomLevel = Math.min(1.0, Math.max(0.40, fitScale));
+        state.zoomLevel = Math.round(Math.min(1.0, Math.max(0.40, fitScale)) * 100) / 100;
       }
       applyZoom();
     }
@@ -6284,12 +6614,21 @@
     // ========================================================
     // MOBILE BOTTOM SHEET DRAWER & CONTROLS
     // ========================================================
+    function normalizeMobileSheetType(type) {
+      if (type === 'margins' || type === 'align') return 'margin';
+      if (type === 'fonts' || type === 'font') return 'style';
+      if (type === 'templates' || type === 'paper') return 'template';
+      if (type === 'diagrams') return 'diagram';
+      return type;
+    }
+
     function toggleMobileSheet(type) {
+      const normType = normalizeMobileSheetType(type);
       const sheet = document.getElementById('mobileSheet');
-      if (sheet && sheet.classList.contains('active') && sheet.dataset.type === type) {
+      if (sheet && sheet.classList.contains('active') && sheet.dataset.type === normType) {
         closeMobileSheet();
       } else {
-        openMobileSheet(type);
+        openMobileSheet(normType);
       }
     }
 
@@ -6413,7 +6752,7 @@
                   paginateText();
                   renderCanvas();
                   closeMobileSheet();
-                  switchMobileView('preview');
+                  if (window.innerWidth <= 991) switchMobileView('preview');
                   showToast('✨ AI đã vẽ lại sơ đồ và tự động thêm vào vở!');
                 };
                 aiImg.src = aiResultUrl;
@@ -6440,7 +6779,7 @@
             paginateText();
             renderCanvas();
             closeMobileSheet();
-            switchMobileView('preview');
+            if (window.innerWidth <= 991) switchMobileView('preview');
             showToast('✨ AI đã vẽ lại sơ đồ bằng nét bút bi vào trang vở!');
           });
         };
@@ -6514,8 +6853,10 @@
             if (btnRem) btnRem.style.display = 'inline-flex';
             paginateText();
             renderCanvas();
-            switchMobileView('preview');
-            openMobileSheet('diagram');
+            if (window.innerWidth <= 991) {
+              switchMobileView('preview');
+              openMobileSheet('diagram');
+            }
             showToast('✨ AI đã vẽ lại sơ đồ bằng nét bút bi vào vở!');
           };
           img.src = dataUrl;
@@ -6542,50 +6883,57 @@
       });
     }
 
-    function openAiDiagramStudio() {
-      switchMobileView('preview');
-      openMobileSheet('diagram');
-    }
-
     function openMobileSheet(type) {
+      const normType = normalizeMobileSheetType(type);
+      if (!['style', 'margin', 'template', 'diagram'].includes(normType)) return;
       const sheet = document.getElementById('mobileSheet');
       const overlay = document.getElementById('mobileSheetOverlay');
       const body = document.getElementById('mobileSheetBody');
       if (!sheet || !overlay || !body) return;
 
-      sheet.dataset.type = type;
+      // Ensure mobile users see live canvas preview behind the bottom sheet
+      if (window.innerWidth <= 991 && !document.body.classList.contains('view-preview')) {
+        document.body.classList.add('view-preview');
+        const btnEdit = document.getElementById('btnSwitchEdit');
+        const btnPrev = document.getElementById('btnSwitchPreview');
+        if (btnPrev) btnPrev.classList.add('active');
+        if (btnEdit) btnEdit.classList.remove('active');
+        setTimeout(() => { fitCanvasToViewport(); }, 50);
+      }
+
+      sheet.dataset.type = normType;
 
       if (typeof closeAiDiagramStudio === 'function') closeAiDiagramStudio();
 
       // Update active highlight on bottom dock buttons
       document.querySelectorAll('.mobile-bar-btn').forEach(btn => btn.classList.remove('active-feature'));
-      const activeBarBtn = document.getElementById('btnBar_' + type);
+      const activeBarBtn = document.getElementById('btnBar_' + normType);
       if (activeBarBtn) activeBarBtn.classList.add('active-feature');
 
       const title = document.getElementById('mobileSheetTitle');
 
-      if (type === 'style') {
+      if (normType === 'style') {
         if (title) title.innerHTML = '🖋️ Nét & Kiểu Chữ';
         body.innerHTML = `
           <div style="margin-bottom:14px;">
             <label class="form-label" style="margin-bottom:6px; display:block;">Font chữ viết tay:</label>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-              <button class="btn btn-secondary ${state.font === 'JasonHandwriting5' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting5', this)" style="font-size:12px; justify-content:center;">Jason 5 (Tự nhiên ★)</button>
-              <button class="btn btn-secondary ${state.font === 'LiuJianMaoCao' ? 'active' : ''}" onclick="setMobileFont('LiuJianMaoCao', this)" style="font-size:12px; justify-content:center; border-color:var(--accent); color:var(--accent);">Liu Jian (Cực ẩu ★)</button>
-              <button class="btn btn-secondary ${state.font === 'LongCang' ? 'active' : ''}" onclick="setMobileFont('LongCang', this)" style="font-size:12px; justify-content:center;">Long Cang (Nguệch ngoạc ★)</button>
-              <button class="btn btn-secondary ${state.font === 'ZhiMangXing' ? 'active' : ''}" onclick="setMobileFont('ZhiMangXing', this)" style="font-size:12px; justify-content:center;">Zhi Mang Xing (Tốc ký ★)</button>
-              <button class="btn btn-secondary ${state.font === 'KleeOne' ? 'active' : ''}" onclick="setMobileFont('KleeOne', this)" style="font-size:12px; justify-content:center;">Klee One (Bút chì)</button>
-              <button class="btn btn-secondary ${state.font === 'JasonHandwriting4' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting4', this)" style="font-size:12px; justify-content:center;">Jason 4 (Tốc ký nhẹ)</button>
-              <button class="btn btn-secondary ${state.font === 'JasonHandwriting3' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting3', this)" style="font-size:12px; justify-content:center;">Jason 3 (Nắn nót)</button>
-              <button class="btn btn-secondary ${state.font === 'JasonHandwriting1' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting1', this)" style="font-size:12px; justify-content:center;">Jason 1 (Đều tay)</button>
-              <button class="btn btn-secondary ${state.font === 'JasonHandwriting2' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting2', this)" style="font-size:12px; justify-content:center;">Jason 2 (Thanh mảnh)</button>
-              <button class="btn btn-secondary ${state.font === 'JasonHandwriting6' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting6', this)" style="font-size:12px; justify-content:center;">Jason 6 (Bút gel)</button>
-              <button class="btn btn-secondary ${state.font === 'JasonHandwriting7' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting7', this)" style="font-size:12px; justify-content:center;">Jason 7 (Nét đậm)</button>
+            <div class="mobile-font-grid">
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'JasonHandwriting5' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting5', this)">Jason 5 (Tự nhiên ★)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'LiuJianMaoCao' ? 'active' : ''}" onclick="setMobileFont('LiuJianMaoCao', this)">Liu Jian (Cực ẩu ★)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'LongCang' ? 'active' : ''}" onclick="setMobileFont('LongCang', this)">Long Cang (Nguệch ngoạc ★)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'ZhiMangXing' ? 'active' : ''}" onclick="setMobileFont('ZhiMangXing', this)">Zhi Mang Xing (Tốc ký ★)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'KleeOne' ? 'active' : ''}" onclick="setMobileFont('KleeOne', this)">Klee One (Bút chì)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'JasonHandwriting4' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting4', this)">Jason 4 (Tốc ký nhẹ)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'JasonHandwriting3' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting3', this)">Jason 3 (Nắn nót)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'JasonHandwriting1' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting1', this)">Jason 1 (Đều tay)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'JasonHandwriting2' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting2', this)">Jason 2 (Thanh mảnh)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'JasonHandwriting6' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting6', this)">Jason 6 (Bút gel)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'JasonHandwriting7' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting7', this)">Jason 7 (Nét đậm)</button>
             </div>
           </div>
           <div style="margin-bottom:14px;">
             <label class="form-label" style="margin-bottom:6px; display:block;">Màu mực:</label>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
               <button class="tool-chip ${state.inkColor === 'gel_black' ? 'active' : ''}" onclick="setMobileInkColor('gel_black', this)">⚫ Mực Gel Đen</button>
               <button class="tool-chip ${state.inkColor === 'blue' ? 'active' : ''}" onclick="setMobileInkColor('blue', this)">🔵 Mực Xanh</button>
               <button class="tool-chip ${state.inkColor === 'purple' ? 'active' : ''}" onclick="setMobileInkColor('purple', this)">🟣 Mực Tím</button>
@@ -6596,13 +6944,13 @@
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
               <span>Cỡ chữ:</span><strong id="mFontSizeVal">${state.fontSize}px</strong>
             </div>
-            <input type="range" class="range-slider" min="12" max="32" value="${state.fontSize}" oninput="updateFontSize(this.value); const mel = document.getElementById('mFontSizeVal'); if(mel) mel.innerText = this.value + 'px';">
+            <input type="range" id="mFontSizeSlider" class="range-slider" min="12" max="32" value="${state.fontSize}" oninput="updateFontSize(this.value);">
           </div>
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
               <span>Độ nghiêng & lệch dòng tự nhiên:</span><strong id="mMessinessVal">${state.messiness}%</strong>
             </div>
-            <input type="range" class="range-slider" min="0" max="100" value="${state.messiness}" oninput="updateMessiness(this.value); const mel = document.getElementById('mMessinessVal'); if(mel) mel.innerText = this.value + '%';">
+            <input type="range" id="mMessinessSlider" class="range-slider" min="0" max="100" value="${state.messiness}" oninput="updateMessiness(this.value);">
           </div>
           <div class="ios-switch-row" style="margin-top:8px;">
             <span class="ios-switch-label">Tự động gạch chữ sai (Chân thật)</span>
@@ -6619,32 +6967,32 @@
             </label>
           </div>
         `;
-      } else if (type === 'margin') {
+      } else if (normType === 'margin') {
         if (title) title.innerHTML = '📏 Căn Dòng & Lề Vở';
         body.innerHTML = `
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
               <span>Căn bám dòng ô vở (Lên / Xuống):</span><strong id="mBaselineVal">${state.baselineOffset}px</strong>
             </div>
-            <input type="range" class="range-slider" min="-20" max="20" value="${state.baselineOffset}" oninput="updateBaselineOffset(this.value); const mel = document.getElementById('mBaselineVal'); if(mel) mel.innerText = this.value + 'px';">
+            <input type="range" id="mBaselineSlider" class="range-slider" min="-20" max="20" value="${state.baselineOffset}" oninput="updateBaselineOffset(this.value); const mel = document.getElementById('mBaselineVal'); if(mel) mel.innerText = this.value + 'px';">
           </div>
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
               <span>Căn lề đỏ (Trái / Phải):</span><strong id="mMarginVal">${state.marginOffset}px</strong>
             </div>
-            <input type="range" class="range-slider" min="-40" max="40" value="${state.marginOffset}" oninput="updateMarginOffset(this.value); const mel = document.getElementById('mMarginVal'); if(mel) mel.innerText = this.value + 'px';">
+            <input type="range" id="mMarginSlider" class="range-slider" min="-40" max="40" value="${state.marginOffset}" oninput="updateMarginOffset(this.value); const mel = document.getElementById('mMarginVal'); if(mel) mel.innerText = this.value + 'px';">
           </div>
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
               <span>Đẩy lùi lề trên (Dòng trống đầu trang):</span><strong id="mTopMarginVal">${state.topMarginLines} dòng</strong>
             </div>
-            <input type="range" class="range-slider" min="0" max="8" value="${state.topMarginLines}" oninput="updateTopMargin(this.value); const mel = document.getElementById('mTopMarginVal'); if(mel) mel.innerText = this.value + ' dòng';">
+            <input type="range" id="mTopMarginSlider" class="range-slider" min="0" max="8" value="${state.topMarginLines}" oninput="updateTopMargin(this.value); const mel = document.getElementById('mTopMarginVal'); if(mel) mel.innerText = this.value + ' dòng';">
           </div>
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
               <span>Dự trữ lề dưới (Tránh chạm mép đáy):</span><strong id="mBottomMarginVal">${state.bottomMarginLines} dòng</strong>
             </div>
-            <input type="range" class="range-slider" min="0" max="8" value="${state.bottomMarginLines}" oninput="updateBottomMargin(this.value); const mel = document.getElementById('mBottomMarginVal'); if(mel) mel.innerText = this.value + ' dòng';">
+            <input type="range" id="mBottomMarginSlider" class="range-slider" min="0" max="8" value="${state.bottomMarginLines}" oninput="updateBottomMargin(this.value); const mel = document.getElementById('mBottomMarginVal'); if(mel) mel.innerText = this.value + ' dòng';">
           </div>
           <div style="margin-top:14px;">
             <button class="btn btn-secondary" onclick="resetMargins();" style="width:100%; justify-content:center; padding:10px; font-size:13px; font-weight:600;">
@@ -6652,14 +7000,14 @@
             </button>
           </div>
         `;
-      } else if (type === 'template') {
+      } else if (normType === 'template') {
         if (title) title.innerHTML = '📓 Chọn Mẫu Vở';
         let tplCardsHtml = '';
         Object.entries(TEMPLATES_CONFIG).forEach(([filename, cfg]) => {
           const isAct = state.notebookTemplate === filename;
           tplCardsHtml += `
             <div class="template-card ${isAct ? 'active' : ''}" onclick="setMobileTemplate('${filename}', this)" style="display:flex; flex-direction:row; align-items:center; gap:10px; padding:8px;">
-              <img crossorigin="anonymous" src="${getAssetUrl('assets/' + filename)}" style="width:50px; height:50px; object-fit:contain; background:#141721; border-radius:6px; flex-shrink:0;">
+              <img src="${getAssetUrl('assets/' + filename)}" style="width:50px; height:50px; object-fit:contain; background:#141721; border-radius:6px; flex-shrink:0;">
               <div style="flex:1; min-width:0;">
                 <div style="font-size:13px; font-weight:600; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${cfg.name}</div>
                 <div style="font-size:11px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${cfg.isSpread ? 'Trang Đôi 3D' : 'Trang Đơn'} • ${cfg.desc}</div>
@@ -6675,7 +7023,7 @@
           </button>
         `;
         body.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px;">${tplCardsHtml}</div>`;
-      } else if (type === 'diagram') {
+      } else if (normType === 'diagram') {
         if (title) title.innerHTML = '🪄 AI Vẽ Lại Sơ Đồ Vào Vở';
         const hasDiag = state.diagram && state.diagram.enabled;
         body.innerHTML = `
@@ -6686,11 +7034,10 @@
             <span style="font-size: 12px; color: rgba(255,255,255,0.85); display: block; line-height: 1.45;">
               AI sẽ <b>tự động phân tích & vẽ lại</b> thành nét bút bi rồi <b>tự thêm vào trang vở</b>
             </span>
-            <button class="btn btn-primary" style="margin-top: 14px; width: 100%; justify-content: center; padding: 11px; font-size: 13px; font-weight: 600; gap: 8px; background: linear-gradient(135deg,#9333ea,#38bdf8);">
+            <button type="button" class="btn btn-primary" style="margin-top: 14px; width: 100%; justify-content: center; padding: 11px; font-size: 13px; font-weight: 600; gap: 8px; background: linear-gradient(135deg,#9333ea,#38bdf8);">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Chọn Ảnh Để AI Tự Vẽ Lại
             </button>
-            <input type="file" id="aiDiagramAutoFileInput" accept="image/*" style="display:none;" onchange="handleAiDiagramAutoUpload(this.files[0])">
           </div>
 
           <!-- OPTIONAL: AI SETTINGS -->
@@ -6743,6 +7090,7 @@
 
       overlay.classList.add('active');
       sheet.classList.add('active');
+      document.body.classList.add('mobile-sheet-open');
     }
 
     function closeMobileSheet() {
@@ -6753,7 +7101,8 @@
         sheet.dataset.type = '';
       }
       if (overlay) overlay.classList.remove('active');
-      document.querySelectorAll('.mobile-bar-btn:not(#btnBar_diagram)').forEach(btn => btn.classList.remove('active-feature'));
+      document.body.classList.remove('mobile-sheet-open');
+      document.querySelectorAll('.mobile-bar-btn').forEach(btn => btn.classList.remove('active-feature'));
     }
 
     function resetMargins() {
@@ -6762,6 +7111,8 @@
       state.topMarginLines = 0;
       state.bottomMarginLines = 0;
       state.skipLine = false;
+
+      // Sync labels
       const b0 = document.getElementById('mBaselineVal'); if (b0) b0.innerText = '0px';
       const m0 = document.getElementById('mMarginVal'); if (m0) m0.innerText = '0px';
       const t0 = document.getElementById('mTopMarginVal'); if (t0) t0.innerText = '0 dòng';
@@ -6771,7 +7122,19 @@
       const mgDesktop = document.getElementById('marginVal'); if (mgDesktop) mgDesktop.innerText = '0px';
       const tmDesktop = document.getElementById('topMarginVal'); if (tmDesktop) tmDesktop.innerText = '0 dòng';
       const bmDesktop = document.getElementById('bottomMarginVal'); if (bmDesktop) bmDesktop.innerText = '0 dòng';
-      const skDesktop = document.getElementById('btnSkipLine'); if (skDesktop) { skDesktop.innerText = 'Cách dòng: Tắt'; skDesktop.classList.remove('active'); }
+      const skDesktop = document.getElementById('btnSkipLineDesktop');
+      if (skDesktop) { skDesktop.innerText = '📝 Đang Tắt'; skDesktop.classList.remove('active'); }
+
+      // Sync range input .value and checkbox .checked
+      ['baselineSlider', 'mBaselineSlider', 'marginSlider', 'mMarginSlider', 'topMarginSlider', 'mTopMarginSlider', 'bottomMarginSlider', 'mBottomMarginSlider'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = 0;
+      });
+      const mSkip = document.getElementById('mSkipLine');
+      if (mSkip) mSkip.checked = false;
+      const chipSkip = document.getElementById('chipPresetSkip');
+      if (chipSkip) chipSkip.classList.remove('active');
+
       paginateText();
       renderCanvas();
       showToast('↺ Đã đặt lại căn lề và dòng chuẩn!');
@@ -6813,15 +7176,31 @@
     function applySmartPreset(presetKey) {
       document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
 
+      const ensureFontAndRender = (fontName, toastMsg) => {
+        const sel = document.getElementById('fontSelector');
+        if (sel) sel.value = fontName;
+        const finish = () => {
+          charWidthCache.clear();
+          paginateText();
+          renderCanvas();
+          if (toastMsg) showToast(toastMsg);
+        };
+        if (document.fonts && document.fonts.load) {
+          document.fonts.load(`${state.fontSize}px "${fontName}"`).then(finish).catch(finish);
+        } else {
+          finish();
+        }
+      };
+
       if (presetKey === 'messy') {
+        document.getElementById('chipPresetMessy')?.classList.add('active');
         state.font = 'LiuJianMaoCao';
         state.messiness = 80;
         state.autoTypo = true;
-        const sel = document.getElementById('fontSelector'); if (sel) sel.value = 'LiuJianMaoCao';
-        const ms = document.getElementById('messinessSlider'); if (ms) ms.value = 80;
-        const mv = document.getElementById('messinessVal'); if (mv) mv.innerText = '80%';
-        scheduleRender(true);
-        showToast('Đã áp dụng: Chữ xấu & viết ẩu tự nhiên');
+        ['messinessSlider', 'mMessinessSlider'].forEach(id => { const el = document.getElementById(id); if (el) el.value = 80; });
+        ['messinessVal', 'mMessinessVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = '80%'; });
+        const mAuto = document.getElementById('mAutoTypo'); if (mAuto) mAuto.checked = true;
+        ensureFontAndRender('LiuJianMaoCao', '✍️ Đã áp dụng: Chữ xấu & viết ẩu tự nhiên');
         return;
       }
       if (presetKey === 'student') {
@@ -6834,8 +7213,16 @@
         state.topMarginLines = 0;
         state.bottomMarginLines = 0;
         state.baselineOffset = 0;
+        ['baselineSlider', 'mBaselineSlider', 'topMarginSlider', 'mTopMarginSlider', 'bottomMarginSlider', 'mBottomMarginSlider'].forEach(id => {
+          const el = document.getElementById(id); if (el) el.value = 0;
+        });
+        ['baselineVal', 'mBaselineVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = '0px'; });
+        ['topMarginVal', 'mTopMarginVal', 'bottomMarginVal', 'mBottomMarginVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = '0 dòng'; });
+        const mSkip = document.getElementById('mSkipLine'); if (mSkip) mSkip.checked = false;
+        const bDesktop = document.getElementById('btnSkipLineDesktop');
+        if (bDesktop) { bDesktop.innerText = '📝 Đang TẮT'; bDesktop.classList.remove('active'); }
         selectTemplate('notebook_thanhnam_left.jpg');
-        showToast('🎓 Chế độ Học Sinh: Font Jason 5 tự nhiên, vở Thành Nam chuẩn');
+        ensureFontAndRender('JasonHandwriting5', '🎓 Chế độ Học Sinh: Font Jason 5 tự nhiên, vở Thành Nam chuẩn');
       } else if (presetKey === 'fast') {
         document.getElementById('chipPresetFast')?.classList.add('active');
         state.font = 'JasonHandwriting4';
@@ -6843,31 +7230,42 @@
         state.messiness = 65;
         state.autoTypo = true;
         state.skipLine = false;
-        paginateText();
-        renderCanvas();
-        showToast('⚡ Chế độ Tốc Ký: Nhanh, nét nghiêng tự nhiên');
+        const mSkip = document.getElementById('mSkipLine'); if (mSkip) mSkip.checked = false;
+        const bDesktop = document.getElementById('btnSkipLineDesktop');
+        if (bDesktop) { bDesktop.innerText = '📝 Đang TẮT'; bDesktop.classList.remove('active'); }
+        ensureFontAndRender('JasonHandwriting4', '⚡ Chế độ Tốc Ký: Nhanh, nét nghiêng tự nhiên');
       } else if (presetKey === 'spread') {
         document.getElementById('chipPresetSpread')?.classList.add('active');
         state.font = 'JasonHandwriting5';
         state.inkColor = 'blue';
         state.fontSize = 15;
         selectTemplate('notebook_hongha_spread.jpg');
-        showToast('📖 Đã đổi sang Trang Đôi Hồng Hà');
+        ensureFontAndRender('JasonHandwriting5', '📖 Đã đổi sang Trang Đôi Hồng Hà');
       } else if (presetKey === 'purple') {
         document.getElementById('chipPresetPurple')?.classList.add('active');
         setInkColor('purple');
         showToast('🟣 Đã chọn Mực Tím Học Sinh');
       }
+      const mAuto = document.getElementById('mAutoTypo'); if (mAuto) mAuto.checked = !!state.autoTypo;
 
-      const fsSlider = document.getElementById('fontSizeSlider');
-      const fsVal = document.getElementById('fontSizeVal');
-      if (fsSlider) fsSlider.value = state.fontSize;
-      if (fsVal) fsVal.innerText = state.fontSize + 'px';
+      ['fontSizeSlider', 'mFontSizeSlider'].forEach(id => {
+        const fsSlider = document.getElementById(id);
+        if (fsSlider) fsSlider.value = state.fontSize;
+      });
+      ['fontSizeVal', 'mFontSizeVal'].forEach(id => {
+        const fsVal = document.getElementById(id);
+        if (fsVal) fsVal.innerText = state.fontSize + 'px';
+      });
 
-      const mSlider = document.getElementById('messinessSlider');
-      const mVal = document.getElementById('messinessVal');
-      if (mSlider) mSlider.value = state.messiness;
-      if (mVal) mVal.innerText = state.messiness + '%';
+      ['messinessSlider', 'mMessinessSlider'].forEach(id => {
+        const mSlider = document.getElementById(id);
+        if (mSlider) mSlider.value = state.messiness;
+      });
+      ['messinessVal', 'mMessinessVal'].forEach(id => {
+        const mVal = document.getElementById(id);
+        if (mVal) mVal.innerText = state.messiness + '%';
+      });
+      setInkColor(state.inkColor);
     }
 
     function showPwaInstallModal() {
@@ -6892,11 +7290,11 @@
       </button>
       <button class="mobile-bar-btn" onclick="document.getElementById('diagramFileInput').click()" title="Chèn ảnh sơ đồ">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <span>Chèn Sơ Đồ</span>
+        <span>Sơ Đồ</span>
       </button>
       <button class="mobile-bar-btn" onclick="toggleTradSimp()" title="Đổi Phồn / Giản thể">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-        <span>Phồn ⇄ Giản</span>
+        <span>Phồn⇄Giản</span>
       </button>
       <button class="mobile-bar-btn" onclick="loadSample('taohuayuan')" title="Nạp bài văn mẫu">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -6904,7 +7302,7 @@
       </button>
       <button class="mobile-bar-btn" onclick="clearText()" title="Xóa nội dung" style="color:var(--text-dim);">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        <span>Xóa Hết</span>
+        <span>Xóa</span>
       </button>
       <button class="mobile-bar-btn btn-cta-view-preview" onclick="switchMobileView('preview')">
         <span>Xem Trang Vở</span>
