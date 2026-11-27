@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.5.1-clean-templates-strict-baseline';
+const CACHE_NAME = 'cheptay-v6.5.2-remove-trad-simp-btn';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
