@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.5.2-remove-trad-simp-btn';
+const CACHE_NAME = 'cheptay-v6.5.3-no-cache-html';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -61,10 +61,10 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // For navigation & HTML, try network first to ensure latest updates
+  // For navigation & HTML, always revalidate with network (bypass stale 10-min GitHub Pages HTTP cache)
   if (req.mode === 'navigate' || req.headers.get('accept')?.includes('text/html')) {
     event.respondWith(
-      fetch(req).catch(() => caches.match('./index.html'))
+      fetch(req, { cache: 'no-cache' }).catch(() => caches.match('./index.html'))
     );
     return;
   }

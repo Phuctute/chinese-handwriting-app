@@ -2412,7 +2412,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.5.2';
+    const APP_VERSION = '6.5.3';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -5449,35 +5449,7 @@
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
-      showToast(state.skipLine ? '📝 Đã BẬT viết cách dòng' : '📝 Đã TẮT viết cách dòng');
-    }
-
-    function toggleTradSimp() {
-      showToast('Đang chuyển đổi Phồn thể / Giản thể...');
-      const simp = '门见为来还进国听说话书练习时汉语言学习';
-      const trad = '門見為來還進國聽說話書練習時漢語言學習';
-      let val = textInput.value;
-      let isSimpToTrad = false;
-      for (let ch of val) {
-        if (simp.indexOf(ch) !== -1) { isSimpToTrad = true; break; }
-      }
-
-      let res = '';
-      for (let ch of val) {
-        if (isSimpToTrad) {
-          const idx = simp.indexOf(ch);
-          res += (idx !== -1) ? trad[idx] : ch;
-        } else {
-          const idx = trad.indexOf(ch);
-          res += (idx !== -1) ? simp[idx] : ch;
-        }
-      }
-      textInput.value = res;
-      state.text = res;
-      updateCharCount();
-      paginateText();
-      renderCanvas();
-      showToast(isSimpToTrad ? 'Đã chuyển sang Phồn thể' : 'Đã chuyển sang Giản thể');
+      showToast(state.skipLine ? 'Đã bật viết cách dòng' : 'Đã tắt viết cách dòng');
     }
 
     function insertStrikeSnippet() {
