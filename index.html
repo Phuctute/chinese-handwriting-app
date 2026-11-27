@@ -2198,14 +2198,14 @@
         <div class="section-card">
           <div class="card-header">
             <span class="card-title">Mẫu Vở Học Sinh</span>
-            <span class="badge" id="templateCountBadge">8 mẫu</span>
+            <span class="badge" id="templateCountBadge">4 mẫu</span>
           </div>
 
           <!-- Template Category Pills -->
           <div style="display:flex; gap:6px;">
             <button class="tool-chip active" id="filterTplAll" onclick="filterTemplates('all')">Tất cả</button>
-            <button class="tool-chip" id="filterTplSpread" onclick="filterTemplates('spread')">Trang Đôi (4)</button>
-            <button class="tool-chip" id="filterTplSingle" onclick="filterTemplates('single')">Trang Đơn (4)</button>
+            <button class="tool-chip" id="filterTplSpread" onclick="filterTemplates('spread')">Trang Đôi (1)</button>
+            <button class="tool-chip" id="filterTplSingle" onclick="filterTemplates('single')">Trang Đơn (3)</button>
           </div>
 
           <!-- Template Cards Grid -->
@@ -2412,7 +2412,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.5.0';
+    const APP_VERSION = '6.5.1';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -2728,7 +2728,7 @@
               y += extraLines * avgPitch;
             }
             const p = Math.max(0, Math.min(1, (x - leftM) / Math.max(1, rightM - leftM)));
-            const handWave = Math.sin(p * Math.PI * 3.2 + (lIdx || 0) * 1.5) * 0.25;
+            const handWave = Math.sin(p * Math.PI * 3.2 + (lIdx || 0) * 1.5) * 0.15;
             return { y: y + safeBlOffset + handWave, angle: angle };
           }
         }
@@ -2798,76 +2798,59 @@
     // (100% Authentic user camera photographs - zero synthetic lines)
     // ========================================================
     const TEMPLATES_CONFIG = {
-      // === 4 MẪU TRANG ĐƠN KẺ NGANG CHỤP THỰC TẾ (100% ẢNH GỐC) ===
+      // === 3 MẪU TRANG ĐƠN CHỤP THẬT 100% (ĐÃ HIỆU CHUẨN TỌA ĐỘ 0PX) ===
       'notebook_thanhnam_left.jpg': {
         name: 'Trang Đơn Trái Thành Nam',
-        desc: 'Ảnh gốc chụp lề đỏ bên trái & logo Thành Nam góc dưới',
+        desc: 'Ảnh gốc chụp lề đỏ trái & độ cong gáy tự nhiên',
         isSpread: false,
-        leftMargin: 85,
-        rightMargin: 705,
+        leftMargin: 102,
+        rightMargin: 700,
         lines: TN_LEFT_LINES.map(l => l.y100)
       },
-      'notebook_thanhnam_right.jpg': {
+      'notebook_thanhnam_single2.jpg': {
         name: 'Trang Đơn Phải Thành Nam',
-        desc: 'Ảnh gốc chụp lề đỏ bên phải của vở học sinh',
+        desc: 'Ảnh gốc trên bàn gỗ, lề đỏ trái & dòng Date/No',
         isSpread: false,
-        leftMargin: 85,
+        leftMargin: 112,
+        rightMargin: 696,
+        lines: [94, 121, 148, 174, 201, 227, 254, 280, 307, 334, 361, 388, 415, 442, 469, 496, 523, 550, 578, 605, 633, 660, 688, 716, 745, 774, 803, 832, 862, 891, 921, 951, 980]
+      },
+      'notebook_thanhnam_right.jpg': {
+        name: 'Trang Đơn Hồng Hà',
+        desc: 'Ảnh gốc vở Hồng Hà lề xanh, kẻ ngang sắc nét',
+        isSpread: false,
+        leftMargin: 122,
         rightMargin: 690,
         lines: [79, 107, 135, 163, 191, 220, 249, 279, 308, 339, 370, 401, 432, 464, 496, 529, 561, 594, 628, 661, 694, 728, 762, 796, 830, 863, 898, 932, 967]
       },
-      'notebook_thanhnam_single2.jpg': {
-        name: 'Trang Đơn Thành Nam (Cận Cảnh)',
-        desc: 'Ảnh gốc chụp cận cảnh chất giấy tự nhiên',
-        isSpread: false,
-        leftMargin: 85,
-        rightMargin: 700,
-        lines: [94, 121, 148, 174, 201, 227, 254, 280, 307, 334, 361, 388, 415, 442, 469, 496, 523, 550, 578, 605, 633, 660, 688, 716, 745, 774, 803, 832, 862, 891, 921, 951, 980]
-      },
-      'notebook_thanhnam_single3.jpg': {
-        name: 'Trang Đơn Thành Nam (Tone Ấm)',
-        desc: 'Ảnh gốc chụp dưới ánh đèn vàng ấm áp',
-        isSpread: false,
-        leftMargin: 85,
-        rightMargin: 690,
-        lines: [79, 107, 135, 163, 191, 220, 249, 279, 308, 339, 370, 401, 431, 464, 496, 529, 561, 594, 628, 661, 694, 728, 761, 795, 829, 863, 898, 932, 967]
-      },
 
-      // === 4 MẪU TRANG ĐÔI KẺ NGANG MỞ RỘNG (100% ẢNH GỐC BÀN HỌC & GÁY THẬT) ===
+      // === 1 MẪU TRANG ĐÔI CHỤP THẬT NGUYÊN BẢN (KHÔNG GHÉP, KHÔNG XOAY) ===
       'notebook_thanhnam_spread.jpg': {
         name: 'Trang Đôi Thành Nam (Bàn Gỗ)',
-        desc: 'Ảnh gốc chụp vở mở trên bàn gỗ tự nhiên, gáy thật',
+        desc: 'Ảnh chụp thật nguyên bản 2 trang mở liền gáy trên bàn gỗ',
         isSpread: true,
-        leftPage: { leftMargin: 68, rightMargin: 485, lines: SPREAD_LINES_L },
-        rightPage: { leftMargin: 540, rightMargin: 955, lines: SPREAD_LINES_R }
-      },
-      'notebook_thanhnam_spread2.jpg': {
-        name: 'Trang Đôi Thành Nam (Góc Rộng)',
-        desc: 'Ảnh gốc toàn cảnh 2 trang mở rộng đối xứng',
-        isSpread: true,
-        leftPage: { leftMargin: 68, rightMargin: 485, lines: SPREAD_LINES_L },
-        rightPage: { leftMargin: 540, rightMargin: 955, lines: SPREAD_LINES_R }
-      },
-      'notebook_campus_spread.jpg': {
-        name: 'Trang Đôi Campus Klong (Trắng Sáng)',
-        desc: 'Ảnh gốc chụp giấy trắng ngọc trai chống lóa',
-        isSpread: true,
-        leftPage: { leftMargin: 65, rightMargin: 460, lines: SPREAD_LINES_L },
-        rightPage: { leftMargin: 535, rightMargin: 940, lines: SPREAD_LINES_R }
-      },
-      'notebook_hongha_spread.jpg': {
-        name: 'Trang Đôi Hồng Hà (Bãi Bằng)',
-        desc: 'Ảnh gốc chụp giấy kẻ ngang Bãi Bằng truyền thống',
-        isSpread: true,
-        leftPage: { leftMargin: 55, rightMargin: 425, lines: HONGHA_SPREAD_LINES_L },
-        rightPage: { leftMargin: 495, rightMargin: 865, lines: HONGHA_SPREAD_LINES_R }
+        leftPage: { leftMargin: 68, rightMargin: 478, lines: SPREAD_LINES_L },
+        rightPage: { leftMargin: 554, rightMargin: 952, lines: SPREAD_LINES_R }
       }
     };
 
-    // Aliases for compatibility
-    TEMPLATES_CONFIG['notebook_thanhnam_spread_clean.jpg'] = TEMPLATES_CONFIG['notebook_thanhnam_spread2.jpg'];
-    TEMPLATES_CONFIG['notebook_clean_single.jpg'] = TEMPLATES_CONFIG['notebook_thanhnam_single2.jpg'];
-    TEMPLATES_CONFIG['notebook_campus_single.jpg'] = TEMPLATES_CONFIG['notebook_thanhnam_single3.jpg'];
-    TEMPLATES_CONFIG['notebook_hongha_2.jpg'] = TEMPLATES_CONFIG['notebook_thanhnam_right.jpg'];
+    // Legacy template key migration (keeps old links/saved keys mapped to clean real photos without polluting gallery)
+    const LEGACY_TEMPLATE_MAP = {
+      'notebook_thanhnam_spread2.jpg': 'notebook_thanhnam_spread.jpg',
+      'notebook_thanhnam_spread_clean.jpg': 'notebook_thanhnam_spread.jpg',
+      'notebook_campus_spread.jpg': 'notebook_thanhnam_spread.jpg',
+      'notebook_hongha_spread.jpg': 'notebook_thanhnam_spread.jpg',
+      'notebook_spread.jpg': 'notebook_thanhnam_spread.jpg',
+      'notebook_clean_single.jpg': 'notebook_thanhnam_single2.jpg',
+      'notebook_thanhnam_single3.jpg': 'notebook_thanhnam_right.jpg',
+      'notebook_campus_single.jpg': 'notebook_thanhnam_right.jpg',
+      'notebook_hongha_2.jpg': 'notebook_thanhnam_right.jpg',
+      'notebook_left.jpg': 'notebook_thanhnam_left.jpg'
+    };
+    function normalizeTemplateKey(key) {
+      const mapped = LEGACY_TEMPLATE_MAP[key] || key;
+      return TEMPLATES_CONFIG[mapped] ? mapped : 'notebook_thanhnam_left.jpg';
+    }
 
     // ========================================================
     // GLOBAL APPLICATION STATE
@@ -2998,12 +2981,9 @@
 
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('template')) {
-        const tpl = urlParams.get('template');
-        if (TEMPLATES_CONFIG[tpl]) {
-          state.notebookTemplate = tpl;
-          if (TEMPLATES_CONFIG[tpl].isSpread) state.fontSize = 15;
-          else state.fontSize = 20;
-        }
+        const tpl = normalizeTemplateKey(urlParams.get('template'));
+        state.notebookTemplate = tpl;
+        state.fontSize = TEMPLATES_CONFIG[tpl].isSpread ? 15 : 20;
       }
 
       // Populate initial values
@@ -3257,6 +3237,7 @@
     }
 
     function selectTemplate(filename) {
+      filename = normalizeTemplateKey(filename);
       state.notebookTemplate = filename;
       const cfg = TEMPLATES_CONFIG[filename];
 
@@ -4634,7 +4615,7 @@
 
         // Pass unshifted baseline so getNotebookLineContour applies blOffset exactly once
         const rawBaseY = baselines[lIdx];
-        const lineJitterY = (prng() - 0.5) * 1.4 * mFactor;
+        const lineJitterY = (prng() - 0.5) * 0.5 * mFactor;
 
         let nominalX = leftM + (lineItem.isStart ? startIndent : 0);
         let curX = nominalX + (lineItem.isStart ? 0 : (prng() * 2.5 * mFactor));
@@ -4700,9 +4681,9 @@
           const isAscii = ch.charCodeAt(0) < 128;
           const wobbleMult = (isSub || isSuper) ? 0.5 : (isAscii ? 1.05 : 1.0);
 
-          // 1. Lively Human Baseline Jitter
-          const chJitterY = (prng() - 0.5) * 5.0 * mFactor * wobbleMult;
-          const chJitterX = (prng() - 0.5) * 2.6 * mFactor * wobbleMult;
+          // 1. Grounded Human Baseline Jitter (stays anchored on the ruled line)
+          const chJitterY = (prng() - 0.5) * 1.6 * mFactor * wobbleMult;
+          const chJitterX = (prng() - 0.5) * 2.4 * mFactor * wobbleMult;
 
           // 2. Dynamic Slant & Tilt
           const naturalSlantBias = -0.03 * mFactor;
@@ -7057,8 +7038,8 @@
         state.font = 'JasonHandwriting5';
         state.inkColor = 'blue';
         state.fontSize = 15;
-        selectTemplate('notebook_hongha_spread.jpg');
-        ensureFontAndRender('JasonHandwriting5', '📖 Đã đổi sang Trang Đôi Hồng Hà');
+        selectTemplate('notebook_thanhnam_spread.jpg');
+        ensureFontAndRender('JasonHandwriting5', 'Đã đổi sang Trang Đôi Thành Nam');
       } else if (presetKey === 'purple') {
         document.getElementById('chipPresetPurple')?.classList.add('active');
         setInkColor('purple');

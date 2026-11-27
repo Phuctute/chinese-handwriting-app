@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.5.0-editorial-studio-ui';
+const CACHE_NAME = 'cheptay-v6.5.1-clean-templates-strict-baseline';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -14,17 +14,9 @@ const ASSETS_TO_CACHE = [
   './assets/so_do_chatgpt_but_bi.jpg',
   './assets/so_do_chep_but_bi_xanh.jpg',
   './assets/notebook_thanhnam_spread.jpg',
-  './assets/notebook_thanhnam_spread2.jpg',
-  './assets/notebook_hongha_spread.jpg',
-  './assets/notebook_thanhnam_spread_clean.jpg',
-  './assets/notebook_campus_spread.jpg',
   './assets/notebook_thanhnam_left.jpg',
   './assets/notebook_thanhnam_right.jpg',
   './assets/notebook_thanhnam_single2.jpg',
-  './assets/notebook_thanhnam_single3.jpg',
-  './assets/notebook_hongha_2.jpg',
-  './assets/notebook_clean_single.jpg',
-  './assets/notebook_campus_single.jpg',
   './fonts/JasonHandwriting5.woff2',
   './fonts/JasonHandwriting3.woff2',
   './fonts/JasonHandwriting5.ttf',
