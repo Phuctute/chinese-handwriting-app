@@ -1904,14 +1904,14 @@
         <div class="section-card">
           <div class="card-header">
             <span class="card-title">Mẫu Vở Học Sinh</span>
-            <span class="badge" id="templateCountBadge">4 mẫu</span>
+            <span class="badge" id="templateCountBadge">7 mẫu</span>
           </div>
 
           <!-- Template Category Pills -->
           <div style="display:flex; gap:6px;">
             <button class="tool-chip active" id="filterTplAll" onclick="filterTemplates('all')">Tất cả</button>
-            <button class="tool-chip" id="filterTplSpread" onclick="filterTemplates('spread')">Trang Đôi (1)</button>
-            <button class="tool-chip" id="filterTplSingle" onclick="filterTemplates('single')">Trang Đơn (3)</button>
+            <button class="tool-chip" id="filterTplSpread" onclick="filterTemplates('spread')">Trang Đôi (2)</button>
+            <button class="tool-chip" id="filterTplSingle" onclick="filterTemplates('single')">Trang Đơn (5)</button>
           </div>
 
           <!-- Template Cards Grid -->
@@ -2118,7 +2118,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.6.0';
+    const APP_VERSION = '6.6.1';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -2554,14 +2554,37 @@
         rightMargin: 690,
         lines: [79, 107, 135, 163, 191, 220, 249, 279, 308, 339, 370, 401, 432, 464, 496, 529, 561, 594, 628, 661, 694, 728, 762, 796, 830, 863, 898, 932, 967]
       },
+      'notebook_muji_cream.jpg': {
+        name: 'Trang Đơn Giấy Kem Muji',
+        desc: 'Giấy màu kem dịu mắt, dòng rộng thoáng & gáy chỉ khâu',
+        isSpread: false,
+        leftMargin: 156,
+        rightMargin: 702,
+        lines: [129, 160, 192, 224, 255, 287, 318, 350, 381, 413, 445, 476, 508, 539, 571, 603, 634, 666, 697, 729, 760, 792, 824, 855, 887, 918]
+      },
+      'notebook_campus_grid.jpg': {
+        name: 'Trang Đơn Ô Vuông Campus',
+        desc: 'Giấy trắng mịn kẻ ô vuông mờ học sinh, lề xanh thẳng',
+        isSpread: false,
+        leftMargin: 166,
+        rightMargin: 702,
+        lines: [127, 152, 178, 204, 229, 255, 281, 306, 332, 358, 383, 409, 435, 460, 486, 512, 537, 563, 589, 614, 640, 666, 691, 717, 743, 769, 794, 820, 846, 872, 897, 923]
+      },
 
-      // === 1 MẪU TRANG ĐÔI CHỤP THẬT NGUYÊN BẢN (KHÔNG GHÉP, KHÔNG XOAY) ===
+      // === 2 MẪU TRANG ĐÔI NGUYÊN BẢN (KHÔNG GHÉP, KHÔNG XOAY) ===
       'notebook_thanhnam_spread.jpg': {
         name: 'Trang Đôi Thành Nam (Bàn Gỗ)',
         desc: 'Ảnh chụp thật nguyên bản 2 trang mở liền gáy trên bàn gỗ',
         isSpread: true,
         leftPage: { leftMargin: 68, rightMargin: 478, lines: SPREAD_LINES_L },
         rightPage: { leftMargin: 554, rightMargin: 952, lines: SPREAD_LINES_R }
+      },
+      'notebook_oak_spread.jpg': {
+        name: 'Trang Đôi Giấy Trắng (Bàn Gỗ Sồi)',
+        desc: 'Vở đôi gáy khâu chỉ trên bàn gỗ sồi, lề hồng kẻ xanh sắc nét',
+        isSpread: true,
+        leftPage: { leftMargin: 162, rightMargin: 484, lines: [128, 152, 174, 196, 219, 242, 265, 288, 310, 333, 356, 378, 401, 424, 446, 470, 492, 514, 538, 560, 583, 606, 628, 651, 674] },
+        rightPage: { leftMargin: 584, rightMargin: 932, lines: [122, 146, 170, 192, 216, 240, 263, 286, 309, 332, 356, 378, 401, 424, 447, 470, 493, 516, 540, 562, 586, 610, 632, 656, 678] }
       }
     };
 

@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.6.0-full-upgrade';
+const CACHE_NAME = 'cheptay-v6.6.1-new-calibrated-templates';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -14,9 +14,12 @@ const ASSETS_TO_CACHE = [
   './assets/so_do_chatgpt_but_bi.jpg',
   './assets/so_do_chep_but_bi_xanh.jpg',
   './assets/notebook_thanhnam_spread.jpg',
+  './assets/notebook_oak_spread.jpg',
   './assets/notebook_thanhnam_left.jpg',
   './assets/notebook_thanhnam_right.jpg',
-  './assets/notebook_thanhnam_single2.jpg'
+  './assets/notebook_thanhnam_single2.jpg',
+  './assets/notebook_muji_cream.jpg',
+  './assets/notebook_campus_grid.jpg'
 ];
 
 self.addEventListener('install', (event) => {
