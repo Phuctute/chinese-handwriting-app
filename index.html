@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
       <link rel="preload" href="fonts/JasonHandwriting5.woff2" as="font" type="font/woff2" crossorigin>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <title>Chép Tay AI - Vở Viết Tay Chữ Hán Thông Minh</title>
-  <meta name="description" content="Chuyển văn bản tiếng Trung thành chữ viết tay tự nhiên uốn theo dòng kẻ vở học sinh, vẽ lại sơ đồ và bảng thông minh không đè dòng.">
+  <title>Chép Tay — Vở Viết Tay Tự Nhiên</title>
+  <meta name="description" content="Chuyển văn bản thành chữ viết tay tự nhiên uốn theo dòng kẻ vở học sinh, chèn sơ đồ và bảng viết tay không đè dòng.">
 
   <!-- PWA Metadata & Favicons -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0d1117">
+  <meta name="theme-color" content="#F7F5F0">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Chép Tay">
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -20,10 +20,10 @@
   <link rel="preload" href="fonts/JasonHandwriting5.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="preload" href="fonts/JasonHandwriting3.ttf" as="font" type="font/ttf" crossorigin>
 
-  <!-- Google Fonts & OCR Library -->
+  <!-- Editorial Typography & OCR Library -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
@@ -85,28 +85,38 @@
     }
 
     :root {
-      /* Apple iOS HIG Dark Mode Palette */
-      --bg-base: #000000;
-      --bg-card: #1c1c1e;
-      --bg-card-hover: #2c2c2e;
-      --bg-input: #2c2c2e;
-      --border-color: rgba(255, 255, 255, 0.10);
-      --border-hover: rgba(255, 255, 255, 0.20);
-      --text-main: #ffffff;
-      --text-muted: rgba(235, 235, 245, 0.65);
-      --text-dim: rgba(235, 235, 245, 0.38);
-      --accent: #0a84ff; /* Apple System Blue */
-      --accent-glow: rgba(10, 132, 255, 0.24);
-      --accent-hover: #0071e3;
-      --success: #34c759; /* Apple System Green */
-      --danger: #ff453a;  /* Apple System Red */
-      --warning: #ffd60a; /* Apple System Yellow */
-      --purple: #bf5af2;  /* Apple System Purple */
+      /* Warm Stationery & Editorial Writing Desk Palette */
+      --bg-base: #F7F5F0;
+      --bg-desk: #E8E4DB;
+      --bg-card: #FFFFFF;
+      --bg-card-hover: #F3F0E9;
+      --bg-input: #F4F1EA;
+      --border-color: #E4DFD4;
+      --border-hover: #CFC8B9;
+      --text-main: #1C1917;
+      --text-muted: #57534E;
+      --text-dim: #8C857B;
+      --accent: #1D4ED8;        /* Classic Fountain-Pen Ink Blue */
+      --accent-soft: rgba(29, 78, 216, 0.08);
+      --accent-glow: rgba(29, 78, 216, 0.12);
+      --accent-hover: #1E40AF;
+      --ink-black: #1C1917;
+      --ink-black-hover: #292524;
+      --brand-primary: #1D4ED8;
+      --success: #15803D;
+      --danger: #B91C1C;
+      --warning: #B45309;
+      --purple: #6D28D9;
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 16px;
-      --radius-xl: 22px;
-      --ios-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", -apple-system-subheadline, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --radius-xl: 20px;
+      --shadow-xs: 0 1px 2px rgba(28, 25, 23, 0.05);
+      --shadow-sm: 0 2px 8px rgba(28, 25, 23, 0.06);
+      --shadow-md: 0 10px 30px rgba(28, 25, 23, 0.10);
+      --shadow-paper: 0 22px 54px rgba(28, 25, 23, 0.15), 0 4px 12px rgba(28, 25, 23, 0.06);
+      --ui-font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --serif-font: "Newsreader", Georgia, "Times New Roman", serif;
     }
 
     * {
@@ -116,8 +126,14 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* Quiet Editorial Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(28, 25, 23, 0.16); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(28, 25, 23, 0.28); }
+
     body {
-      font-family: var(--ios-font);
+      font-family: var(--ui-font);
       background-color: var(--bg-base);
       color: var(--text-main);
       min-height: 100vh;
@@ -131,12 +147,12 @@
 
     /* Top Navigation Bar */
     header.app-header {
-      background: rgba(22, 22, 24, 0.82);
-      backdrop-filter: blur(25px) saturate(190%);
-      -webkit-backdrop-filter: blur(25px) saturate(190%);
-      border-bottom: 0.5px solid rgba(255, 255, 255, 0.12);
-      height: 52px;
-      padding: 0 16px;
+      background: rgba(247, 245, 240, 0.92);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border-color);
+      height: 54px;
+      padding: 0 20px;
       padding-top: env(safe-area-inset-top, 0px);
       display: flex;
       align-items: center;
@@ -149,41 +165,37 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 11px;
       text-decoration: none;
       color: var(--text-main);
     }
     .brand-icon {
       width: 32px;
       height: 32px;
-      background: linear-gradient(180deg, #0a84ff, #0064d2);
-      border-radius: 8.5px;
+      background: var(--ink-black);
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(10, 132, 255, 0.35);
+      color: #FAF8F5;
+      box-shadow: var(--shadow-xs);
     }
     .brand-text h1 {
-      font-size: 15px;
+      font-family: var(--serif-font);
+      font-size: 19px;
       font-weight: 600;
       letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--text-main);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
     .brand-text p {
       font-size: 11px;
       color: var(--text-dim);
-      font-weight: 400;
-    }
-    .brand-badge {
-      font-size: 10.5px;
-      font-weight: 600;
-      background: rgba(10, 132, 255, 0.16);
-      color: var(--accent);
-      padding: 1.5px 7px;
-      border-radius: 99px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
     }
 
     .header-actions {
@@ -197,66 +209,79 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+      font-family: inherit;
       font-size: 13px;
       font-weight: 600;
       padding: 7px 14px;
-      border-radius: 10px;
+      border-radius: 9px;
       cursor: pointer;
-      border: 0.5px solid transparent;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid transparent;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, transform 0.12s ease, box-shadow 0.16s ease;
       white-space: nowrap;
     }
     .btn:active {
-      transform: scale(0.97);
+      transform: scale(0.98);
+    }
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
     }
     .btn-secondary {
-      background: #2c2c2e;
-      border-color: rgba(255, 255, 255, 0.08);
+      background: var(--bg-card);
+      border-color: var(--border-color);
       color: var(--text-main);
+      box-shadow: var(--shadow-xs);
     }
     .btn-secondary:hover {
-      background: #3a3a3c;
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
     }
     .btn-secondary.active {
-      background: rgba(10, 132, 255, 0.2);
+      background: var(--accent-soft);
       border-color: var(--accent);
       color: var(--accent);
     }
     .btn-primary {
-      background: var(--accent);
-      color: #ffffff;
-      box-shadow: 0 2px 8px rgba(10, 132, 255, 0.35);
-      border-radius: 9999px;
-      padding: 6px 15px;
+      background: var(--ink-black);
+      color: #FAF8F5;
+      border-color: var(--ink-black);
+      border-radius: 9px;
+      padding: 7px 16px;
+      box-shadow: 0 2px 6px rgba(28, 25, 23, 0.14);
     }
     .btn-primary:hover {
-      background: var(--accent-hover);
+      background: var(--ink-black-hover);
+      box-shadow: 0 4px 12px rgba(28, 25, 23, 0.2);
     }
     .btn-icon {
-      padding: 7px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-      width: 32px;
-      height: 32px;
+      padding: 0;
+      border-radius: 9px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      width: 34px;
+      height: 34px;
+    }
+    .btn-icon:hover {
+      color: var(--text-main);
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
     }
 
-    /* Apple UISegmentedControl Style */
+    /* Mobile View Switch (hidden when bottom dock active) */
     .mobile-view-switch {
       display: none;
-      padding: 7px 14px;
-      background: rgba(22, 22, 24, 0.85);
-      backdrop-filter: blur(25px) saturate(190%);
-      -webkit-backdrop-filter: blur(25px) saturate(190%);
-      border-bottom: 0.5px solid rgba(255, 255, 255, 0.12);
+      padding: 8px 14px;
+      background: var(--bg-base);
+      border-bottom: 1px solid var(--border-color);
     }
     .segmented-switch {
       display: flex;
-      background: rgba(118, 118, 128, 0.24);
-      border-radius: 9px;
-      padding: 2px;
-      gap: 2px;
-      border: none;
-      height: 36px;
+      background: #EAE5DC;
+      border-radius: 10px;
+      padding: 3px;
+      gap: 3px;
+      height: 38px;
     }
     .switch-pill {
       flex: 1;
@@ -272,118 +297,121 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .switch-pill:active {
-      transform: scale(0.98);
+      transition: all 0.2s ease;
     }
     .switch-pill.active {
-      background: #ffffff;
-      color: #000000;
+      background: #FFFFFF;
+      color: var(--text-main);
       font-weight: 600;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.22), 0 1px 2px rgba(0, 0, 0, 0.12);
+      box-shadow: var(--shadow-xs);
     }
 
-    /* Main Container Layout */
+    /* Main Split Workspace */
     .main-layout {
       flex: 1;
       display: grid;
-      grid-template-columns: 460px 1fr;
-      min-height: calc(100vh - 60px);
+      grid-template-columns: 416px 1fr;
+      min-height: calc(100vh - 54px);
     }
 
-    /* Left Panel: Tools & Editor */
+    /* Left Panel: Editorial Sidebar */
     .left-panel {
       background: var(--bg-base);
       border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 60px);
+      height: calc(100vh - 54px);
       overflow-y: auto;
     }
 
-    /* Tab Navigation */
+    /* Segmented Tab Navigation */
     .nav-tabs {
-      display: flex;
-      background: rgba(28, 28, 30, 0.85);
-      backdrop-filter: blur(25px) saturate(190%);
-      -webkit-backdrop-filter: blur(25px) saturate(190%);
-      border-bottom: 0.5px solid rgba(255, 255, 255, 0.12);
-      padding: 8px 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--bg-base);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 16px;
       gap: 6px;
       position: sticky;
       top: 0;
       z-index: 10;
     }
     .nav-tab {
-      padding: 7px 14px;
+      padding: 8px 12px;
+      font-family: inherit;
       font-size: 13px;
       font-weight: 500;
       color: var(--text-muted);
-      border: none;
+      border: 1px solid transparent;
       background: transparent;
       border-radius: 8px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .nav-tab:active {
-      transform: scale(0.97);
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.16s ease;
     }
     .nav-tab:hover {
       color: var(--text-main);
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(28, 25, 23, 0.04);
     }
     .nav-tab.active {
-      color: #ffffff;
-      background: #3a3a3c;
+      color: var(--text-main);
+      background: var(--bg-card);
+      border-color: var(--border-color);
       font-weight: 600;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--shadow-xs);
     }
 
     .tab-panel {
       display: none;
       padding: 16px;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
     .tab-panel.active {
       display: flex;
     }
 
-    /* Apple Inset Grouped Section Cards */
+    /* Crisp Stationery Cards */
     .section-card {
-      background: #1c1c1e;
-      border: 0.5px solid rgba(255, 255, 255, 0.08);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
       border-radius: 14px;
-      padding: 14px 16px;
+      padding: 15px 16px;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      box-shadow: var(--shadow-xs);
     }
     .card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 8px;
     }
     .card-title {
       font-size: 13px;
       font-weight: 600;
       color: var(--text-main);
+      letter-spacing: -0.01em;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
+    }
+    .card-title svg {
+      color: var(--text-dim);
     }
     .badge {
       font-size: 11px;
-      padding: 2px 7px;
+      padding: 2.5px 8px;
       border-radius: 99px;
       font-weight: 600;
-      background: rgba(148, 163, 184, 0.15);
+      font-variant-numeric: tabular-nums;
+      background: var(--bg-input);
       color: var(--text-muted);
+      border: 1px solid var(--border-color);
     }
 
     /* Text Editor Area */
@@ -392,24 +420,28 @@
       flex-direction: column;
       gap: 8px;
     }
-    textarea.text-input {
+    textarea.text-input, textarea.form-textarea {
       width: 100%;
-      height: 220px;
-      background: #2c2c2e;
-      border: 0.5px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 12px 14px;
+      height: 230px;
+      background: var(--bg-input);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 13px 14px;
       color: var(--text-main);
       font-family: inherit;
       font-size: 14.5px;
-      line-height: 1.6;
+      line-height: 1.65;
       resize: vertical;
-      transition: all 0.2s ease;
+      transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
     }
-    textarea.text-input:focus {
+    textarea.text-input::placeholder, textarea.form-textarea::placeholder {
+      color: var(--text-dim);
+    }
+    textarea.text-input:focus, textarea.form-textarea:focus {
       outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-glow);
+      background: #FFFFFF;
+      border-color: var(--ink-black);
+      box-shadow: 0 0 0 3px rgba(28, 25, 23, 0.07);
     }
 
     /* Quick Toolbar */
@@ -422,24 +454,35 @@
       background: var(--bg-base);
       border: 1px solid var(--border-color);
       color: var(--text-muted);
+      font-family: inherit;
       font-size: 12px;
       font-weight: 500;
-      padding: 5px 10px;
-      border-radius: 6px;
+      padding: 6px 10px;
+      border-radius: 8px;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 5px;
       transition: all 0.15s ease;
     }
     .tool-chip:hover {
       border-color: var(--border-hover);
+      background: var(--bg-card-hover);
       color: var(--text-main);
     }
     .tool-chip.active {
-      background: var(--accent-glow);
+      background: var(--accent-soft);
       border-color: var(--accent);
       color: var(--accent);
+      font-weight: 600;
+    }
+    .tool-chip-danger {
+      color: var(--danger) !important;
+      border-color: rgba(185, 28, 28, 0.25) !important;
+      background: rgba(185, 28, 28, 0.05) !important;
+    }
+    .tool-chip-danger:hover {
+      background: rgba(185, 28, 28, 0.10) !important;
     }
 
     /* Visual Grid Selectors */
@@ -449,9 +492,9 @@
       gap: 8px;
     }
     .visual-card {
-      background: var(--bg-input);
+      background: var(--bg-base);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
+      border-radius: 10px;
       padding: 10px;
       cursor: pointer;
       display: flex;
@@ -462,25 +505,27 @@
     }
     .visual-card:hover {
       border-color: var(--border-hover);
-      background: var(--bg-card-hover);
+      background: var(--bg-card);
     }
     .visual-card.active {
       border-color: var(--accent);
-      background: var(--accent-glow);
+      background: var(--accent-soft);
     }
     .visual-card-icon {
       width: 28px;
       height: 28px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.05);
+      border-radius: 7px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-main);
+      color: var(--text-muted);
     }
     .visual-card.active .visual-card-icon {
       background: var(--accent);
-      color: #0b0d13;
+      border-color: var(--accent);
+      color: #FFFFFF;
     }
     .visual-card-title {
       font-size: 12px;
@@ -490,37 +535,36 @@
     .visual-card-desc {
       font-size: 10.5px;
       color: var(--text-dim);
-      line-height: 1.3;
+      line-height: 1.35;
     }
 
     /* Template Thumbnails */
     .template-card {
-      background: var(--bg-input);
+      background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
+      border-radius: 10px;
       overflow: hidden;
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      transition: all 0.15s ease;
+      transition: all 0.16s ease;
     }
     .template-card:hover {
       border-color: var(--border-hover);
-      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
     }
     .template-card.active {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-glow);
+      border-color: var(--ink-black);
+      box-shadow: 0 0 0 1.5px var(--ink-black);
     }
     .template-preview {
       width: 100%;
-      height: 80px;
-      object-fit: contain;
-      background: #141721;
-      padding: 2px;
+      height: 82px;
+      object-fit: cover;
+      background: var(--bg-desk);
     }
     .template-meta {
-      padding: 8px;
+      padding: 8px 9px;
       display: flex;
       flex-direction: column;
       gap: 2px;
@@ -528,6 +572,7 @@
     .template-title {
       font-size: 11.5px;
       font-weight: 600;
+      color: var(--text-main);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -537,7 +582,7 @@
       color: var(--text-dim);
     }
 
-    /* Controls & Sliders */
+    /* Controls & Precision Sliders */
     .form-row {
       display: flex;
       flex-direction: column;
@@ -556,37 +601,49 @@
     .form-value {
       font-size: 11px;
       font-weight: 600;
-      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      color: var(--text-main);
       background: var(--bg-input);
-      padding: 1px 6px;
-      border-radius: 4px;
+      padding: 2px 7px;
+      border-radius: 5px;
       border: 1px solid var(--border-color);
     }
-    /* Apple UISlider */
-    input[type="range"] {
+
+    input[type="range"], .range-slider {
       -webkit-appearance: none;
       appearance: none;
       width: 100%;
-      height: 4px;
-      border-radius: 2px;
-      background: rgba(120, 120, 128, 0.32);
+      height: 3.5px;
+      border-radius: 99px;
+      background: #DDD7CB;
       outline: none;
-      transition: background 0.2s ease;
+      margin: 7px 0 4px 0;
+      transition: background 0.16s ease;
     }
-    input[type="range"]::-webkit-slider-thumb {
+    input[type="range"]::-webkit-slider-thumb, .range-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 24px;
-      height: 24px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
-      background: #ffffff;
+      background: #FFFFFF;
+      border: 2px solid var(--ink-black);
+      box-shadow: 0 2px 5px rgba(28, 25, 23, 0.18);
       cursor: pointer;
-      border: 0.5px solid rgba(0, 0, 0, 0.04);
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.38), 0 1px 2px rgba(0, 0, 0, 0.2);
-      transition: transform 0.15s ease;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
     }
-    input[type="range"]::-webkit-slider-thumb:active {
-      transform: scale(1.12);
+    input[type="range"]::-webkit-slider-thumb:active, .range-slider::-webkit-slider-thumb:active {
+      transform: scale(1.14);
+      box-shadow: 0 0 0 4px rgba(28, 25, 23, 0.10);
+    }
+    input[type="range"]::-moz-range-thumb, .range-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 2px solid var(--ink-black);
+      box-shadow: 0 2px 5px rgba(28, 25, 23, 0.18);
+      cursor: pointer;
     }
 
     select.form-select, input[type="text"].form-input, input[type="number"].form-input {
@@ -594,86 +651,88 @@
       background: var(--bg-input);
       border: 1px solid var(--border-color);
       color: var(--text-main);
-      padding: 8px 10px;
+      font-family: inherit;
+      padding: 8px 11px;
       font-size: 13px;
-      border-radius: var(--radius-sm);
+      border-radius: 9px;
       outline: none;
-      transition: border-color 0.15s ease;
+      transition: border-color 0.15s ease, background 0.15s ease;
     }
-    select.form-select:focus, input[type="text"].form-input:focus {
-      border-color: var(--accent);
+    select.form-select:focus, input[type="text"].form-input:focus, input[type="number"].form-input:focus {
+      background: #FFFFFF;
+      border-color: var(--ink-black);
     }
 
-
-    /* Apple iOS UISwitch Component */
+    /* Tactile Toggle Switch */
     .ios-switch-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 8px 0;
+      border-top: 1px solid var(--border-color);
     }
     .ios-switch-label {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 500;
       color: var(--text-main);
     }
     .ios-switch {
       position: relative;
       display: inline-block;
-      width: 48px;
-      height: 28px;
+      width: 44px;
+      height: 24px;
       flex-shrink: 0;
     }
-    .ios-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
+    .ios-switch input { opacity: 0; width: 0; height: 0; }
     .ios-switch-track {
       position: absolute;
       cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #39393d;
-      transition: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-      border-radius: 28px;
+      inset: 0;
+      background-color: #D6D0C4;
+      transition: 0.22s ease;
+      border-radius: 99px;
     }
     .ios-switch-track:before {
       position: absolute;
       content: "";
-      height: 24px;
-      width: 24px;
-      left: 2px;
-      bottom: 2px;
-      background-color: #ffffff;
-      transition: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #FFFFFF;
+      transition: 0.22s ease;
       border-radius: 50%;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 1px 3px rgba(28, 25, 23, 0.24);
     }
     .ios-switch input:checked + .ios-switch-track {
-      background-color: #34c759; /* Apple Green */
+      background-color: var(--ink-black);
     }
     .ios-switch input:checked + .ios-switch-track:before {
       transform: translateX(20px);
     }
 
-    /* Right Panel: Canvas Preview */
+    /* Right Panel: Warm Architectural Study Desk */
     .right-panel {
-      background: #080a0f;
+      background-color: var(--bg-desk);
+      background-image: radial-gradient(rgba(28, 25, 23, 0.065) 1px, transparent 1px);
+      background-size: 20px 20px;
       display: flex;
       flex-direction: column;
       position: relative;
       overflow: hidden;
     }
 
-    /* Canvas Top Bar (Page navigation & Zoom) */
+    /* Canvas Top Bar */
     .canvas-toolbar {
-      background: rgba(13, 17, 23, 0.95);
+      background: rgba(247, 245, 240, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border-color);
-      padding: 8px 16px;
+      padding: 8px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
       z-index: 10;
     }
     .page-controller {
@@ -684,18 +743,65 @@
     .page-pill {
       font-size: 12.5px;
       font-weight: 600;
+      font-variant-numeric: tabular-nums;
       color: var(--text-main);
       background: var(--bg-card);
-      padding: 5px 12px;
-      border-radius: var(--radius-sm);
+      padding: 6px 14px;
+      border-radius: 9px;
       border: 1px solid var(--border-color);
-      min-width: 90px;
+      min-width: 98px;
       text-align: center;
+      box-shadow: var(--shadow-xs);
     }
     .zoom-controller {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
+    }
+
+    /* Presets Strip */
+    .smart-presets-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      background: rgba(247, 245, 240, 0.78);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      flex-shrink: 0;
+    }
+    .smart-presets-bar::-webkit-scrollbar { display: none; }
+    .preset-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 13px;
+      border-radius: 99px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .preset-chip:hover {
+      color: var(--text-main);
+      border-color: var(--border-hover);
+      background: #FFFFFF;
+    }
+    .preset-chip.active {
+      background: var(--ink-black);
+      border-color: var(--ink-black);
+      color: #FAF8F5;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(28, 25, 23, 0.16);
     }
 
     /* Canvas Container */
@@ -705,14 +811,14 @@
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding: 24px 16px;
+      padding: 28px 20px 36px 20px;
       position: relative;
     }
     .canvas-wrapper {
       position: relative;
-      background: #faf7ee;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75), 0 2px 8px rgba(0, 0, 0, 0.5);
-      border-radius: 4px;
+      background: #FAF7EE;
+      box-shadow: var(--shadow-paper);
+      border-radius: 3px;
       overflow: hidden;
       line-height: 0;
       display: inline-block;
@@ -730,22 +836,23 @@
       position: fixed;
       bottom: 24px;
       left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: #1e293b;
-      color: #f8fafc;
-      border: 1px solid #334155;
+      transform: translateX(-50%) translateY(90px);
+      background: var(--ink-black);
+      color: #FAF8F5;
+      border: 1px solid rgba(255, 255, 255, 0.08);
       padding: 10px 18px;
       border-radius: 99px;
       font-size: 13px;
       font-weight: 500;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      box-shadow: 0 12px 32px rgba(28, 25, 23, 0.28);
       display: flex;
       align-items: center;
       gap: 8px;
-      z-index: 1000;
+      z-index: 10000;
       opacity: 0;
       pointer-events: none;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: calc(100vw - 32px);
     }
     .toast.show {
       transform: translateX(-50%) translateY(0);
@@ -755,17 +862,17 @@
 
     /* Dropzone */
     .dropzone {
-      border: 2px dashed var(--border-color);
-      border-radius: var(--radius-sm);
-      padding: 16px;
+      border: 1.5px dashed var(--border-hover);
+      border-radius: 12px;
+      padding: 18px 14px;
       text-align: center;
-      background: var(--bg-input);
+      background: var(--bg-base);
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.16s ease;
     }
     .dropzone:hover {
-      border-color: var(--accent);
-      background: var(--accent-glow);
+      border-color: var(--ink-black);
+      background: #FFFFFF;
     }
     .dropzone-title {
       font-size: 12.5px;
@@ -779,96 +886,43 @@
       margin-top: 3px;
     }
 
-    
-    /* ========================================================
-       MODERN SMART MOBILE & GLASSMORPHIC DESIGN SYSTEM
-       ======================================================== */
-    .smart-presets-bar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      background: rgba(18, 18, 20, 0.85);
-      backdrop-filter: blur(25px) saturate(190%);
-      -webkit-backdrop-filter: blur(25px) saturate(190%);
-      border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
-      overflow-x: auto;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-      flex-shrink: 0;
-    }
-    .smart-presets-bar::-webkit-scrollbar {
-      display: none;
-    }
-    .preset-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 0.5px solid rgba(255, 255, 255, 0.12);
-      color: var(--text-muted);
-      font-size: 12px;
-      font-weight: 500;
-      padding: 5px 13px;
-      border-radius: 9999px; /* Apple capsule */
-      white-space: nowrap;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .preset-chip:active {
-      transform: scale(0.96);
-    }
-    .preset-chip:hover {
-      color: var(--text-main);
-      background: rgba(255, 255, 255, 0.14);
-    }
-    .preset-chip.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #ffffff;
-      font-weight: 600;
-      box-shadow: 0 2px 8px rgba(10, 132, 255, 0.35);
-    }
-
-    /* iOS Frosted Glass Capsule & Controls */
+    /* Floating Capsule (Mobile Preview) */
     .floating-capsule {
       display: inline-flex;
       align-items: center;
-      background: rgba(28, 28, 32, 0.90) !important;
-      backdrop-filter: blur(25px) saturate(180%);
-      -webkit-backdrop-filter: blur(25px) saturate(180%);
-      border: 0.5px solid rgba(255, 255, 255, 0.18) !important;
-      border-radius: 20px !important;
+      background: rgba(255, 255, 255, 0.94) !important;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(28, 25, 23, 0.10) !important;
+      border-radius: 99px !important;
       padding: 4px 10px !important;
-      gap: 3px !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+      gap: 2px !important;
+      box-shadow: 0 6px 22px rgba(28, 25, 23, 0.12) !important;
     }
     .capsule-btn {
       background: transparent !important;
       border: none !important;
-      color: #ffffff !important;
+      color: var(--text-main) !important;
+      font-family: inherit !important;
       font-size: 13px !important;
-      font-weight: 550 !important;
+      font-weight: 600 !important;
       padding: 4px 8px !important;
-      border-radius: 10px !important;
+      border-radius: 99px !important;
       cursor: pointer !important;
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
       line-height: 1 !important;
-      outline: none !important;
-      box-shadow: none !important;
-      -webkit-tap-highlight-color: transparent !important;
-      transition: background 0.15s ease, opacity 0.15s ease !important;
+      transition: background 0.14s ease !important;
     }
     .capsule-btn:active {
-      background: rgba(255, 255, 255, 0.20) !important;
-      opacity: 0.75 !important;
+      background: rgba(28, 25, 23, 0.08) !important;
     }
     .capsule-text {
       font-size: 12px !important;
       font-weight: 600 !important;
-      color: rgba(255, 255, 255, 0.9) !important;
+      font-variant-numeric: tabular-nums !important;
+      color: var(--text-main) !important;
       padding: 0 4px !important;
       user-select: none !important;
       white-space: nowrap !important;
@@ -876,26 +930,23 @@
     .capsule-divider {
       width: 1px !important;
       height: 14px !important;
-      background: rgba(255, 255, 255, 0.18) !important;
-      margin: 0 4px !important;
+      background: var(--border-color) !important;
+      margin: 0 3px !important;
+      display: inline-block !important;
     }
 
-    /* Mobile Bottom Bar (Hidden on desktop) */
-    .mobile-bottom-bar {
-      display: none;
-    }
+    /* Mobile Bottom Bar (Hidden on Desktop) */
+    .mobile-bottom-bar { display: none; }
 
-    /* Apple UISheetPresentationController Style - Placed Above Bottom Bar */
+    /* Mobile Bottom Sheet */
     .mobile-sheet-overlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.06); /* Ultra-light tint so live canvas stays crisp & clear above sheet */
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
+      inset: 0;
+      background: rgba(28, 25, 23, 0.14);
       z-index: 9980;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.22s ease;
+      transition: opacity 0.2s ease;
     }
     .mobile-sheet-overlay.active {
       opacity: 1;
@@ -903,21 +954,20 @@
     }
     .mobile-sheet {
       position: fixed;
-      bottom: 64px; /* Sits cleanly above the bottom dock, NEVER covering dock buttons */
-      left: 8px; right: 8px;
+      bottom: 68px;
+      left: 10px;
+      right: 10px;
       max-height: 46vh;
-      background: rgba(24, 24, 28, 0.98);
-      backdrop-filter: blur(35px) saturate(200%);
-      -webkit-backdrop-filter: blur(35px) saturate(200%);
-      border: 0.5px solid rgba(255, 255, 255, 0.16);
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
       border-radius: 20px;
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.9);
-      z-index: 9990; /* below bottom dock (9999) so dock buttons remain clickable */
-      transform: translateY(calc(100% + 80px));
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease, visibility 0s linear 0.28s;
+      box-shadow: 0 14px 44px rgba(28, 25, 23, 0.18), 0 2px 10px rgba(28, 25, 23, 0.06);
+      z-index: 9990;
+      transform: translateY(calc(100% + 90px));
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease, visibility 0s linear 0.28s;
       display: flex;
       flex-direction: column;
-      overflow: hidden; /* Header fixed, body scrolls */
+      overflow: hidden;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
@@ -927,13 +977,13 @@
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease, visibility 0s;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease, visibility 0s;
     }
     .mobile-sheet-handle {
-      width: 36px;
+      width: 34px;
       height: 4px;
-      background: rgba(255, 255, 255, 0.32);
-      border-radius: 2px;
+      background: #DDD7CB;
+      border-radius: 99px;
       margin: 8px auto 2px auto;
       flex-shrink: 0;
     }
@@ -941,97 +991,40 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 16px;
-      border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 16px 10px 16px;
+      border-bottom: 1px solid var(--border-color);
       flex-shrink: 0;
     }
     .mobile-sheet-title {
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 600;
       color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 7px;
-      letter-spacing: -0.2px;
+      letter-spacing: -0.015em;
     }
-    .sheet-close-btn {
+    .sheet-close-btn, .mobile-sheet-close {
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.10);
+      background: var(--bg-input);
       border: none;
-      color: rgba(255, 255, 255, 0.7);
+      color: var(--text-muted);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
       transition: background 0.15s ease, color 0.15s ease;
     }
-    .sheet-close-btn:active {
-      background: rgba(255, 255, 255, 0.22);
-      color: #ffffff;
-    }
-
-    /* iOS Native Range Sliders */
-    .range-slider {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.18);
-      border-radius: 3px;
-      outline: none;
-      margin: 8px 0 4px 0;
-      transition: background 0.2s ease;
-    }
-    .range-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #ffffff;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45), 0 0 1px rgba(0, 0, 0, 0.3);
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-      border: none;
-    }
-    .range-slider::-webkit-slider-thumb:active {
-      transform: scale(1.15);
-      box-shadow: 0 3px 12px rgba(10, 132, 255, 0.6);
-    }
-    .range-slider::-moz-range-thumb {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #ffffff;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
-      border: none;
-      cursor: pointer;
-    }
-    .mobile-sheet-close {
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
-      color: var(--text-muted);
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.15s ease;
-    }
-    .mobile-sheet-close:hover {
-      background: rgba(255, 255, 255, 0.15);
+    .sheet-close-btn:hover, .mobile-sheet-close:hover {
+      background: #E6E1D6;
       color: var(--text-main);
     }
     .mobile-sheet-body {
-      padding: 12px 16px 18px 16px;
+      padding: 13px 16px 18px 16px;
       overflow-y: auto;
       overflow-x: hidden;
       flex: 1;
@@ -1047,7 +1040,7 @@
       display: block !important;
       width: 100%;
       min-width: 0;
-      padding: 7px 8px !important;
+      padding: 8px 8px !important;
       font-size: 11.5px !important;
       text-align: center;
       overflow: hidden;
@@ -1055,119 +1048,95 @@
       white-space: nowrap;
     }
 
-    /* Apple UIAlertController Style */
-    .pwa-modal-overlay {
+    /* Editorial Gallery Modals (PWA, Download, Restyler, Diagram Studio) */
+    .pwa-modal-overlay, .download-modal-overlay, .ai-studio-overlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      z-index: 3000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.28s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-    .pwa-modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .pwa-modal-card {
-      background: rgba(36, 36, 38, 0.96);
-      border: 0.5px solid rgba(255, 255, 255, 0.18);
-      border-radius: 18px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85);
-      overflow: hidden;
-    }
-
-    /* --- DOWNLOAD CONFIRMATION MODAL (Apple iOS Dialog Style) --- */
-    .download-modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
+      inset: 0;
+      background: rgba(28, 25, 23, 0.42);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       z-index: 10050;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.22s ease;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
     }
-    .download-modal-overlay.active {
+    .pwa-modal-overlay.active, .download-modal-overlay.active, .ai-studio-overlay.active {
       opacity: 1;
       pointer-events: auto;
     }
-    .download-modal-card {
-      background: rgba(28, 28, 32, 0.98);
-      border: 0.5px solid rgba(255, 255, 255, 0.2);
-      border-radius: 22px;
+    .pwa-modal-card, .download-modal-card, .ai-studio-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
       width: 100%;
-      max-width: 410px;
-      max-height: 92vh;
-      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9);
+      max-width: 420px;
+      max-height: 90vh;
+      box-shadow: 0 24px 64px rgba(28, 25, 23, 0.22);
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      transform: scale(0.94) translateY(12px);
-      transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: scale(0.96) translateY(8px);
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .download-modal-overlay.active .download-modal-card {
+    .ai-studio-card { max-width: 660px; overflow: hidden; }
+    .pwa-modal-overlay.active .pwa-modal-card,
+    .download-modal-overlay.active .download-modal-card,
+    .ai-studio-overlay.active .ai-studio-card {
       transform: scale(1) translateY(0);
     }
-    .download-modal-header {
+
+    .pwa-modal-header, .download-modal-header, .ai-studio-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-base);
     }
     .download-modal-title {
       font-size: 15px;
       font-weight: 700;
-      color: #fff;
+      color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .download-modal-body {
-      padding: 16px 18px;
+    .pwa-modal-body, .download-modal-body, .ai-studio-body {
+      padding: 18px 20px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
+      overflow-y: auto;
+      flex: 1;
     }
     .download-preview-box {
       width: 100%;
-      height: 180px;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      height: 186px;
+      background: var(--bg-desk);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      padding: 8px;
+      padding: 10px;
     }
     .download-preview-box img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-      border-radius: 6px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+      border-radius: 4px;
+      box-shadow: 0 6px 18px rgba(28, 25, 23, 0.16);
     }
-    /* Export Resolution Picker */
     .download-scale-picker {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 10px 12px;
+      padding: 11px 12px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -1177,7 +1146,7 @@
       font-weight: 600;
       color: var(--text-dim);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.04em;
     }
     .scale-pills-row {
       display: flex;
@@ -1191,67 +1160,56 @@
       align-items: center;
       justify-content: center;
       gap: 2px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      padding: 7px 4px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 9px;
+      padding: 8px 4px;
       color: var(--text-muted);
+      font-family: inherit;
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.15s ease;
     }
-    .scale-pill:hover {
-      background: rgba(255, 255, 255, 0.09);
-      color: #fff;
-    }
+    .scale-pill:hover { border-color: var(--border-hover); color: var(--text-main); }
     .scale-pill.active {
-      background: rgba(14, 165, 233, 0.22);
-      border-color: #0ea5e9;
-      color: #38bdf8;
-      box-shadow: 0 0 12px rgba(14, 165, 233, 0.25);
+      background: var(--ink-black);
+      border-color: var(--ink-black);
+      color: #FAF8F5;
     }
-    .scale-sub {
-      font-size: 9.5px;
-      font-weight: 400;
-      opacity: 0.75;
-    }
-    .scale-pill.active .scale-sub {
-      opacity: 1;
-      font-weight: 600;
-      color: #7dd3fc;
-    }
+    .scale-sub { font-size: 10px; font-weight: 400; opacity: 0.72; }
+    .scale-pill.active .scale-sub { opacity: 0.85; color: #E7E5E4; }
+
     .download-meta-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
     .download-meta-item {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.07);
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 8px 10px;
+      padding: 9px 11px;
       display: flex;
       flex-direction: column;
       gap: 2px;
     }
-    .download-meta-label {
-      font-size: 10.5px;
-      color: var(--text-dim);
-      font-weight: 500;
-    }
-    .download-meta-val {
-      font-size: 12.5px;
-      color: #fff;
-      font-weight: 600;
-    }
-    .download-modal-footer {
+    .download-meta-label { font-size: 10.5px; color: var(--text-dim); font-weight: 500; }
+    .download-meta-val { font-size: 12.5px; color: var(--text-main); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .download-modal-footer, .ai-studio-footer {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      padding: 12px 18px 16px 18px;
-      background: rgba(0, 0, 0, 0.2);
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 14px 20px 16px 20px;
+      background: var(--bg-base);
+      border-top: 1px solid var(--border-color);
+    }
+    .ai-studio-footer {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
     .btn-download-primary {
       width: 100%;
@@ -1259,41 +1217,34 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background: linear-gradient(135deg, #0284c7, #0ea5e9);
-      color: #fff;
+      background: var(--ink-black);
+      color: #FAF8F5;
       border: none;
       padding: 11px 16px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 700;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
       cursor: pointer;
-      transition: filter 0.2s, transform 0.1s;
-      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35);
+      transition: background 0.16s ease, transform 0.1s ease;
     }
-    .btn-download-primary:hover {
-      filter: brightness(1.1);
-    }
-    .btn-download-primary:active {
-      transform: scale(0.98);
-    }
+    .btn-download-primary:hover { background: var(--ink-black-hover); }
+    .btn-download-primary:active { transform: scale(0.99); }
     .btn-download-share {
       width: 100%;
       display: none;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background: rgba(255, 255, 255, 0.08);
-      color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      background: #FFFFFF;
+      color: var(--accent);
+      border: 1px solid var(--accent);
       padding: 10px 16px;
-      border-radius: 12px;
+      border-radius: 10px;
+      font-family: inherit;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-download-share:hover {
-      background: rgba(56, 189, 248, 0.15);
     }
     .btn-download-cancel {
       width: 100%;
@@ -1301,69 +1252,240 @@
       align-items: center;
       justify-content: center;
       background: transparent;
-      color: var(--text-dim);
+      color: var(--text-muted);
       border: none;
-      padding: 8px 16px;
-      border-radius: 10px;
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-family: inherit;
       font-size: 13px;
       font-weight: 500;
       cursor: pointer;
-      transition: color 0.2s;
     }
-    .btn-download-cancel:hover {
-      color: #fff;
-    }
-    .pwa-modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .pwa-modal-body {
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .btn-download-cancel:hover { color: var(--text-main); background: rgba(28, 25, 23, 0.05); }
+
     .pwa-step {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 12px;
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      border-radius: 11px;
       padding: 12px;
     }
     .pwa-step-badge {
       display: inline-block;
       font-size: 11px;
-      font-weight: 700;
-      color: var(--accent);
-      background: rgba(99, 102, 241, 0.15);
+      font-weight: 600;
+      color: var(--text-main);
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
       padding: 2px 8px;
       border-radius: 6px;
       margin-bottom: 6px;
     }
-    .pwa-step p {
-      font-size: 12.5px;
+    .pwa-step p { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; margin: 0; }
+
+    /* Diagram Studio Refined Components */
+    .ai-studio-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--ink-black);
+      color: #FAF8F5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ai-studio-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--bg-input);
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .ai-studio-close:hover { background: #E6E1D6; color: var(--text-main); }
+    .ai-studio-dropzone {
+      border: 1.5px dashed var(--border-hover);
+      background: var(--bg-base);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .ai-studio-dropzone:hover {
+      border-color: var(--ink-black);
+      background: #FFFFFF;
+    }
+    .dropzone-pulse-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
       color: var(--text-main);
-      line-height: 1.5;
-      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ai-archetypes-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+      gap: 8px;
+    }
+    .archetype-pill {
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .archetype-pill:hover {
+      background: #FFFFFF;
+      border-color: var(--border-hover);
+    }
+    .archetype-pill.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+    }
+    .arch-emoji {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .archetype-pill.active .arch-emoji {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #FFFFFF;
+    }
+    .arch-info { display: flex; flex-direction: column; min-width: 0; }
+    .arch-name { font-size: 12.5px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .arch-desc { font-size: 10.5px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .ai-scan-hud {
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px 14px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .ai-scan-laser {
+      position: absolute;
+      left: 0; right: 0; height: 2px;
+      background: var(--accent);
+      top: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .ai-scan-hud.scanning .ai-scan-laser {
+      opacity: 0.7;
+      animation: laserSweep 1.4s ease-in-out infinite alternate;
+    }
+    @keyframes laserSweep { 0% { top: 4%; } 100% { top: 96%; } }
+    .ai-scan-preview-box {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .ai-scan-thumb { width: 100%; height: 100%; object-fit: cover; }
+    .ai-scan-placeholder { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; color: var(--text-dim); }
+    .ai-scan-logs { flex: 1; display: flex; flex-direction: column; gap: 3px; font-size: 11.5px; color: var(--text-muted); }
+    .ai-log-item { display: flex; align-items: center; gap: 6px; }
+    .ai-log-item.active { color: var(--accent); font-weight: 500; }
+    .ai-log-item.success { color: var(--success); }
+    .log-dot { font-size: 8px; }
+
+    .ai-inspector-box {
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .inspector-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .math-btn {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+    .math-btn:hover {
+      background: var(--ink-black);
+      border-color: var(--ink-black);
+      color: #FFFFFF;
+    }
+
+    .mobile-header-capsule { display: none; }
+    .btn-danger-pill {
+      background: rgba(185, 28, 28, 0.08) !important;
+      color: var(--danger) !important;
+      border: 1px solid rgba(185, 28, 28, 0.25) !important;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
     }
 
     /* Desktop Split-Pane Viewport Lock (>= 992px) */
     @media (min-width: 992px) {
       .main-layout {
-        height: calc(100vh - 52px);
+        height: calc(100vh - 54px);
         min-height: 0;
         overflow: hidden;
       }
-      .left-panel {
-        height: 100%;
-        overflow-y: auto;
-      }
-      .right-panel {
-        height: 100%;
-        overflow: hidden;
-      }
+      .left-panel { height: 100%; overflow-y: auto; }
+      .right-panel { height: 100%; overflow: hidden; }
       .mobile-bottom-bar,
       .mobile-sheet,
       .mobile-sheet-overlay,
@@ -1372,56 +1494,31 @@
       }
     }
 
-    /* Single Unified Clean Mobile Layout (< 992px) */
+    /* Unified Clean Mobile Layout (< 992px) */
     @media (max-width: 991px) {
       .app-header {
         height: 48px;
-        padding: 0 10px;
+        padding: 0 14px;
       }
-      .brand-text p {
-        display: none;
-      }
-      .brand-text h1 {
-        font-size: 13.5px;
-      }
-      .brand-icon {
-        width: 28px;
-        height: 28px;
-      }
-      .header-actions .btn-primary {
-        padding: 5px 10px;
-        font-size: 11.5px;
-      }
+      .brand-text p { display: none; }
+      .brand-text h1 { font-size: 17px; }
+      .brand-icon { width: 28px; height: 28px; border-radius: 8px; }
 
-      /* Clean Top Header on mobile: hide duplicate page capsule, download button & danger pill */
-      .mobile-header-capsule {
-        display: none !important;
-      }
-      .btn-danger-pill {
-        display: none !important;
-      }
-      .header-actions .btn-primary {
-        display: none !important;
-      }
-
-      /* Hide top switcher and top nav-tabs on mobile */
-      .mobile-view-switch {
-        display: none !important;
-      }
+      .mobile-header-capsule,
+      .btn-danger-pill,
+      .header-actions .btn-primary,
+      .mobile-view-switch,
       .left-panel .nav-tabs {
         display: none !important;
       }
 
-      /* Main layout mobile behavior */
       .main-layout {
         display: flex;
         flex-direction: column;
         height: auto;
         min-height: calc(100vh - 48px);
-        padding-bottom: 64px; /* space for mobile bottom bar */
+        padding-bottom: 66px;
       }
-
-      /* In Editor View (default): Left panel is full width, right is hidden */
       .left-panel {
         display: flex !important;
         width: 100% !important;
@@ -1434,101 +1531,44 @@
         min-height: calc(100vh - 48px);
       }
 
-      /* In Preview View (body.view-preview): */
-      body.view-preview .left-panel {
-        display: none !important;
-      }
-      body.view-preview .right-panel {
-        display: flex !important;
-      }
-      body.view-preview .canvas-toolbar {
-        display: none !important;
-      }
+      body.view-preview .left-panel { display: none !important; }
+      body.view-preview .right-panel { display: flex !important; }
+      body.view-preview .canvas-toolbar,
       body.view-preview .smart-presets-bar {
         display: none !important;
       }
 
-      /* Floating Page Capsule on Mobile Canvas */
-      .mobile-canvas-floating-header {
-        display: none;
-      }
+      .mobile-canvas-floating-header { display: none; }
       body.view-preview .mobile-canvas-floating-header {
         display: flex !important;
         position: sticky;
-        top: 6px;
+        top: 8px;
         z-index: 50;
         justify-content: center;
         width: 100%;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         pointer-events: none;
       }
       .floating-capsule {
         pointer-events: auto;
-        display: inline-flex;
-        align-items: center;
         max-width: calc(100vw - 16px);
-        background: rgba(28, 28, 32, 0.92) !important;
-        backdrop-filter: blur(25px) saturate(180%);
-        -webkit-backdrop-filter: blur(25px) saturate(180%);
-        border: 0.5px solid rgba(255, 255, 255, 0.18) !important;
-        border-radius: 20px !important;
-        padding: 4px 8px !important;
-        gap: 2px !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
-      }
-      .capsule-btn {
-        background: transparent !important;
-        border: none !important;
-        color: #ffffff !important;
-        font-size: 13px !important;
-        font-weight: 550 !important;
-        padding: 4px 8px !important;
-        border-radius: 10px !important;
-        cursor: pointer !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        line-height: 1 !important;
-        outline: none !important;
-        box-shadow: none !important;
-        -webkit-tap-highlight-color: transparent !important;
-        transition: background 0.15s ease, opacity 0.15s ease !important;
-      }
-      .capsule-btn:active {
-        background: rgba(255, 255, 255, 0.20) !important;
-        opacity: 0.75 !important;
-      }
-      .capsule-text {
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        color: rgba(255, 255, 255, 0.9) !important;
-        padding: 0 4px !important;
-        user-select: none !important;
-        white-space: nowrap !important;
-      }
-      .capsule-divider {
-        width: 1px !important;
-        height: 14px !important;
-        background: rgba(255, 255, 255, 0.22) !important;
-        margin: 0 3px !important;
-        display: inline-block !important;
       }
 
-      /* Apple UITabBar Style - Highest Z-Index (9999) */
+      /* Mobile Frosted-Paper Bottom Dock */
       .mobile-bottom-bar {
         display: flex !important;
         position: fixed !important;
         bottom: 0 !important; left: 0 !important; right: 0 !important;
         height: 64px;
-        background: rgba(16, 18, 24, 0.94) !important;
-        backdrop-filter: blur(28px) saturate(200%) !important;
-        -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
-        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: rgba(247, 245, 240, 0.95) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border-top: 1px solid var(--border-color) !important;
         z-index: 9999 !important;
         align-items: center;
-        padding: 0 6px;
+        padding: 0 8px;
         padding-bottom: env(safe-area-inset-bottom, 4px);
-        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 -4px 20px rgba(28, 25, 23, 0.06);
       }
       .mobile-bar-mode {
         display: flex;
@@ -1537,18 +1577,10 @@
         justify-content: space-between;
         gap: 2px;
       }
-      .mobile-bar-editor-mode {
-        display: flex;
-      }
-      .mobile-bar-preview-mode {
-        display: none;
-      }
-      body.view-preview .mobile-bar-editor-mode {
-        display: none !important;
-      }
-      body.view-preview .mobile-bar-preview-mode {
-        display: flex !important;
-      }
+      .mobile-bar-editor-mode { display: flex; }
+      .mobile-bar-preview-mode { display: none; }
+      body.view-preview .mobile-bar-editor-mode { display: none !important; }
+      body.view-preview .mobile-bar-preview-mode { display: flex !important; }
 
       .mobile-bar-btn {
         display: flex;
@@ -1558,104 +1590,62 @@
         gap: 3px;
         background: transparent;
         border: none;
-        color: rgba(240, 242, 248, 0.65);
+        color: var(--text-muted);
+        font-family: inherit;
         font-size: 10px;
         font-weight: 500;
         white-space: nowrap;
         cursor: pointer;
         padding: 6px 2px;
-        border-radius: 12px;
-        transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+        border-radius: 10px;
+        transition: all 0.15s ease;
         flex: 1;
         min-width: 0;
-        -webkit-tap-highlight-color: transparent;
       }
       .mobile-bar-btn:active {
-        background: rgba(255, 255, 255, 0.08);
-        transform: scale(0.92);
+        background: rgba(28, 25, 23, 0.06);
+        transform: scale(0.95);
       }
       .mobile-bar-btn.active,
       .mobile-bar-btn.active-feature {
-        color: var(--accent) !important;
+        color: var(--ink-black) !important;
         font-weight: 600;
-        background: rgba(56, 189, 248, 0.12);
+        background: rgba(28, 25, 23, 0.07);
       }
       .mobile-bar-btn.active-feature svg {
-        stroke: var(--accent) !important;
-        transform: translateY(-1px);
+        stroke: var(--ink-black) !important;
       }
-      .mobile-bar-btn svg {
-        width: 19px;
-        height: 19px;
+      .mobile-bar-btn svg { width: 19px; height: 19px; }
+
+      .btn-cta-view-preview {
+        background: var(--ink-black) !important;
+        color: #FAF8F5 !important;
+        border-radius: 99px !important;
+        padding: 9px 13px !important;
+        flex: 0 0 auto !important;
+        flex-direction: row !important;
+        gap: 4px !important;
+        font-size: 11.5px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 3px 10px rgba(28, 25, 23, 0.18) !important;
       }
+      .btn-cta-view-preview svg { width: 15px !important; height: 15px !important; stroke: #FAF8F5 !important; }
+
+      .btn-bar-download { color: var(--accent) !important; font-weight: 600 !important; }
+      .btn-bar-download svg { stroke: var(--accent) !important; }
 
       .ai-studio-overlay {
         align-items: flex-end !important;
         padding: 0 8px 68px 8px !important;
-        background: rgba(0, 0, 0, 0.45) !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
         z-index: 9990 !important;
       }
       .ai-studio-card {
         max-height: 80vh !important;
-        border-radius: 20px !important;
-        margin-bottom: 0 !important;
-      }
-      .ai-studio-footer {
-        padding: 10px 14px !important;
+        border-radius: 18px !important;
       }
 
-      /* Primary CTA in Editor mode: 'Xem Trang Vở ➜' */
-      .btn-cta-view-preview {
-        background: linear-gradient(135deg, #0a84ff, #0066cc) !important;
-        color: #ffffff !important;
-        border-radius: 20px !important;
-        padding: 8px 11px !important;
-        flex: 0 0 auto !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 4px !important;
-        font-size: 11.5px !important;
-        font-weight: 600 !important;
-        white-space: nowrap !important;
-        box-shadow: 0 4px 14px rgba(10, 132, 255, 0.4) !important;
-        border: none !important;
-      }
-      .btn-cta-view-preview:active {
-        transform: scale(0.96) !important;
-      }
-      .btn-cta-view-preview svg {
-        width: 16px !important;
-        height: 16px !important;
-        stroke: #ffffff !important;
-      }
-
-      /* Highlighted Action Buttons in Preview mode */
-      .btn-bar-download {
-        color: var(--accent) !important;
-        font-weight: 600 !important;
-      }
-      .btn-bar-download svg {
-        stroke: var(--accent) !important;
-      }
-      .btn-bar-ai {
-        color: #38bdf8 !important;
-      }
-      .btn-bar-ai svg {
-        stroke: #38bdf8 !important;
-      }
-      .btn-bar-delete-diag {
-        color: #ef4444 !important;
-      }
-      .btn-bar-delete-diag svg {
-        stroke: #ef4444 !important;
-      }
-
-      /* Canvas Viewport: Full Width with Centered Paper & Pan Support When Zoomed on Mobile */
       .canvas-viewport {
-        padding: 8px 8px 84px 8px !important;
+        padding: 10px 10px 84px 10px !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: flex-start !important;
@@ -1663,334 +1653,21 @@
         overflow-x: auto !important;
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
-        background: #000000 !important;
+        background: transparent !important;
       }
       body.mobile-sheet-open .canvas-viewport {
         padding-bottom: 58vh !important;
       }
       .canvas-wrapper {
-        box-shadow: 0 6px 28px rgba(0, 0, 0, 0.85) !important;
-        border-radius: 4px !important;
+        box-shadow: 0 12px 32px rgba(28, 25, 23, 0.16), 0 2px 6px rgba(28, 25, 23, 0.08) !important;
+        border-radius: 3px !important;
         margin: 0 auto !important;
       }
-
-      /* Toast above bottom bar */
       .toast {
         bottom: 74px !important;
         z-index: 10000 !important;
       }
     }
-  
-    /* --- MOBILE HEADER CAPSULE & COMPACT CONTROLS --- */
-    .mobile-header-capsule {
-      display: none;
-    }
-    .btn-danger-pill {
-      background: rgba(239, 68, 68, 0.15) !important;
-      color: #ef4444 !important;
-      border: 1px solid rgba(239, 68, 68, 0.35) !important;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .btn-danger-pill:hover {
-      background: rgba(239, 68, 68, 0.25) !important;
-    }
-
-    /* --- AI DIAGRAM & TABLE SCAN STUDIO MODAL --- */
-    .ai-studio-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.78);
-      backdrop-filter: blur(28px) saturate(190%);
-      -webkit-backdrop-filter: blur(28px) saturate(190%);
-      z-index: 2500;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-    .ai-studio-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .ai-studio-card {
-      background: rgba(24, 24, 28, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 22px;
-      width: 100%;
-      max-width: 680px;
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(56, 189, 248, 0.2);
-      overflow: hidden;
-      animation: studioSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes studioSlideUp {
-      from { transform: translateY(24px) scale(0.96); opacity: 0; }
-      to { transform: translateY(0) scale(1); opacity: 1; }
-    }
-    .ai-studio-header {
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.02);
-    }
-    .ai-studio-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(99, 102, 241, 0.25));
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-    }
-    .ai-studio-close {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
-      color: var(--text-dim);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .ai-studio-close:hover {
-      background: rgba(255, 255, 255, 0.16);
-      color: #fff;
-    }
-    .ai-studio-body {
-      padding: 18px 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      flex: 1;
-    }
-    .ai-studio-dropzone {
-      border: 2px dashed rgba(56, 189, 248, 0.35);
-      background: linear-gradient(180deg, rgba(56, 189, 248, 0.06), rgba(15, 23, 42, 0.4));
-      border-radius: 16px;
-      padding: 18px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-    .ai-studio-dropzone:hover {
-      border-color: var(--accent);
-      background: linear-gradient(180deg, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.6));
-      transform: translateY(-1px);
-    }
-    .dropzone-pulse-circle {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: rgba(56, 189, 248, 0.15);
-      border: 1px solid var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-      box-shadow: 0 0 16px rgba(56, 189, 248, 0.25);
-    }
-    .ai-archetypes-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 8px;
-    }
-    .archetype-pill {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .archetype-pill:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.18);
-    }
-    .archetype-pill.active {
-      background: rgba(14, 165, 233, 0.14);
-      border-color: var(--accent);
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
-    }
-    .arch-emoji {
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-    .arch-info {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-    .arch-name {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .arch-desc {
-      font-size: 10.5px;
-      color: var(--text-dim);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Live AI Scan HUD */
-    .ai-scan-hud {
-      background: rgba(11, 15, 25, 0.85);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      border-radius: 14px;
-      padding: 12px 14px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      gap: 14px;
-      align-items: center;
-    }
-    .ai-scan-laser {
-      position: absolute;
-      left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, transparent);
-      box-shadow: 0 0 12px #38bdf8, 0 0 24px #818cf8;
-      top: 0;
-      opacity: 0;
-      pointer-events: none;
-    }
-    .ai-scan-hud.scanning .ai-scan-laser {
-      opacity: 1;
-      animation: laserSweep 1.6s ease-in-out infinite alternate;
-    }
-    @keyframes laserSweep {
-      0% { top: 4%; }
-      100% { top: 96%; }
-    }
-    .ai-scan-preview-box {
-      width: 64px;
-      height: 64px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-    .ai-scan-thumb {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .ai-scan-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      text-align: center;
-    }
-    .ai-scan-logs {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 11.5px;
-      color: var(--text-muted);
-    }
-    .ai-log-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .ai-log-item.active {
-      color: var(--accent);
-      font-weight: 500;
-    }
-    .ai-log-item.success {
-      color: #34d399;
-    }
-    .log-dot {
-      font-size: 8px;
-    }
-
-    /* Inspector Box */
-    .ai-inspector-box {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .inspector-title {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .ai-studio-footer {
-      padding: 14px 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.02);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-  
-    .math-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: var(--text-main);
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .math-btn:hover {
-      background: rgba(56, 189, 248, 0.18);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
   </style>
 </head>
 <body>
@@ -1999,14 +1676,14 @@
   <header class="app-header">
     <a href="#" class="brand">
       <div class="brand-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 20h9"/>
           <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
         </svg>
       </div>
       <div class="brand-text">
-        <h1>Chép Tay AI <span class="brand-badge">24/7 Online</span></h1>
-        <p>Vở viết tay chữ Hán & Sơ đồ thông minh</p>
+        <h1>Chép Tay</h1>
+        <p>Vở chép viết tay tự nhiên</p>
       </div>
     </a>
 
@@ -2103,28 +1780,28 @@
           <!-- Quick Action Tools -->
           <div class="quick-toolbar" style="flex-wrap:wrap; gap:6px;">
             <button class="tool-chip" onclick="insertStrikeSnippet()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="20" y2="12"/><path d="m16 6-4-2-4 2"/><path d="m8 18 4 2 4-2"/></svg>
-              ~~Gạch xóa~~
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="20" y2="12"/><path d="m16 6-4-2-4 2"/><path d="m8 18 4 2 4-2"/></svg>
+              Gạch xóa
             </button>
-            <button class="tool-chip" id="btnToggleMathToolbar" onclick="toggleMathToolbar()" style="color:var(--accent); border-color:rgba(56,189,248,0.4); background:rgba(56,189,248,0.06);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19L9 4h3l3 15 5-10"/></svg>
-              📐 Phím tắt Toán Học
+            <button class="tool-chip" id="btnToggleMathToolbar" onclick="toggleMathToolbar()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19L9 4h3l3 15 5-10"/></svg>
+              Công thức
             </button>
-            <button class="tool-chip" onclick="openAiDiagramStudio()" style="color:#a78bfa; border-color:rgba(167,139,250,0.4); background:rgba(167,139,250,0.06);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/></svg>
-              🪄 AI Sơ Đồ Bút Bi
+            <button class="tool-chip" onclick="openAiDiagramStudio()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+              Mẫu sơ đồ
             </button>
             <button class="tool-chip" onclick="document.getElementById('aiDiagramAutoFileInput').click()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              📸 Up ảnh để AI vẽ lại
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Chèn ảnh sơ đồ
             </button>
-            <div id="diagramQuickPageBar" style="display:none; align-items:center; gap:4px; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.35); border-radius:20px; padding:2px 6px; font-size:11.5px; color:var(--accent);">
+            <div id="diagramQuickPageBar" style="display:none; align-items:center; gap:3px; background:var(--accent-soft); border:1px solid rgba(29,78,216,0.28); border-radius:8px; padding:2px 6px; font-size:11.5px; color:var(--accent);">
               <button type="button" id="qDiagPrevBtn" onclick="moveDiagramPage(-1)" style="background:none; border:none; color:inherit; cursor:pointer; padding:2px 5px; font-weight:700;" title="Đưa sơ đồ về trang trước">◀</button>
-              <span id="qDiagPageLabel" style="font-weight:600; white-space:nowrap;">Sơ đồ: Trang 1</span>
+              <span id="qDiagPageLabel" style="font-weight:600; white-space:nowrap; font-variant-numeric:tabular-nums;">Sơ đồ: Trang 1</span>
               <button type="button" id="qDiagNextBtn" onclick="moveDiagramPage(1)" style="background:none; border:none; color:inherit; cursor:pointer; padding:2px 5px; font-weight:700;" title="Đưa sơ đồ sang trang sau">▶</button>
             </div>
-            <button class="tool-chip" id="btnRemoveDiagram" onclick="removeDiagram()" style="display:none; color:#f87171;">
-              ✕ Xóa sơ đồ
+            <button class="tool-chip tool-chip-danger" id="btnRemoveDiagram" onclick="removeDiagram()" style="display:none;">
+              Xóa sơ đồ
             </button>
             <input type="file" id="ocrFileInput" accept="image/*" style="display:none;" onchange="handleOcrUpload(this.files[0])">
             <input type="file" id="diagramFileInput" accept="image/*" style="display:none;" onchange="handleDiagramImageUpload(this.files[0])">
@@ -2132,10 +1809,10 @@
           </div>
 
           <!-- Expandable Quick Math Palette -->
-          <div id="mathPalette" style="display:none; margin-top:8px; padding:10px; background:rgba(15,23,42,0.7); border:1px solid rgba(56,189,248,0.25); border-radius:10px;">
+          <div id="mathPalette" style="display:none; margin-top:4px; padding:11px; background:var(--bg-base); border:1px solid var(--border-color); border-radius:10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <span style="font-size:11.5px; font-weight:600; color:var(--accent);">⚡ Ký hiệu & Công thức toán học 1-chạm:</span>
-              <span style="font-size:11px; color:var(--text-dim); cursor:pointer; padding:2px 6px;" onclick="toggleMathToolbar()">✕ Đóng</span>
+              <span style="font-size:11.5px; font-weight:600; color:var(--text-main);">Ký hiệu & công thức nhanh</span>
+              <span style="font-size:11px; color:var(--text-dim); cursor:pointer; padding:2px 6px;" onclick="toggleMathToolbar()">Đóng</span>
             </div>
             <div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px;">
               <button class="math-btn" onclick="insertMathText('²', 0)">x²</button>
@@ -2166,9 +1843,9 @@
               <button class="math-btn" onclick="insertMathText('lim', 0)">lim</button>
             </div>
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <button class="btn btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="loadMathSample('quad')">📐 Mẫu Pt bậc 2</button>
-              <button class="btn btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="loadMathSample('pythagoras')">📐 Mẫu Định lý Pytago</button>
-              <button class="btn btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="loadMathSample('chem')">🧪 Mẫu Hóa học</button>
+              <button class="btn btn-secondary" style="font-size:11px; padding:4px 9px;" onclick="loadMathSample('quad')">Pt bậc 2</button>
+              <button class="btn btn-secondary" style="font-size:11px; padding:4px 9px;" onclick="loadMathSample('pythagoras')">Định lý Pytago</button>
+              <button class="btn btn-secondary" style="font-size:11px; padding:4px 9px;" onclick="loadMathSample('chem')">Công thức Hóa</button>
             </div>
           </div>
         </div>
@@ -2691,14 +2368,14 @@
         </div>
       </div>
 
-              <!-- Smart Quick Presets Bar (Instant 1-Tap Handwritting Styling) -->
+        <!-- Smart Quick Presets Bar -->
         <div class="smart-presets-bar">
-          <button class="preset-chip active" id="chipPresetStudent" onclick="applySmartPreset('student')">🎓 Học Sinh</button>
-          <button class="preset-chip" id="chipPresetMessy" onclick="applySmartPreset('messy')">✍️ Viết Ẩu</button>
-          <button class="preset-chip" id="chipPresetFast" onclick="applySmartPreset('fast')">⚡ Tốc Ký</button>
-          <button class="preset-chip" id="chipPresetSpread" onclick="applySmartPreset('spread')">📖 Trang Đôi 3D</button>
-          <button class="preset-chip" id="chipPresetPurple" onclick="applySmartPreset('purple')">🟣 Mực Tím</button>
-          <button class="preset-chip" id="chipPresetSkip" onclick="toggleSkipLine()">📝 Cách Dòng</button>
+          <button class="preset-chip active" id="chipPresetStudent" onclick="applySmartPreset('student')">Học sinh</button>
+          <button class="preset-chip" id="chipPresetMessy" onclick="applySmartPreset('messy')">Viết ẩu</button>
+          <button class="preset-chip" id="chipPresetFast" onclick="applySmartPreset('fast')">Tốc ký</button>
+          <button class="preset-chip" id="chipPresetSpread" onclick="applySmartPreset('spread')">Trang đôi</button>
+          <button class="preset-chip" id="chipPresetPurple" onclick="applySmartPreset('purple')">Mực tím</button>
+          <button class="preset-chip" id="chipPresetSkip" onclick="toggleSkipLine()">Cách dòng</button>
         </div>
 
       <div class="canvas-viewport" id="viewport">
@@ -2735,7 +2412,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.4.1';
+    const APP_VERSION = '6.5.0';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -3801,7 +3478,7 @@
         if (badge) { badge.innerText = 'Đang tắt'; badge.style.background = '#475569'; }
       } else {
         if (posBox) posBox.style.display = 'flex';
-        if (badge) { badge.innerText = 'Đang bật'; badge.style.background = 'var(--accent)'; badge.style.color = '#0b0d13'; }
+        if (badge) { badge.innerText = 'Đang bật'; badge.style.background = 'var(--ink-black)'; badge.style.color = '#FAF8F5'; }
 
         const targetSub = 'subpanel' + type.charAt(0).toUpperCase() + type.slice(1);
         const subEl = document.getElementById(targetSub);
@@ -4292,8 +3969,8 @@
       const badge = document.getElementById('diagramStatusBadge');
       if (badge) {
         badge.innerText = isEnabled ? 'Đang bật' : 'Đang tắt';
-        badge.style.background = isEnabled ? 'var(--accent)' : '#475569';
-        badge.style.color = isEnabled ? '#0b0d13' : '#fff';
+        badge.style.background = isEnabled ? 'var(--ink-black)' : 'var(--bg-input)';
+        badge.style.color = isEnabled ? '#FAF8F5' : 'var(--text-muted)';
       }
     }
 
@@ -6297,9 +5974,9 @@
         return;
       }
       container.innerHTML = restylerState.labels.map((lb, idx) => `
-        <div style="display:inline-flex; align-items:center; gap:4px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:3px 7px; border-radius:6px; font-size:11px;">
-          <input type="text" value="${lb.text}" oninput="updateRestylerLabelText(${idx}, this.value)" style="background:transparent; border:none; color:#fff; width:70px; font-size:11px; outline:none; font-family:'${restylerState.font}', cursive;">
-          <span onclick="removeRestylerLabel(${idx})" style="cursor:pointer; color:#f87171; font-weight:bold; padding:0 2px;">✕</span>
+        <div style="display:inline-flex; align-items:center; gap:4px; background:var(--bg-card); border:1px solid var(--border-color); padding:3px 7px; border-radius:6px; font-size:11px;">
+          <input type="text" value="${lb.text}" oninput="updateRestylerLabelText(${idx}, this.value)" style="background:transparent; border:none; color:var(--text-main); width:70px; font-size:11px; outline:none; font-family:'${restylerState.font}', cursive;">
+          <span onclick="removeRestylerLabel(${idx})" style="cursor:pointer; color:var(--danger); font-weight:bold; padding:0 2px;">✕</span>
         </div>
       `).join('');
     }
@@ -7041,15 +6718,15 @@
       const title = document.getElementById('mobileSheetTitle');
 
       if (normType === 'style') {
-        if (title) title.innerHTML = '🖋️ Nét & Kiểu Chữ';
+        if (title) title.innerText = 'Nét & Kiểu chữ';
         body.innerHTML = `
           <div style="margin-bottom:14px;">
             <label class="form-label" style="margin-bottom:6px; display:block;">Font chữ viết tay:</label>
             <div class="mobile-font-grid">
-              <button class="btn btn-secondary mobile-font-btn ${state.font === 'JasonHandwriting5' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting5', this)">Jason 5 (Tự nhiên ★)</button>
-              <button class="btn btn-secondary mobile-font-btn ${state.font === 'LiuJianMaoCao' ? 'active' : ''}" onclick="setMobileFont('LiuJianMaoCao', this)">Liu Jian (Cực ẩu ★)</button>
-              <button class="btn btn-secondary mobile-font-btn ${state.font === 'LongCang' ? 'active' : ''}" onclick="setMobileFont('LongCang', this)">Long Cang (Nguệch ngoạc ★)</button>
-              <button class="btn btn-secondary mobile-font-btn ${state.font === 'ZhiMangXing' ? 'active' : ''}" onclick="setMobileFont('ZhiMangXing', this)">Zhi Mang Xing (Tốc ký ★)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'JasonHandwriting5' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting5', this)">Jason 5 (Tự nhiên)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'LiuJianMaoCao' ? 'active' : ''}" onclick="setMobileFont('LiuJianMaoCao', this)">Liu Jian (Cực ẩu)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'LongCang' ? 'active' : ''}" onclick="setMobileFont('LongCang', this)">Long Cang (Nguệch ngoạc)</button>
+              <button class="btn btn-secondary mobile-font-btn ${state.font === 'ZhiMangXing' ? 'active' : ''}" onclick="setMobileFont('ZhiMangXing', this)">Zhi Mang Xing (Tốc ký)</button>
               <button class="btn btn-secondary mobile-font-btn ${state.font === 'KleeOne' ? 'active' : ''}" onclick="setMobileFont('KleeOne', this)">Klee One (Bút chì)</button>
               <button class="btn btn-secondary mobile-font-btn ${state.font === 'JasonHandwriting4' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting4', this)">Jason 4 (Tốc ký nhẹ)</button>
               <button class="btn btn-secondary mobile-font-btn ${state.font === 'JasonHandwriting3' ? 'active' : ''}" onclick="setMobileFont('JasonHandwriting3', this)">Jason 3 (Nắn nót)</button>
@@ -7062,33 +6739,33 @@
           <div style="margin-bottom:14px;">
             <label class="form-label" style="margin-bottom:6px; display:block;">Màu mực:</label>
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <button class="tool-chip ${state.inkColor === 'gel_black' ? 'active' : ''}" onclick="setMobileInkColor('gel_black', this)">⚫ Mực Gel Đen</button>
-              <button class="tool-chip ${state.inkColor === 'blue' ? 'active' : ''}" onclick="setMobileInkColor('blue', this)">🔵 Mực Xanh</button>
-              <button class="tool-chip ${state.inkColor === 'purple' ? 'active' : ''}" onclick="setMobileInkColor('purple', this)">🟣 Mực Tím</button>
-              <button class="tool-chip ${state.inkColor === 'deep_black' ? 'active' : ''}" onclick="setMobileInkColor('deep_black', this)">⬛ Đen Đậm</button>
+              <button class="tool-chip ${state.inkColor === 'gel_black' ? 'active' : ''}" onclick="setMobileInkColor('gel_black', this)"><span style="width:9px;height:9px;border-radius:50%;background:#1c202a;display:inline-block;"></span> Gel đen</button>
+              <button class="tool-chip ${state.inkColor === 'blue' ? 'active' : ''}" onclick="setMobileInkColor('blue', this)"><span style="width:9px;height:9px;border-radius:50%;background:#1e3a8a;display:inline-block;"></span> Bút bi xanh</button>
+              <button class="tool-chip ${state.inkColor === 'purple' ? 'active' : ''}" onclick="setMobileInkColor('purple', this)"><span style="width:9px;height:9px;border-radius:50%;background:#6b21a8;display:inline-block;"></span> Mực tím</button>
+              <button class="tool-chip ${state.inkColor === 'deep_black' ? 'active' : ''}" onclick="setMobileInkColor('deep_black', this)"><span style="width:9px;height:9px;border-radius:50%;background:#000;display:inline-block;"></span> Đen đậm</button>
             </div>
           </div>
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-              <span>Cỡ chữ:</span><strong id="mFontSizeVal">${state.fontSize}px</strong>
+              <span>Cỡ chữ:</span><strong id="mFontSizeVal" style="font-variant-numeric:tabular-nums;">${state.fontSize}px</strong>
             </div>
             <input type="range" id="mFontSizeSlider" class="range-slider" min="12" max="32" value="${state.fontSize}" oninput="updateFontSize(this.value);">
           </div>
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-              <span>Độ nghiêng & lệch dòng tự nhiên:</span><strong id="mMessinessVal">${state.messiness}%</strong>
+              <span>Độ nghiêng & lệch dòng tự nhiên:</span><strong id="mMessinessVal" style="font-variant-numeric:tabular-nums;">${state.messiness}%</strong>
             </div>
             <input type="range" id="mMessinessSlider" class="range-slider" min="0" max="100" value="${state.messiness}" oninput="updateMessiness(this.value);">
           </div>
           <div class="ios-switch-row" style="margin-top:8px;">
-            <span class="ios-switch-label">Tự động gạch chữ sai (Chân thật)</span>
+            <span class="ios-switch-label">Tự động gạch chữ sai</span>
             <label class="ios-switch">
               <input type="checkbox" id="mAutoTypo" ${state.autoTypo ? 'checked' : ''} onchange="state.autoTypo = this.checked; paginateText(); renderCanvas();">
               <span class="ios-switch-track"></span>
             </label>
           </div>
-          <div class="ios-switch-row" style="margin-top:10px;">
-            <span class="ios-switch-label">Viết cách 1 dòng kẻ (Dãn dòng)</span>
+          <div class="ios-switch-row">
+            <span class="ios-switch-label">Viết cách 1 dòng kẻ</span>
             <label class="ios-switch">
               <input type="checkbox" id="mSkipLine" ${state.skipLine ? 'checked' : ''} onchange="toggleSkipLine();">
               <span class="ios-switch-track"></span>
@@ -7096,98 +6773,86 @@
           </div>
         `;
       } else if (normType === 'margin') {
-        if (title) title.innerHTML = '📏 Căn Dòng & Lề Vở';
+        if (title) title.innerText = 'Căn dòng & Lề vở';
         body.innerHTML = `
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-              <span>Căn bám dòng ô vở (Lên / Xuống):</span><strong id="mBaselineVal">${state.baselineOffset}px</strong>
+              <span>Căn bám dòng ô vở (Lên / Xuống):</span><strong id="mBaselineVal" style="font-variant-numeric:tabular-nums;">${state.baselineOffset}px</strong>
             </div>
             <input type="range" id="mBaselineSlider" class="range-slider" min="-20" max="20" value="${state.baselineOffset}" oninput="updateBaselineOffset(this.value); const mel = document.getElementById('mBaselineVal'); if(mel) mel.innerText = this.value + 'px';">
           </div>
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-              <span>Căn lề đỏ (Trái / Phải):</span><strong id="mMarginVal">${state.marginOffset}px</strong>
+              <span>Căn lề đỏ (Trái / Phải):</span><strong id="mMarginVal" style="font-variant-numeric:tabular-nums;">${state.marginOffset}px</strong>
             </div>
             <input type="range" id="mMarginSlider" class="range-slider" min="-40" max="40" value="${state.marginOffset}" oninput="updateMarginOffset(this.value); const mel = document.getElementById('mMarginVal'); if(mel) mel.innerText = this.value + 'px';">
           </div>
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-              <span>Đẩy lùi lề trên (Dòng trống đầu trang):</span><strong id="mTopMarginVal">${state.topMarginLines} dòng</strong>
+              <span>Đẩy lùi lề trên (Dòng trống đầu trang):</span><strong id="mTopMarginVal" style="font-variant-numeric:tabular-nums;">${state.topMarginLines} dòng</strong>
             </div>
             <input type="range" id="mTopMarginSlider" class="range-slider" min="0" max="8" value="${state.topMarginLines}" oninput="updateTopMargin(this.value); const mel = document.getElementById('mTopMarginVal'); if(mel) mel.innerText = this.value + ' dòng';">
           </div>
           <div style="margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-              <span>Dự trữ lề dưới (Tránh chạm mép đáy):</span><strong id="mBottomMarginVal">${state.bottomMarginLines} dòng</strong>
+              <span>Dự trữ lề dưới (Tránh chạm mép đáy):</span><strong id="mBottomMarginVal" style="font-variant-numeric:tabular-nums;">${state.bottomMarginLines} dòng</strong>
             </div>
             <input type="range" id="mBottomMarginSlider" class="range-slider" min="0" max="8" value="${state.bottomMarginLines}" oninput="updateBottomMargin(this.value); const mel = document.getElementById('mBottomMarginVal'); if(mel) mel.innerText = this.value + ' dòng';">
           </div>
           <div style="margin-top:14px;">
             <button class="btn btn-secondary" onclick="resetMargins();" style="width:100%; justify-content:center; padding:10px; font-size:13px; font-weight:600;">
-              ↺ Đặt lại lề mặc định
+              Đặt lại lề mặc định
             </button>
           </div>
         `;
       } else if (normType === 'template') {
-        if (title) title.innerHTML = '📓 Chọn Mẫu Vở';
+        if (title) title.innerText = 'Chọn mẫu giấy vở';
         let tplCardsHtml = '';
         Object.entries(TEMPLATES_CONFIG).forEach(([filename, cfg]) => {
           const isAct = state.notebookTemplate === filename;
           tplCardsHtml += `
             <div class="template-card ${isAct ? 'active' : ''}" onclick="setMobileTemplate('${filename}', this)" style="display:flex; flex-direction:row; align-items:center; gap:10px; padding:8px;">
-              <img src="${getAssetUrl('assets/' + filename)}" style="width:50px; height:50px; object-fit:contain; background:#141721; border-radius:6px; flex-shrink:0;">
+              <img src="${getAssetUrl('assets/' + filename)}" style="width:48px; height:48px; object-fit:cover; background:var(--bg-desk); border:1px solid var(--border-color); border-radius:6px; flex-shrink:0;">
               <div style="flex:1; min-width:0;">
                 <div style="font-size:13px; font-weight:600; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${cfg.name}</div>
-                <div style="font-size:11px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${cfg.isSpread ? 'Trang Đôi 3D' : 'Trang Đơn'} • ${cfg.desc}</div>
+                <div style="font-size:11px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${cfg.isSpread ? 'Trang đôi' : 'Trang đơn'} · ${cfg.desc}</div>
               </div>
-              ${isAct ? '<span class="sheet-check" style="color:var(--accent); font-size:14px; font-weight:bold;">✓</span>' : ''}
+              ${isAct ? '<span class="sheet-check" style="color:var(--ink-black); font-size:14px; font-weight:700;">✓</span>' : ''}
             </div>
           `;
         });
         tplCardsHtml += `
-          <button class="btn btn-secondary" onclick="clearAppCacheAndReload()" style="width:100%; margin-top:8px; font-size:12px; padding:10px; border-color:var(--accent); color:var(--accent); display:flex; align-items:center; justify-content:center; gap:6px; background:rgba(56,189,248,0.06);">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-            <span>Làm mới & Xóa cache mẫu vở mới nhất</span>
+          <button class="btn btn-secondary" onclick="clearAppCacheAndReload()" style="width:100%; margin-top:6px; font-size:12px; padding:10px; display:flex; align-items:center; justify-content:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            <span>Làm mới & xóa cache mẫu vở</span>
           </button>
         `;
         body.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px;">${tplCardsHtml}</div>`;
       } else if (normType === 'diagram') {
-        if (title) title.innerHTML = '🪄 AI Vẽ Lại Sơ Đồ Vào Vở';
+        if (title) title.innerText = 'Chèn sơ đồ vào vở';
         const hasDiag = state.diagram && state.diagram.enabled;
         body.innerHTML = `
-          <!-- PRIMARY ACTION: UPLOAD IMAGE -> AI AUTO REDRAWS -> AUTO ADDS TO NOTEBOOK -->
-          <div style="background: linear-gradient(135deg, rgba(147,51,234,0.22), rgba(56,189,248,0.20)); border: 2px dashed rgba(168,85,247,0.6); border-radius: 16px; padding: 20px 14px; margin-bottom: 14px; text-align: center; cursor: pointer;" onclick="document.getElementById('aiDiagramAutoFileInput').click()">
-            <div style="font-size: 36px; margin-bottom: 6px;">📸 🪄</div>
-            <strong style="font-size: 15px; color: #ffffff; display: block; margin-bottom: 4px;">Up ảnh sơ đồ lên</strong>
-            <span style="font-size: 12px; color: rgba(255,255,255,0.85); display: block; line-height: 1.45;">
-              AI sẽ <b>tự động phân tích & vẽ lại</b> thành nét bút bi rồi <b>tự thêm vào trang vở</b>
-            </span>
-            <button type="button" class="btn btn-primary" style="margin-top: 14px; width: 100%; justify-content: center; padding: 11px; font-size: 13px; font-weight: 600; gap: 8px; background: linear-gradient(135deg,#9333ea,#38bdf8);">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Chọn Ảnh Để AI Tự Vẽ Lại
-            </button>
-          </div>
-
-          <!-- OPTIONAL: AI SETTINGS -->
-          <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:10px; padding:10px 12px; margin-bottom:14px;">
-            <div style="font-size:11.5px; color:var(--text-dim);">
-              🔑 Kết nối Google AI Studio (Tùy chọn):
+          <div style="background:var(--bg-base); border:1.5px dashed var(--border-hover); border-radius:14px; padding:18px 14px; margin-bottom:12px; text-align:center; cursor:pointer;" onclick="document.getElementById('aiDiagramAutoFileInput').click()">
+            <div style="width:38px; height:38px; border-radius:10px; background:#fff; border:1px solid var(--border-color); display:inline-flex; align-items:center; justify-content:center; margin-bottom:8px; color:var(--text-main);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             </div>
-            <button class="btn btn-secondary" onclick="configGeminiApiKey()" style="font-size:11px; padding:5px 10px;">
-              Cài đặt Key
+            <strong style="font-size:14px; color:var(--text-main); display:block; margin-bottom:3px;">Tải ảnh sơ đồ từ máy</strong>
+            <span style="font-size:12px; color:var(--text-muted); display:block; line-height:1.45;">
+              Tự động chuyển nét bút bi và hòa mực vào trang vở
+            </span>
+            <button type="button" class="btn btn-primary" style="margin-top:12px; width:100%; justify-content:center; padding:10px; font-size:13px;">
+              Chọn ảnh sơ đồ
             </button>
           </div>
 
-          <!-- Preset Handwritten Diagrams -->
-          <div style="margin-bottom:10px;">
-            <button class="btn btn-secondary" onclick="loadChatGptSampleDiagram()" style="width:100%; justify-content:center; padding:11px; font-size:12.5px; font-weight:600; gap:8px; border-color:rgba(56,189,248,0.5); color:var(--accent); background:rgba(56,189,248,0.08);">
-              📝 Chèn sơ đồ Thủy triều vẽ tay (Bản AI của anh)
-            </button>
+          <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-base); border:1px solid var(--border-color); border-radius:10px; padding:9px 12px; margin-bottom:12px;">
+            <div style="font-size:11.5px; color:var(--text-muted);">API Key Google AI Studio (tùy chọn)</div>
+            <button class="btn btn-secondary" onclick="configGeminiApiKey()" style="font-size:11px; padding:5px 10px;">Cài đặt</button>
           </div>
-          <div style="margin-bottom:14px;">
-            <button class="btn btn-secondary" onclick="loadSampleHanddrawnDiagram()" style="width:100%; justify-content:center; padding:11px; font-size:12px; font-weight:500; gap:8px;">
-              🌊 Hoặc dùng mẫu Thủy triều bút bi xanh số 2
-            </button>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+            <button class="btn btn-secondary" onclick="loadChatGptSampleDiagram()" style="justify-content:center; padding:9px 8px; font-size:11.5px;">Mẫu Thủy triều 1</button>
+            <button class="btn btn-secondary" onclick="loadSampleHanddrawnDiagram()" style="justify-content:center; padding:9px 8px; font-size:11.5px;">Mẫu Thủy triều 2</button>
           </div>
           ${hasDiag ? (() => {
             const dCfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
@@ -7196,12 +6861,12 @@
               ? `Trang ${state.diagram.page * 2 + 1}-${state.diagram.page * 2 + 2} (Tờ ${state.diagram.page + 1}/${state.totalPages})`
               : `Trang ${state.diagram.page + 1} / ${state.totalPages}`;
             return `
-            <div style="background:rgba(255,255,255,0.04); border:1px solid var(--border-color); border-radius:10px; padding:12px; margin-bottom:14px;">
-              <div style="font-size:13px; font-weight:600; margin-bottom:10px; color:var(--text-main);">⚙️ Điều chỉnh vị trí sơ đồ:</div>
+            <div style="background:var(--bg-base); border:1px solid var(--border-color); border-radius:12px; padding:12px; margin-bottom:10px;">
+              <div style="font-size:12.5px; font-weight:600; margin-bottom:10px; color:var(--text-main);">Vị trí sơ đồ trên trang</div>
               <div style="margin-bottom:12px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-bottom:6px;">
-                  <span>Trang đặt sơ đồ:</span>
-                  <strong id="mDiagPageVal" style="color:var(--accent);">${dPageLabel}</strong>
+                  <span style="color:var(--text-muted);">Trang đặt sơ đồ:</span>
+                  <strong id="mDiagPageVal" style="color:var(--accent); font-variant-numeric:tabular-nums;">${dPageLabel}</strong>
                 </div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
                   <button type="button" id="mDiagPrevPageBtn" class="btn btn-secondary" ${state.diagram.page <= 0 ? 'disabled' : ''} onclick="moveDiagramPage(-1)" style="justify-content:center; padding:8px; font-size:12px;">◀ Trang trước</button>
@@ -7210,32 +6875,32 @@
               </div>
               ${dIsSpread ? `
               <div style="margin-bottom:12px;">
-                <div style="font-size:12px; margin-bottom:6px;">Mặt trang (Vở đôi):</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;">Mặt trang (Vở đôi):</div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                  <button type="button" id="mDiagSideLeft" class="btn btn-secondary ${state.diagram.spreadSide === 'left' ? 'active' : ''}" onclick="setDiagramSpreadSide('left')" style="justify-content:center; padding:8px; font-size:12px;">📄 Trang Trái</button>
-                  <button type="button" id="mDiagSideRight" class="btn btn-secondary ${state.diagram.spreadSide !== 'left' ? 'active' : ''}" onclick="setDiagramSpreadSide('right')" style="justify-content:center; padding:8px; font-size:12px;">📄 Trang Phải</button>
+                  <button type="button" id="mDiagSideLeft" class="btn btn-secondary ${state.diagram.spreadSide === 'left' ? 'active' : ''}" onclick="setDiagramSpreadSide('left')" style="justify-content:center; padding:8px; font-size:12px;">Trang Trái</button>
+                  <button type="button" id="mDiagSideRight" class="btn btn-secondary ${state.diagram.spreadSide !== 'left' ? 'active' : ''}" onclick="setDiagramSpreadSide('right')" style="justify-content:center; padding:8px; font-size:12px;">Trang Phải</button>
                 </div>
               </div>
               ` : ''}
               <div style="margin-bottom:12px;">
                 <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
-                  <span>Dòng bắt đầu:</span><strong id="mDiagStartVal">Dòng ${state.diagram.startLine + 1}</strong>
+                  <span style="color:var(--text-muted);">Dòng bắt đầu:</span><strong id="mDiagStartVal" style="font-variant-numeric:tabular-nums;">Dòng ${state.diagram.startLine + 1}</strong>
                 </div>
                 <input type="range" class="range-slider" min="0" max="25" value="${state.diagram.startLine}" oninput="state.diagram.startLine = parseInt(this.value, 10); paginateText(); renderCanvas(); syncDiagramPositionUI(); document.getElementById('mDiagStartVal').innerText = 'Dòng ' + (parseInt(this.value, 10) + 1);">
               </div>
               <div style="margin-bottom:12px;">
                 <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
-                  <span>Độ cao (số dòng chiếm):</span><strong id="mDiagSpanVal">${state.diagram.lineSpan} dòng</strong>
+                  <span style="color:var(--text-muted);">Độ cao (số dòng chiếm):</span><strong id="mDiagSpanVal" style="font-variant-numeric:tabular-nums;">${state.diagram.lineSpan} dòng</strong>
                 </div>
                 <input type="range" class="range-slider" min="4" max="22" value="${state.diagram.lineSpan}" oninput="state.diagram.lineSpan = parseInt(this.value, 10); paginateText(); renderCanvas(); syncDiagramPositionUI(); document.getElementById('mDiagSpanVal').innerText = this.value + ' dòng';">
               </div>
-              <button class="btn btn-secondary" onclick="removeDiagram(); openMobileSheet('diagram');" style="width:100%; justify-content:center; color:#f87171; border-color:rgba(239,68,68,0.3); padding:10px; font-size:12px; font-weight:600;">
-                ✕ Xóa sơ đồ khỏi trang vở
+              <button class="btn btn-secondary tool-chip-danger" onclick="removeDiagram(); openMobileSheet('diagram');" style="width:100%; justify-content:center; padding:9px; font-size:12px; font-weight:600;">
+                Xóa sơ đồ khỏi trang vở
               </button>
             </div>
           `; })() : `
-            <div style="font-size:12px; color:var(--text-dim); line-height:1.5; background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; border:1px dashed var(--border-color);">
-              💡 <strong>Mẹo:</strong> Sau khi tải ảnh sơ đồ, ảnh sẽ tự động hòa mực bút bi vào trang vở (chế độ Multiply không viền trắng), và toàn bộ chữ viết tay bên dưới sẽ tự động dạt xuống dưới né sơ đồ.
+            <div style="font-size:12px; color:var(--text-muted); line-height:1.5; background:var(--bg-base); padding:10px 12px; border-radius:10px; border:1px solid var(--border-color);">
+              Sau khi chèn, sơ đồ tự hòa mực không viền trắng và chữ viết tay bên dưới sẽ tự dạt xuống né sơ đồ.
             </div>
           `}
         `;
@@ -7508,26 +7173,26 @@
   <div class="pwa-modal-overlay" id="pwaModal" onclick="closePwaInstallModal()">
     <div class="pwa-modal-card" onclick="event.stopPropagation()">
       <div class="pwa-modal-header">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <img src="assets/icon-192.png" style="width:36px; height:36px; border-radius:8px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <img src="assets/icon-192.png" style="width:34px; height:34px; border-radius:8px; border:1px solid var(--border-color);">
           <div>
-            <h3 style="font-size:15px; margin:0; color:#fff;">Cài App Chép Tay AI</h3>
-            <p style="font-size:11px; margin:0; color:var(--text-dim);">Dùng mượt mà không cần mở trình duyệt</p>
+            <h3 style="font-size:14.5px; margin:0; color:var(--text-main); font-weight:600;">Cài ứng dụng Chép Tay</h3>
+            <p style="font-size:11px; margin:0; color:var(--text-dim);">Mở nhanh từ màn hình chính</p>
           </div>
         </div>
         <button class="mobile-sheet-close" onclick="closePwaInstallModal()">✕</button>
       </div>
       <div class="pwa-modal-body">
         <div class="pwa-step">
-          <div class="pwa-step-badge">📱 iPhone / iPad (Safari)</div>
-          <p>1. Bấm biểu tượng <strong>Chia sẻ</strong> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> ở thanh dưới cùng Safari.<br>2. Cuộn xuống và chọn <strong>"Thêm vào MH chính" (Add to Home Screen)</strong>.</p>
+          <div class="pwa-step-badge">iPhone / iPad (Safari)</div>
+          <p>1. Bấm biểu tượng <strong>Chia sẻ</strong> ở thanh dưới cùng Safari.<br>2. Cuộn xuống chọn <strong>"Thêm vào màn hình chính"</strong>.</p>
         </div>
         <div class="pwa-step">
-          <div class="pwa-step-badge">🤖 Android (Chrome / Cốc Cốc)</div>
-          <p>1. Bấm nút <strong>3 chấm ⋮</strong> ở góc trên cùng bên phải.<br>2. Chọn <strong>"Cài đặt ứng dụng"</strong> hoặc <strong>"Thêm vào màn hình chính"</strong>.</p>
+          <div class="pwa-step-badge">Android (Chrome)</div>
+          <p>1. Bấm biểu tượng <strong>3 chấm ⋮</strong> ở góc trên cùng bên phải.<br>2. Chọn <strong>"Cài đặt ứng dụng"</strong> hoặc <strong>"Thêm vào màn hình chính"</strong>.</p>
         </div>
-        <button class="btn btn-primary" onclick="installPWA(); closePwaInstallModal();" style="width:100%; justify-content:center; padding:10px; font-weight:700;">
-          📲 Bấm Cài Đặt Ngay
+        <button class="btn btn-primary" onclick="installPWA(); closePwaInstallModal();" style="width:100%; justify-content:center; padding:10px;">
+          Cài đặt ngay
         </button>
       </div>
     </div>
@@ -7536,41 +7201,35 @@
 
   <!-- DIAGRAM TEXT RESTYLER MODAL -->
   <div class="download-modal-overlay" id="diagramRestylerModal" onclick="closeDiagramRestylerModal()">
-    <div class="download-modal-card" style="max-width:540px; width:92%; max-height:88vh; display:flex; flex-direction:column; padding:0; overflow:hidden;" onclick="event.stopPropagation()">
-      <div class="download-modal-header" style="padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.02);">
-        <div style="font-size:15px; font-weight:600; color:var(--text-main); display:flex; align-items:center; gap:8px;">
-          <span>🪄</span>
-          <span>Sửa Font Chữ Trong Ảnh Sơ Đồ</span>
-        </div>
+    <div class="download-modal-card" style="max-width:520px; width:92%; max-height:88vh; display:flex; flex-direction:column; padding:0; overflow:hidden;" onclick="event.stopPropagation()">
+      <div class="download-modal-header">
+        <div class="download-modal-title">Sửa chữ trong ảnh sơ đồ</div>
         <button class="sheet-close-btn" onclick="closeDiagramRestylerModal()" title="Đóng">✕</button>
       </div>
 
-      <div style="padding:14px 18px; overflow-y:auto; flex:1;">
-        <!-- STEP 1: Upload or Choose Sample -->
+      <div style="padding:16px 20px; overflow-y:auto; flex:1;">
         <div style="display:flex; gap:8px; margin-bottom:12px;">
           <button class="btn btn-secondary" onclick="document.getElementById('restylerFileInput').click()" style="flex:1; justify-content:center; font-size:12px; padding:9px;">
-            📁 Chọn ảnh khác từ máy
+            Chọn ảnh từ máy
           </button>
-          <button class="btn btn-secondary" onclick="loadSampleIntoRestyler()" style="flex:1; justify-content:center; font-size:12px; padding:9px; border-color:var(--brand-primary); color:var(--brand-primary);">
-            📝 Dùng ảnh SGK mẫu
+          <button class="btn btn-secondary" onclick="loadSampleIntoRestyler()" style="flex:1; justify-content:center; font-size:12px; padding:9px;">
+            Dùng ảnh SGK mẫu
           </button>
           <input type="file" id="restylerFileInput" accept="image/*" style="display:none;" onchange="handleRestylerFileUpload(this.files[0])">
         </div>
 
-        <!-- PREVIEW CANVAS -->
-        <div style="background:#0a0c10; border:1px solid rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; margin-bottom:14px; text-align:center; position:relative; min-height:160px; max-height:240px; display:flex; align-items:center; justify-content:center;">
+        <div style="background:var(--bg-desk); border:1px solid var(--border-color); border-radius:10px; overflow:hidden; margin-bottom:14px; text-align:center; position:relative; min-height:160px; max-height:240px; display:flex; align-items:center; justify-content:center;">
           <canvas id="restylerCanvas" style="max-width:100%; max-height:230px; object-fit:contain; display:block; margin:auto;"></canvas>
-          <div id="restylerScanLoading" style="position:absolute; inset:0; background:rgba(0,0,0,0.75); display:none; flex-direction:column; align-items:center; justify-content:center; gap:8px; z-index:10;">
+          <div id="restylerScanLoading" style="position:absolute; inset:0; background:rgba(28,25,23,0.72); display:none; flex-direction:column; align-items:center; justify-content:center; gap:8px; z-index:10;">
             <div class="spinner"></div>
-            <span style="font-size:12px; color:#fff;" id="restylerLoadingMsg">AI đang quét vị trí chữ trong ảnh...</span>
+            <span style="font-size:12px; color:#FAF8F5;" id="restylerLoadingMsg">Đang quét vị trí chữ trong ảnh...</span>
           </div>
         </div>
 
-        <!-- CONTROLS -->
         <div style="margin-bottom:12px;">
           <label class="form-label" style="font-size:12px; margin-bottom:6px; display:block;">Font chữ viết tay thay thế:</label>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-            <button class="tool-chip active" id="rstFont_JasonHandwriting5" onclick="setRestylerFont('JasonHandwriting5')">Jason 5 (Tự nhiên ★)</button>
+            <button class="tool-chip active" id="rstFont_JasonHandwriting5" onclick="setRestylerFont('JasonHandwriting5')">Jason 5 (Tự nhiên)</button>
             <button class="tool-chip" id="rstFont_JasonHandwriting3" onclick="setRestylerFont('JasonHandwriting3')">Jason 3 (Nắn nót)</button>
             <button class="tool-chip" id="rstFont_JasonHandwriting4" onclick="setRestylerFont('JasonHandwriting4')">Jason 4 (Tốc ký)</button>
             <button class="tool-chip" id="rstFont_JasonHandwriting1" onclick="setRestylerFont('JasonHandwriting1')">Jason 1 (Đều tay)</button>
@@ -7580,9 +7239,9 @@
         <div style="margin-bottom:12px;">
           <label class="form-label" style="font-size:12px; margin-bottom:6px; display:block;">Màu mực:</label>
           <div style="display:flex; gap:6px;">
-            <button class="tool-chip active" id="rstColor_blue" onclick="setRestylerColor('blue')">🔵 Bút bi xanh</button>
-            <button class="tool-chip" id="rstColor_black" onclick="setRestylerColor('black')">⚫ Mực đen</button>
-            <button class="tool-chip" id="rstColor_purple" onclick="setRestylerColor('purple')">🟣 Mực tím</button>
+            <button class="tool-chip active" id="rstColor_blue" onclick="setRestylerColor('blue')">Bút bi xanh</button>
+            <button class="tool-chip" id="rstColor_black" onclick="setRestylerColor('black')">Mực đen</button>
+            <button class="tool-chip" id="rstColor_purple" onclick="setRestylerColor('purple')">Mực tím</button>
           </div>
         </div>
 
@@ -7594,19 +7253,18 @@
           <input type="range" class="range-slider" min="60" max="150" value="100" oninput="setRestylerScale(this.value)">
         </div>
 
-        <!-- EDITABLE DETECTED LABELS LIST -->
         <div style="margin-bottom:10px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <label class="form-label" style="font-size:12px; margin-bottom:0;">Các chữ trên sơ đồ (có thể bấm sửa):</label>
+            <label class="form-label" style="font-size:12px; margin-bottom:0;">Nhãn chữ trên sơ đồ (bấm để sửa):</label>
             <button class="btn btn-secondary" onclick="addCustomRestylerLabel()" style="padding:3px 8px; font-size:11px;">+ Thêm chữ</button>
           </div>
-          <div id="restylerLabelsContainer" style="display:flex; flex-wrap:wrap; gap:6px; max-height:100px; overflow-y:auto; padding:6px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px;"></div>
+          <div id="restylerLabelsContainer" style="display:flex; flex-wrap:wrap; gap:6px; max-height:100px; overflow-y:auto; padding:8px; background:var(--bg-base); border:1px solid var(--border-color); border-radius:8px;"></div>
         </div>
       </div>
 
-      <div style="padding:12px 18px; border-top:1px solid rgba(255,255,255,0.1); display:flex; gap:10px; background:rgba(255,255,255,0.02);">
-        <button class="btn btn-secondary" onclick="closeDiagramRestylerModal()" style="flex:1; justify-content:center; padding:11px;">✕ Hủy</button>
-        <button class="btn btn-primary" onclick="applyRestyledDiagramToNotebook()" style="flex:2; justify-content:center; padding:11px; font-weight:600;">✓ Chèn vào trang vở</button>
+      <div style="padding:12px 20px; border-top:1px solid var(--border-color); display:flex; gap:10px; background:var(--bg-base);">
+        <button class="btn btn-secondary" onclick="closeDiagramRestylerModal()" style="flex:1; justify-content:center; padding:10px;">Hủy</button>
+        <button class="btn btn-primary" onclick="applyRestyledDiagramToNotebook()" style="flex:2; justify-content:center; padding:10px;">Chèn vào trang vở</button>
       </div>
     </div>
   </div>
@@ -7616,12 +7274,12 @@
     <div class="download-modal-card" onclick="event.stopPropagation()">
       <div class="download-modal-header">
         <div class="download-modal-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2.2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
-          <span>Xác Nhận Tải Ảnh Vở</span>
+          <span>Xuất ảnh trang vở</span>
         </div>
         <button class="mobile-sheet-close" onclick="closeDownloadModal()" title="Đóng">✕</button>
       </div>
@@ -7631,11 +7289,10 @@
           <img id="downloadPreviewImg" alt="Xem trước ảnh trang vở" src="">
         </div>
 
-        <!-- RESOLUTION SELECTOR: 1x, 2x Retina HD, 3x Ultra HD 4K -->
         <div class="download-scale-picker">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="scale-picker-title">Độ Nét Khi Xuất Ảnh:</span>
-            <span style="font-size:10.5px; color:#38bdf8; font-weight:600;">Vector 2K/4K HD</span>
+            <span class="scale-picker-title">Độ phân giải ảnh</span>
+            <span style="font-size:11px; color:var(--text-muted); font-weight:600;">JPG 98%</span>
           </div>
           <div class="scale-pills-row">
             <button type="button" class="scale-pill" id="scalePill1" onclick="setExportScale(1)">
@@ -7643,174 +7300,164 @@
               <span class="scale-sub">768p</span>
             </button>
             <button type="button" class="scale-pill active" id="scalePill2" onclick="setExportScale(2)">
-              <span>2K Cực Nét ★</span>
+              <span>2K Nét</span>
               <span class="scale-sub">Khuyên dùng</span>
             </button>
             <button type="button" class="scale-pill" id="scalePill3" onclick="setExportScale(3)">
-              <span>4K Siêu Nét</span>
-              <span class="scale-sub">In ấn A4</span>
+              <span>4K In ấn</span>
+              <span class="scale-sub">A4 siêu nét</span>
             </button>
           </div>
         </div>
 
         <div class="download-meta-grid">
           <div class="download-meta-item">
-            <span class="download-meta-label">Trang Hiện Tại</span>
+            <span class="download-meta-label">Trang hiện tại</span>
             <span class="download-meta-val" id="downloadPageLabel">Trang 1 / 1</span>
           </div>
           <div class="download-meta-item">
-            <span class="download-meta-label">Định Dạng Tệp</span>
-            <span class="download-meta-val" style="color:#38bdf8;">Ảnh JPG (.jpg)</span>
+            <span class="download-meta-label">Định dạng</span>
+            <span class="download-meta-val">Ảnh JPG (.jpg)</span>
           </div>
           <div class="download-meta-item">
-            <span class="download-meta-label">Chất Lượng Xuất</span>
-            <span class="download-meta-val" id="downloadQualityLabel">98% 2K Cực Nét (2x)</span>
+            <span class="download-meta-label">Chất lượng</span>
+            <span class="download-meta-val" id="downloadQualityLabel">98% 2K (2x)</span>
           </div>
           <div class="download-meta-item">
-            <span class="download-meta-label">Kích Thước Ảnh</span>
+            <span class="download-meta-label">Kích thước</span>
             <span class="download-meta-val" id="downloadDimLabel">1536 × 2048 px</span>
           </div>
         </div>
-
-        <p style="font-size:11.5px; color:var(--text-dim); margin:0; line-height:1.45; text-align:center;">
-          Ảnh xuất ở độ phân giải siêu nét (2K/4K), giữ nguyên độ mảnh của ngòi bút và ô ly giấy viết tay, không bị vỡ hạt khi phóng to hay in ấn.
-        </p>
       </div>
 
       <div class="download-modal-footer">
         <button class="btn-download-primary" id="btnDownloadSingleJpg" onclick="executeDownloadJpg()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
-          <span id="downloadBtnText">Tải Ảnh (.JPG) Về Máy</span>
+          <span id="downloadBtnText">Tải ảnh (.JPG)</span>
         </button>
 
-        <button class="btn-download-primary" id="btnDownloadAllJpg" onclick="executeDownloadAllJpg()" style="display:none; background:linear-gradient(135deg, #4f46e5, #6366f1); box-shadow:0 4px 12px rgba(99,102,241,0.35);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <button class="btn-download-primary" id="btnDownloadAllJpg" onclick="executeDownloadAllJpg()" style="display:none; background:var(--accent);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
           </svg>
-          <span id="downloadAllBtnText">Tải Toàn Bộ Các Trang (.JPG)</span>
+          <span id="downloadAllBtnText">Tải toàn bộ các trang (.JPG)</span>
         </button>
 
         <button class="btn-download-share" id="btnDownloadShare" onclick="executeShareJpg()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
             <polyline points="16 6 12 2 8 6"/>
             <line x1="12" y1="2" x2="12" y2="15"/>
           </svg>
-          <span>Lưu vào Thư Viện Ảnh (iOS / Android)</span>
+          <span>Lưu vào Thư viện ảnh</span>
         </button>
 
-        <button class="btn-download-cancel" onclick="closeDownloadModal()">
-          ✕ Hủy Bỏ
-        </button>
+        <button class="btn-download-cancel" onclick="closeDownloadModal()">Hủy</button>
       </div>
     </div>
   </div>
 
-  <!-- AI DIAGRAM & TABLE SCAN STUDIO MODAL -->
+  <!-- DIAGRAM STUDIO MODAL -->
   <div class="ai-studio-overlay" id="aiDiagramStudioModal" onclick="if(event.target===this)closeAiDiagramStudio()">
     <div class="ai-studio-card">
       <div class="ai-studio-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <div class="ai-studio-icon">✨</div>
+        <div style="display:flex; align-items:center; gap:11px;">
+          <div class="ai-studio-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          </div>
           <div>
-            <h3 style="margin:0; font-size:15px; font-weight:700; color:#fff;">AI Vision - Quét Sơ Đồ & Bảng Viết Tay</h3>
-            <p style="margin:0; font-size:11.5px; color:var(--text-muted);">Bóc tách thực thể từ ảnh chụp và vẽ lại 100% bằng nét bút viết tay tự nhiên</p>
+            <h3 style="margin:0; font-size:15px; font-weight:600; color:var(--text-main);">Chèn sơ đồ & bảng viết tay</h3>
+            <p style="margin:0; font-size:11.5px; color:var(--text-dim);">Quét từ ảnh chụp hoặc chỉnh nhanh mẫu sơ đồ có sẵn</p>
           </div>
         </div>
         <button class="ai-studio-close" onclick="closeAiDiagramStudio()" title="Đóng">✕</button>
       </div>
 
       <div class="ai-studio-body">
-        <!-- Upload / Camera Dropzone -->
         <div class="ai-studio-dropzone" onclick="document.getElementById('aiStudioFileInput').click()">
           <input type="file" id="aiStudioFileInput" accept="image/*" style="display:none;" onchange="handleAiStudioPhotoUpload(this.files[0])">
-          <div class="dropzone-pulse-circle">📸</div>
+          <div class="dropzone-pulse-circle">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
           <div>
-            <div style="font-weight:600; font-size:13.5px; color:var(--accent);">Chạm để chụp hoặc chọn ảnh sơ đồ / bảng từ sách vở</div>
-            <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">AI Vision sẽ quét hình thái, nhận diện công thức, mũi tên và xuất nét bút bi</div>
+            <div style="font-weight:600; font-size:13px; color:var(--text-main);">Chọn hoặc chụp ảnh sơ đồ từ sách vở</div>
+            <div style="font-size:11.5px; color:var(--text-dim); margin-top:2px;">Nhận diện cấu trúc, công thức và vẽ lại bằng nét bút bi</div>
           </div>
         </div>
 
-        <!-- 5 Visual Archetypes for 1-Tap AI Selection -->
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim);">Chọn hoặc thử nghiệm mẫu sơ đồ:</span>
-          <span id="aiDetectedBadge" class="badge" style="background:rgba(56,189,248,0.15); color:var(--accent); border:1px solid rgba(56,189,248,0.3);">Sẵn sàng</span>
+          <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim);">Mẫu sơ đồ cấu trúc</span>
+          <span id="aiDetectedBadge" class="badge">Sẵn sàng</span>
         </div>
 
         <div class="ai-archetypes-row">
           <div class="archetype-pill active" id="archChem" onclick="selectStudioArchetype('chem')">
-            <span class="arch-emoji">🧪</span>
+            <span class="arch-emoji">⇄</span>
             <div class="arch-info">
-              <span class="arch-name">Sơ đồ Chuyển đổi (Hóa học / Mol)</span>
-              <span class="arch-desc">Khối lượng ⇄ Mol ⇄ Số hạt (Ảnh mẫu 1)</span>
+              <span class="arch-name">Sơ đồ chuyển đổi</span>
+              <span class="arch-desc">Khối lượng ⇄ Mol ⇄ Số hạt</span>
             </div>
           </div>
           <div class="archetype-pill" id="archTree" onclick="selectStudioArchetype('tree')">
-            <span class="arch-emoji">🌲</span>
+            <span class="arch-emoji">⌥</span>
             <div class="arch-info">
-              <span class="arch-name">Cây Phân Cấp Đa Tầng</span>
-              <span class="arch-desc">Hệ sinh thái, hộp bóng đổ 3D (Ảnh mẫu 2)</span>
+              <span class="arch-name">Cây phân cấp</span>
+              <span class="arch-desc">Phân nhánh đa tầng</span>
             </div>
           </div>
           <div class="archetype-pill" id="archTable3" onclick="selectStudioArchetype('table3')">
-            <span class="arch-emoji">📊</span>
+            <span class="arch-emoji">⊞</span>
             <div class="arch-info">
-              <span class="arch-name">Bảng Từ Vựng 3 Cột</span>
-              <span class="arch-desc">Chữ Hán | Pinyin | Nghĩa & Ví dụ</span>
+              <span class="arch-name">Bảng từ vựng 3 cột</span>
+              <span class="arch-desc">Chữ Hán · Pinyin · Nghĩa</span>
             </div>
           </div>
           <div class="archetype-pill" id="archProcess" onclick="selectStudioArchetype('process')">
-            <span class="arch-emoji">⚡</span>
+            <span class="arch-emoji">→</span>
             <div class="arch-info">
-              <span class="arch-name">Quy Trình Tuần Hoàn</span>
-              <span class="arch-desc">Các bước tuần hoàn nối tiếp</span>
+              <span class="arch-name">Quy trình các bước</span>
+              <span class="arch-desc">Các bước nối tiếp</span>
             </div>
           </div>
           <div class="archetype-pill" id="archMindmap" onclick="selectStudioArchetype('mindmap')">
-            <span class="arch-emoji">🧠</span>
+            <span class="arch-emoji">◎</span>
             <div class="arch-info">
-              <span class="arch-name">Sơ Đồ Tư Duy (Mindmap)</span>
+              <span class="arch-name">Sơ đồ tư duy</span>
               <span class="arch-desc">Chủ đề trung tâm tỏa nhánh</span>
             </div>
           </div>
         </div>
 
-        <!-- Live AI Scan HUD & Progress -->
         <div class="ai-scan-hud" id="aiScanHud">
           <div class="ai-scan-laser" id="aiScanLaser"></div>
           <div class="ai-scan-preview-box">
             <img id="aiScanThumb" class="ai-scan-thumb" src="" alt="Scan Target" style="display:none;">
             <div id="aiScanPlaceholder" class="ai-scan-placeholder">
-              <span style="font-size:22px;">🔬</span>
-              <span style="font-size:10px; color:var(--text-muted);">AI Radar</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             </div>
           </div>
           <div class="ai-scan-logs" id="aiScanLogs">
-            <div class="ai-log-item active"><span class="log-dot">●</span> <span>Hệ thống AI Vision sẵn sàng quét ảnh sơ đồ...</span></div>
+            <div class="ai-log-item active"><span class="log-dot">●</span> <span>Sẵn sàng quét ảnh hoặc chỉnh trực tiếp nội dung bên dưới.</span></div>
           </div>
         </div>
 
-        <!-- Extracted Structure Inspector (Editable in real-time) -->
         <div class="ai-inspector-box" id="aiInspectorBox">
-          <!-- Populated by JS based on active archetype -->
         </div>
       </div>
 
-      <!-- Action Footer -->
       <div class="ai-studio-footer">
-        <button class="btn btn-secondary" onclick="clearDiagram(); closeAiDiagramStudio();" style="color:#ef4444; border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.08); font-size:12px; padding:6px 12px; display:inline-flex; align-items:center; gap:5px;" title="Xóa sơ đồ hiện tại">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-          <span>Xóa Sơ Đồ</span>
+        <button class="btn btn-secondary tool-chip-danger" onclick="clearDiagram(); closeAiDiagramStudio();" style="font-size:12px; padding:6px 12px;" title="Xóa sơ đồ hiện tại">
+          Xóa sơ đồ
         </button>
         <div style="display:flex; gap:8px;">
           <button class="btn btn-secondary" onclick="closeAiDiagramStudio()" style="font-size:12px; padding:6px 14px;">Đóng</button>
-          <button class="btn btn-primary" onclick="applyAiDiagramFromStudio()" style="background:linear-gradient(135deg, #0ea5e9, #6366f1); border:none; font-weight:600; font-size:12.5px; padding:7px 18px; box-shadow:0 4px 16px rgba(14,165,233,0.35);">
-            ✨ AI Vẽ Vào Vở (Nét Viết Tay)
+          <button class="btn btn-primary" onclick="applyAiDiagramFromStudio()" style="font-size:12.5px; padding:7px 16px;">
+            Vẽ vào trang vở
           </button>
         </div>
       </div>
