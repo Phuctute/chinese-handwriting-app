@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.5.3-no-cache-html';
+const CACHE_NAME = 'cheptay-v6.6.0-full-upgrade';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -16,15 +16,7 @@ const ASSETS_TO_CACHE = [
   './assets/notebook_thanhnam_spread.jpg',
   './assets/notebook_thanhnam_left.jpg',
   './assets/notebook_thanhnam_right.jpg',
-  './assets/notebook_thanhnam_single2.jpg',
-  './fonts/JasonHandwriting5.woff2',
-  './fonts/JasonHandwriting3.woff2',
-  './fonts/JasonHandwriting5.ttf',
-  './fonts/JasonHandwriting3.ttf',
-  './fonts/LongCang.ttf',
-  './fonts/ZhiMangXing.ttf',
-  './fonts/KleeOne.ttf',
-  './fonts/LiuJianMaoCao.ttf'
+  './assets/notebook_thanhnam_single2.jpg'
 ];
 
 self.addEventListener('install', (event) => {

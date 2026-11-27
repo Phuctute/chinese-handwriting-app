@@ -16,71 +16,77 @@
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-  <!-- Preload Authentic Handwriting Fonts -->
-  <link rel="preload" href="fonts/JasonHandwriting5.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="preload" href="fonts/JasonHandwriting3.ttf" as="font" type="font/ttf" crossorigin>
-
-  <!-- Editorial Typography & OCR Library -->
+  <!-- Editorial Typography (OCR Tesseract.js is lazy-loaded on demand) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
-    /* Local authentic handwriting fonts (JasonHandwriting 1-7) */
+    /* Local authentic handwriting fonts (WOFF2 primary with TTF fallback) */
     @font-face {
       font-family: 'JasonHandwriting1';
-      src: url('fonts/JasonHandwriting1.ttf') format('truetype');
+      src: url('fonts/JasonHandwriting1.woff2') format('woff2'),
+           url('fonts/JasonHandwriting1.ttf') format('truetype');
       font-display: swap;
     }
     @font-face {
       font-family: 'JasonHandwriting2';
-      src: url('fonts/JasonHandwriting2.ttf') format('truetype');
+      src: url('fonts/JasonHandwriting2.woff2') format('woff2'),
+           url('fonts/JasonHandwriting2.ttf') format('truetype');
       font-display: swap;
     }
     @font-face {
       font-family: 'JasonHandwriting3';
-      src: url('fonts/JasonHandwriting3.ttf') format('truetype');
+      src: url('fonts/JasonHandwriting3.woff2') format('woff2'),
+           url('fonts/JasonHandwriting3.ttf') format('truetype');
       font-display: swap;
     }
     @font-face {
       font-family: 'JasonHandwriting4';
-      src: url('fonts/JasonHandwriting4.ttf') format('truetype');
+      src: url('fonts/JasonHandwriting4.woff2') format('woff2'),
+           url('fonts/JasonHandwriting4.ttf') format('truetype');
       font-display: swap;
     }
     @font-face {
       font-family: 'JasonHandwriting5';
-      src: url('fonts/JasonHandwriting5.ttf') format('truetype');
+      src: url('fonts/JasonHandwriting5.woff2') format('woff2'),
+           url('fonts/JasonHandwriting5.ttf') format('truetype');
       font-display: swap;
     }
     @font-face {
       font-family: 'JasonHandwriting6';
-      src: url('fonts/JasonHandwriting6.ttf') format('truetype');
+      src: url('fonts/JasonHandwriting6.woff2') format('woff2'),
+           url('fonts/JasonHandwriting6.ttf') format('truetype');
       font-display: swap;
     }
     @font-face {
       font-family: 'JasonHandwriting7';
-      src: url('fonts/JasonHandwriting7.ttf') format('truetype');
+      src: url('fonts/JasonHandwriting7.woff2') format('woff2'),
+           url('fonts/JasonHandwriting7.ttf') format('truetype');
       font-display: swap;
     }
     @font-face {
       font-family: 'LongCang';
-      src: url('fonts/LongCang.ttf') format('truetype');
+      src: url('fonts/LongCang.woff2') format('woff2'),
+           url('fonts/LongCang.ttf') format('truetype');
       font-display: swap;
     }
     @font-face {
       font-family: 'ZhiMangXing';
-      src: url('fonts/ZhiMangXing.ttf') format('truetype');
+      src: url('fonts/ZhiMangXing.woff2') format('woff2'),
+           url('fonts/ZhiMangXing.ttf') format('truetype');
       font-display: swap;
     }
-        @font-face {
+    @font-face {
       font-family: 'LiuJianMaoCao';
-      src: url('fonts/LiuJianMaoCao.ttf') format('truetype');
+      src: url('fonts/LiuJianMaoCao.woff2') format('woff2'),
+           url('fonts/LiuJianMaoCao.ttf') format('truetype');
       font-display: swap;
     }
     @font-face {
       font-family: 'KleeOne';
-      src: url('fonts/KleeOne.ttf') format('truetype');
+      src: url('fonts/KleeOne.woff2') format('woff2'),
+           url('fonts/KleeOne.ttf') format('truetype');
       font-display: swap;
     }
 
@@ -1808,6 +1814,36 @@
             <input type="file" id="aiDiagramAutoFileInput" accept="image/*" style="display:none;" onchange="handleAiDiagramAutoUpload(this.files[0])">
           </div>
 
+          <!-- Compact Desktop Multi-Diagram Position & Page Bar -->
+          <div id="desktopDiagramPosBar" style="display:none; margin-top:4px; padding:10px 12px; background:var(--bg-base); border:1px solid var(--border-color); border-radius:10px; flex-direction:column; gap:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span id="dDiagHeaderLabel" style="font-size:11.5px; font-weight:600; color:var(--text-main);">Sơ đồ trên trang hiện tại</span>
+              <div id="dDiagPageChips" style="display:flex; gap:4px; flex-wrap:wrap; align-items:center;"></div>
+            </div>
+            <div id="dDiagActiveControls" style="display:flex; flex-direction:column; gap:8px;">
+              <div id="dDiagSpreadRow" style="display:none; gap:6px;">
+                <button type="button" id="dDiagSideLeft" class="tool-chip" style="flex:1; justify-content:center;" onclick="setDiagramSpreadSide('left')">Trang Trái</button>
+                <button type="button" id="dDiagSideRight" class="tool-chip active" style="flex:1; justify-content:center;" onclick="setDiagramSpreadSide('right')">Trang Phải</button>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="form-row">
+                  <div class="form-row-header">
+                    <span class="form-label" style="font-size:11px;">Dòng bắt đầu:</span>
+                    <span class="form-value" id="dDiagStartVal">Dòng 2</span>
+                  </div>
+                  <input type="range" id="dDiagStartSlider" min="0" max="25" value="1" oninput="updateDiagramStartLine(this.value)">
+                </div>
+                <div class="form-row">
+                  <div class="form-row-header">
+                    <span class="form-label" style="font-size:11px;">Số dòng chiếm:</span>
+                    <span class="form-value" id="dDiagSpanVal">11 dòng</span>
+                  </div>
+                  <input type="range" id="dDiagSpanSlider" min="3" max="22" value="11" oninput="updateDiagramLineSpan(this.value)">
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Expandable Quick Math Palette -->
           <div id="mathPalette" style="display:none; margin-top:4px; padding:11px; background:var(--bg-base); border:1px solid var(--border-color); border-radius:10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -1860,336 +1896,6 @@
             <button class="btn btn-secondary" style="flex:1; font-size:12px;" onclick="loadSample('vocab')">Vở Từ Vựng HSK</button>
           </div>
         </div>
-      </div>
-
-      <!-- TAB 2: SƠ ĐỒ & BẢNG (DISABLED) -->
-      <div class="tab-panel" id="diagram-tab" style="display:none !important;">
-        
-        <!-- AI Photo Extraction Card (Highlighted) -->
-        <div class="section-card" style="border: 1px solid var(--accent); background: linear-gradient(180deg, rgba(56, 189, 248, 0.08), var(--bg-card));">
-          <div class="card-header">
-            <span class="card-title" style="color:var(--accent);">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-              AI Tự Động Vẽ Lại Từ Ảnh Chụp
-            </span>
-            <span class="badge" style="background:var(--accent); color:#0b0d13;">Thông minh</span>
-          </div>
-          <p style="font-size:11.5px; color:var(--text-muted); line-height:1.4;">
-            Tải ảnh chụp bảng từ vựng hoặc sơ đồ của bạn. AI sẽ nhận diện cấu trúc, trích xuất chữ và <b>vẽ lại hoàn toàn bằng nét bút viết tay</b> đồng bộ với phông chữ đang chọn.
-          </p>
-
-          <div class="dropzone" onclick="document.getElementById('aiPhotoFileInput').click()">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            <div class="dropzone-title">Chạm để chọn ảnh bảng / sơ đồ chụp từ vở hoặc sách</div>
-            <div class="dropzone-sub">AI tự động phân tích cấu trúc, bóc tách chữ và vẽ lại 100% bằng nét viết tay</div>
-          </div>
-          <div style="display:flex; align-items:center; gap:6px; margin-top:10px; flex-wrap:wrap;">
-            <span style="font-size:11.5px; color:var(--text-dim); font-weight:600;">Xem mẫu AI vẽ lại:</span>
-            <button class="tool-chip" onclick="loadDiagramSample('chem')" style="font-size:11px; padding:3px 9px;">🧪 Sơ đồ Hóa học (Mol - Khối lượng)</button>
-            <button class="tool-chip" onclick="loadDiagramSample('tree')" style="font-size:11px; padding:3px 9px;">🌲 Cây Phân Cấp (Hệ sinh thái)</button>
-            <button class="tool-chip" onclick="loadDiagramSample('table3')" style="font-size:11px; padding:3px 9px;">📊 Bảng Từ Vựng 3 cột</button>
-          </div>
-          <input type="file" id="aiPhotoFileInput" accept="image/*" style="display:none;" onchange="handleAiPhotoUpload(this.files[0])">
-        </div>
-
-        <!-- Presets Selector Grid -->
-        <div class="section-card">
-          <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span class="card-title">Mẫu Sơ Đồ & Bảng Viết Tay</span>
-              <span class="badge" id="diagramStatusBadge" style="background:#475569; color:#fff;">Đang tắt</span>
-            </div>
-            <!-- Delete / Clear Button -->
-            <button class="btn btn-secondary" onclick="clearDiagram()" style="color:#ef4444; border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.08); font-size:12px; padding:5px 12px; display:inline-flex; align-items:center; gap:5px;" title="Xóa sơ đồ hiện tại để trả lại dòng kẻ">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-              <span>Xóa sơ đồ / Bảng</span>
-            </button>
-          </div>
-
-          <div class="visual-grid">
-            <div class="visual-card active" id="cardDiagNone" onclick="selectDiagramType('none')">
-              <div class="visual-card-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-              </div>
-              <div class="visual-card-title">Không dùng</div>
-              <div class="visual-card-desc">Chỉ viết văn bản thông thường</div>
-            </div>
-
-            <div class="visual-card" id="cardDiagConversion" onclick="selectDiagramType('conversion')">
-              <div class="visual-card-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
-              </div>
-              <div class="visual-card-title">🧪 Sơ đồ Chuyển đổi Hóa học / Đại lượng</div>
-              <div class="visual-card-desc">Chuỗi đại lượng, mũi tên 2 chiều, số mũ & công thức</div>
-            </div>
-
-            <div class="visual-card" id="cardDiagTree" onclick="selectDiagramType('tree')">
-              <div class="visual-card-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="4" rx="1"/><rect x="3" y="15" width="8" height="6" rx="1"/><rect x="13" y="15" width="8" height="6" rx="1"/><path d="M12 7v4m-5 4v-4h10v4"/></svg>
-              </div>
-              <div class="visual-card-title">🌲 Sơ đồ Cây Phân Cấp Đa Tầng</div>
-              <div class="visual-card-desc">Khung gốc, phân nhánh & 2 khối nội dung chi tiết</div>
-            </div>
-
-            <div class="visual-card" id="cardDiagTable2" onclick="selectDiagramType('table2')">
-              <div class="visual-card-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M10 3v18"/></svg>
-              </div>
-              <div class="visual-card-title">Bảng từ vựng (2 cột)</div>
-              <div class="visual-card-desc">Chữ Hán & Giải nghĩa / Ví dụ</div>
-            </div>
-
-            <div class="visual-card" id="cardDiagTable3" onclick="selectDiagramType('table3')">
-              <div class="visual-card-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
-              </div>
-              <div class="visual-card-title">Bảng từ vựng (3 cột)</div>
-              <div class="visual-card-desc">Chữ Hán, Phiên âm Pinyin & Nghĩa</div>
-            </div>
-
-            <div class="visual-card" id="cardDiagMindmap" onclick="selectDiagramType('mindmap')">
-              <div class="visual-card-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
-              </div>
-              <div class="visual-card-title">Sơ đồ tư duy (Mindmap)</div>
-              <div class="visual-card-desc">Chủ đề trung tâm & các nhánh cong</div>
-            </div>
-
-            <div class="visual-card" id="cardDiagProcess" onclick="selectDiagramType('process')">
-              <div class="visual-card-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="6" height="10" rx="1"/><rect x="16" y="7" width="6" height="10" rx="1"/><path d="M8 12h8"/><path d="m13 9 3 3-3 3"/></svg>
-              </div>
-              <div class="visual-card-title">Sơ đồ quy trình (Flow)</div>
-              <div class="visual-card-desc">Các bước nối tiếp bằng mũi tên</div>
-            </div>
-
-            <div class="visual-card" id="cardDiagCallout" onclick="selectDiagramType('callout')">
-              <div class="visual-card-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              </div>
-              <div class="visual-card-title">Khung ghi chú / Chú thích</div>
-              <div class="visual-card-desc">Khung bo tay viền lượn sóng nổi bật</div>
-            </div>
-
-            <div class="visual-card" id="cardDiagSketch" onclick="selectDiagramType('sketch')">
-              <div class="visual-card-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
-              </div>
-              <div class="visual-card-title">Bảng vẽ tự do cảm ứng</div>
-              <div class="visual-card-desc">Vẽ trực tiếp bằng tay hoặc bút stylus</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Position & Avoidance Controls -->
-        <div class="section-card" id="diagPosBox" style="display:none;">
-          <div class="card-header">
-            <span class="card-title">Vị trí chèn & Chống đè dòng</span>
-          </div>
-
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <div class="form-row" id="spreadSideRow">
-              <span class="form-label">Chọn trang (Trang đôi):</span>
-              <select class="form-select" id="diagSpreadSide" onchange="updateDiagramPos()">
-                <option value="right" selected>Trang Phải (Khuyên dùng)</option>
-                <option value="left">Trang Trái</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <span class="form-label">Số trang xuất hiện:</span>
-              <div style="display:flex; align-items:center; gap:4px;">
-                <button type="button" class="btn btn-secondary" onclick="moveDiagramPage(-1)" style="padding:5px 9px; font-size:12px;" title="Chuyển về trang trước">◀</button>
-                <input type="number" class="form-input" id="diagTargetPage" value="1" min="1" max="30" style="text-align:center;" oninput="updateDiagramPos(true)" onchange="updateDiagramPos(true)">
-                <button type="button" class="btn btn-secondary" onclick="moveDiagramPage(1)" style="padding:5px 9px; font-size:12px;" title="Chuyển sang trang sau">▶</button>
-              </div>
-            </div>
-          </div>
-
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top: 8px;">
-            <div class="form-row">
-              <div class="form-row-header">
-                <span class="form-label">Dòng bắt đầu:</span>
-                <span class="form-value" id="diagStartVal">2</span>
-              </div>
-              <input type="range" id="diagStartSlider" min="0" max="22" value="2" oninput="updateDiagramPos()">
-            </div>
-            <div class="form-row">
-              <div class="form-row-header">
-                <span class="form-label">Số dòng chiếm:</span>
-                <span class="form-value" id="diagSpanVal">9</span>
-              </div>
-              <input type="range" id="diagSpanSlider" min="2" max="18" value="9" oninput="updateDiagramPos()">
-            </div>
-          </div>
-          <p style="font-size:11px; color:var(--success); margin-top:6px;">
-            ✓ Chữ trong vở tự động nhảy qua các dòng này và tiếp tục viết bên dưới, không bao giờ bị đè chữ.
-          </p>
-        </div>
-
-        <!-- SUBPANEL: SƠ ĐỒ CHUYỂN ĐỔI HÓA HỌC / ĐẠI LƯỢNG (ẢNH 1) -->
-        <div class="section-card" id="subpanelConversion" style="display:none;">
-          <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="card-title">🧪 Sơ đồ Chuyển đổi (Hóa học / Vật lý / Toán học)</span>
-            <button class="btn btn-secondary" onclick="clearDiagram()" style="color:#ef4444; font-size:11px; padding:3px 8px;">🗑️ Xóa</button>
-          </div>
-          <div class="form-row">
-            <span class="form-label">Các đại lượng chính (Cách nhau bằng dấu phẩy):</span>
-            <input type="text" class="form-input" id="convNodes" value="質量 (Mass), 莫耳數 (No. of mole), 粒子數 (No. of particles)" oninput="updateConversionContent()">
-          </div>
-          <div class="form-row" style="margin-top:8px;">
-            <span class="form-label">Chú thích dưới chân đại lượng:</span>
-            <input type="text" class="form-input" id="convSubtexts" value=",, 原子、分子、個數" oninput="updateConversionContent()">
-          </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:8px;">
-            <div class="form-row">
-              <span class="form-label">Phép tính mũi tên trên (→):</span>
-              <input type="text" class="form-input" id="convTopOps" value="÷ 原子量(分), × 6.02×10²³" oninput="updateConversionContent()">
-            </div>
-            <div class="form-row">
-              <span class="form-label">Phép tính mũi tên dưới (←):</span>
-              <input type="text" class="form-input" id="convBotOps" value="× 原(分)子量, ÷ 6.02×10²³" oninput="updateConversionContent()">
-            </div>
-          </div>
-          <div class="form-row" style="margin-top:8px;">
-            <span class="form-label">Ghi chú công thức góc trên bên phải (Tùy chọn):</span>
-            <textarea class="form-textarea" id="convNote" style="height:65px;" oninput="updateConversionContent()">1 mole ≡ 6.02×10²³&#10;   ↓&#10;原子, 分子…&#10;  恰 12g</textarea>
-          </div>
-        </div>
-
-        <!-- SUBPANEL: SƠ ĐỒ CÂY PHÂN CẤP ĐA TẦNG (ẢNH 2) -->
-        <div class="section-card" id="subpanelTree" style="display:none;">
-          <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="card-title">🌲 Sơ đồ Cây Phân Cấp Đa Tầng (Hệ Sinh Thái / Khoa Học)</span>
-            <button class="btn btn-secondary" onclick="clearDiagram()" style="color:#ef4444; font-size:11px; padding:3px 8px;">🗑️ Xóa</button>
-          </div>
-          <div class="form-row">
-            <span class="form-label">Tiêu đề khung gốc (Trung tâm trên cùng):</span>
-            <input type="text" class="form-input" id="treeRoot" value="生態系統" oninput="updateTreeContent()">
-          </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:8px;">
-            <div class="form-row">
-              <span class="form-label">Nhánh Trái:</span>
-              <input type="text" class="form-input" id="treeLeftCat" value="非生物成分 (生命維持系統)" oninput="updateTreeContent()">
-            </div>
-            <div class="form-row">
-              <span class="form-label">Nhánh Phải:</span>
-              <input type="text" class="form-input" id="treeRightCat" value="生物成分" oninput="updateTreeContent()">
-            </div>
-          </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:8px;">
-            <div class="form-row">
-              <span class="form-label">Nội dung khối Trái:</span>
-              <textarea class="form-textarea" id="treeLeftContent" style="height:120px;" oninput="updateTreeContent()">1. 非生物環境&#10;  (1) 能源：太陽輻射&#10;  (2) 生物生存環境：岩石、土壤、水、空氣…&#10;  (3) 氣候：溫度、濕度、風和雨雪…&#10;2. 生命代謝原料&#10;  二氧化碳、水、氧、氮、無機鹽、有機質…</textarea>
-            </div>
-            <div class="form-row">
-              <span class="form-label">Nội dung khối Phải:</span>
-              <textarea class="form-textarea" id="treeRightContent" style="height:120px;" oninput="updateTreeContent()">1. 生產者：綠色植物&#10;2. 消費者&#10;  (1) 一級消費者：草食動物&#10;  (2) 二級消費者：肉食動物&#10;  (3) 三級消費者：頂級肉食動物&#10;  (4) 其他：雜食、腐食、寄食動物…&#10;3. 分解者：細菌、真菌等微生物</textarea>
-            </div>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
-            <input type="checkbox" id="treeCrossArrows" checked onchange="state.diagram.treeCrossArrows = this.checked; renderCanvas();">
-            <label for="treeCrossArrows" style="font-size:12.5px; color:var(--text-main);">Vẽ mũi tên tương tác 2 chiều giữa 2 khối</label>
-          </div>
-        </div>
-
-        <!-- SUBPANEL: BẢNG 2 CỘT -->
-        <div class="section-card" id="subpanelTable2" style="display:none;">
-          <div class="card-header">
-            <span class="card-title">Nội dung Bảng từ vựng (2 Cột)</span>
-          </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <div class="form-row">
-              <span class="form-label">Tiêu đề Cột 1:</span>
-              <input type="text" class="form-input" id="t2Col1" value="生詞 (Từ mới)" oninput="updateTable2Content()">
-            </div>
-            <div class="form-row">
-              <span class="form-label">Tiêu đề Cột 2:</span>
-              <input type="text" class="form-input" id="t2Col2" value="釋義與例句 (Giải nghĩa)" oninput="updateTable2Content()">
-            </div>
-          </div>
-          <div class="form-row" style="margin-top:8px;">
-            <span class="form-label">Các hàng (Từ vựng | Giải nghĩa):</span>
-            <textarea class="text-input" id="t2Rows" style="height:100px; font-size:13px;" oninput="updateTable2Content()"></textarea>
-          </div>
-        </div>
-
-        <!-- SUBPANEL: BẢNG 3 CỘT -->
-        <div class="section-card" id="subpanelTable3" style="display:none;">
-          <div class="card-header">
-            <span class="card-title">Nội dung Bảng từ vựng (3 Cột)</span>
-          </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr 1.2fr; gap:8px;">
-            <div class="form-row">
-              <span class="form-label">Cột 1:</span>
-              <input type="text" class="form-input" id="t3Col1" value="漢字" oninput="updateTable3Content()">
-            </div>
-            <div class="form-row">
-              <span class="form-label">Cột 2:</span>
-              <input type="text" class="form-input" id="t3Col2" value="拼音" oninput="updateTable3Content()">
-            </div>
-            <div class="form-row">
-              <span class="form-label">Cột 3:</span>
-              <input type="text" class="form-input" id="t3Col3" value="釋義 & 詞性" oninput="updateTable3Content()">
-            </div>
-          </div>
-          <div class="form-row" style="margin-top:8px;">
-            <span class="form-label">Các hàng (Chữ Hán | Pinyin | Nghĩa):</span>
-            <textarea class="text-input" id="t3Rows" style="height:100px; font-size:13px;" oninput="updateTable3Content()"></textarea>
-          </div>
-        </div>
-
-        <!-- SUBPANEL: MINDMAP -->
-        <div class="section-card" id="subpanelMindmap" style="display:none;">
-          <div class="card-header">
-            <span class="card-title">Cấu trúc Sơ đồ tư duy</span>
-          </div>
-          <div class="form-row">
-            <span class="form-label">Chủ đề trung tâm:</span>
-            <input type="text" class="form-input" id="mindmapRootTitle" value="漢語語法 (Ngữ pháp Hán ngữ)" oninput="updateMindmapContent()">
-          </div>
-          <div class="form-row" style="margin-top:8px;">
-            <span class="form-label">Các nhánh con (Mỗi dòng một nhánh):</span>
-            <textarea class="text-input" id="mindmapBranchesArea" style="height:90px; font-size:13px;" oninput="updateMindmapContent()"></textarea>
-          </div>
-        </div>
-
-        <!-- SUBPANEL: PROCESS FLOW -->
-        <div class="section-card" id="subpanelProcess" style="display:none;">
-          <div class="card-header">
-            <span class="card-title">Sơ đồ quy trình / Bước làm</span>
-          </div>
-          <div class="form-row">
-            <span class="form-label">Các bước thực hiện (Mỗi dòng một bước):</span>
-            <textarea class="text-input" id="processStepsArea" style="height:90px; font-size:13px;" oninput="updateProcessContent()"></textarea>
-          </div>
-        </div>
-
-        <!-- SUBPANEL: CALLOUT -->
-        <div class="section-card" id="subpanelCallout" style="display:none;">
-          <div class="card-header">
-            <span class="card-title">Khung ghi chú viết tay</span>
-          </div>
-          <div class="form-row">
-            <span class="form-label">Tiêu đề ghi chú:</span>
-            <input type="text" class="form-input" id="calloutTitle" value="★ 重要筆記 (Lưu ý quan trọng)" oninput="updateCalloutContent()">
-          </div>
-          <div class="form-row" style="margin-top:8px;">
-            <span class="form-label">Nội dung ghi chú:</span>
-            <textarea class="text-input" id="calloutTextArea" style="height:80px; font-size:13px;" oninput="updateCalloutContent()"></textarea>
-          </div>
-        </div>
-
-        <!-- SUBPANEL: SKETCHPAD -->
-        <div class="section-card" id="subpanelSketch" style="display:none;">
-          <div class="card-header">
-            <span class="card-title">Bảng vẽ cảm ứng tay</span>
-            <button class="btn btn-secondary" style="font-size:11px; padding:3px 8px;" onclick="clearSketch()">Xóa nét vẽ</button>
-          </div>
-          <div style="background:#fff; border-radius:6px; overflow:hidden; border:1px solid #cbd5e1;">
-            <canvas id="sketchCanvas" width="400" height="180" style="width:100%; height:140px; display:block; cursor:crosshair; touch-action:none;"></canvas>
-          </div>
-        </div>
-
       </div>
 
       <!-- TAB 3: KIỂU VỞ & BÚT (STYLE & MARGINS) -->
@@ -2412,7 +2118,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.5.3';
+    const APP_VERSION = '6.6.0';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -2422,6 +2128,31 @@
     function getAssetUrl(url) {
       if (!url) return '';
       return url + (url.includes('?') ? '&' : '?') + 'v=' + APP_VERSION;
+    }
+
+    // Lazy-load Tesseract.js OCR library only on demand
+    let _tesseractLoadPromise = null;
+    function ensureTesseractLoaded() {
+      if (window.Tesseract) return Promise.resolve(window.Tesseract);
+      if (_tesseractLoadPromise) return _tesseractLoadPromise;
+      _tesseractLoadPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+        script.async = true;
+        script.onload = () => {
+          if (window.Tesseract) resolve(window.Tesseract);
+          else {
+            _tesseractLoadPromise = null;
+            reject(new Error('Tesseract.js failed to initialize'));
+          }
+        };
+        script.onerror = () => {
+          _tesseractLoadPromise = null;
+          reject(new Error('Không thể tải thư viện OCR Tesseract.js'));
+        };
+        document.head.appendChild(script);
+      });
+      return _tesseractLoadPromise;
     }
 
     // ========================================================
@@ -2853,39 +2584,21 @@
     }
 
     // ========================================================
-    // GLOBAL APPLICATION STATE
+    // GLOBAL APPLICATION STATE & MULTI-DIAGRAM / AUTO-SAVE
     // ========================================================
-    window.state = null;
-    const state = {
-      notebookTemplate: 'notebook_thanhnam_left.jpg',
-      spreadWriteMode: 'both',
-      text: '',
-      fontSize: 20, // 20px for natural handwriting weight
-      inkColor: 'blue', // Default: Bút bi xanh học sinh
-      font: 'JasonHandwriting5', // Default: authentic "xấu tự nhiên" handwriting
-      messiness: 45, // 45% natural wobble & micro-tilt
-      baselineOffset: 0,
-      marginOffset: 0,
-      topMarginLines: 0, // Top margin shift
-      bottomMarginLines: 0, // Bottom margin reserve
-      skipLine: false,
-      autoTypo: false,
-      zoomLevel: 0.40,
-      exportScale: 2, // 1 = 1x Standard, 2 = 2x Retina HD (Default), 3 = 3x Ultra HD 4K
+    const DRAFT_STORAGE_KEY = 'cheptay_draft_v1';
 
-      // Pagination
-      currentPage: 0,
-      totalPages: 1,
-      allPagesLines: [],
-
-      // Smart Diagrams & Tables Configuration
-      diagram: {
+    function createDefaultDiagram(overrides = {}) {
+      return Object.assign({
+        id: 'diag_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
         enabled: false,
-        type: 'none', // 'none', 'table2', 'table3', 'mindmap', 'process', 'callout', 'sketch'
+        type: 'none', // 'none', 'image', 'conversion', 'tree', 'table2', 'table3', 'mindmap', 'process', 'callout', 'sketch'
         page: 0,
         spreadSide: 'right',
         startLine: 2,
         lineSpan: 9,
+        image: null,
+        rawImage: null,
 
         // Conversion Flow (e.g. Chem / Physics / Math - Image 1 Archetype)
         convNodes: '質量 (Mass), 莫耳數 (No. of mole), 粒子數 (No. of particles)',
@@ -2925,11 +2638,231 @@
         calloutText: '1. 注意成語之字形與聲調變化。\n2. 書寫時保持橫平豎直，筆畫流暢。\n3. 每日複習新詞彙至少十五分鐘。',
 
         sketchCanvas: null
-      },
+      }, overrides);
+    }
+
+    window.state = null;
+    const state = {
+      notebookTemplate: 'notebook_thanhnam_left.jpg',
+      spreadWriteMode: 'both',
+      text: '',
+      fontSize: 20, // 20px for natural handwriting weight
+      inkColor: 'blue', // Default: Bút bi xanh học sinh
+      font: 'JasonHandwriting5', // Default: authentic "xấu tự nhiên" handwriting
+      messiness: 45, // 45% natural wobble & micro-tilt
+      baselineOffset: 0,
+      marginOffset: 0,
+      topMarginLines: 0, // Top margin shift
+      bottomMarginLines: 0, // Bottom margin reserve
+      skipLine: false,
+      autoTypo: false,
+      zoomLevel: 0.40,
+      exportScale: 2, // 1 = 1x Standard, 2 = 2x Retina HD (Default), 3 = 3x Ultra HD 4K
+
+      // Pagination
+      currentPage: 0,
+      totalPages: 1,
+      allPagesLines: [],
+
+      // Multi-page Smart Diagrams & Tables (synced with state.diagram for active page)
+      diagrams: [],
+      diagram: createDefaultDiagram(),
 
       notebookImg: null,
       seed: 42
     };
+    window.state = state;
+
+    function getActiveDiagrams() {
+      return (state.diagrams || []).filter(d => d && d.enabled && d.type && d.type !== 'none');
+    }
+
+    function getDiagramsForPage(pageIdx = state.currentPage) {
+      const target = Math.max(0, parseInt(pageIdx, 10) || 0);
+      return getActiveDiagrams().filter(d => Math.max(0, d.page || 0) === target);
+    }
+
+    function getDiagramForPage(pageIdx = state.currentPage) {
+      const list = getDiagramsForPage(pageIdx);
+      return list.length > 0 ? list[0] : null;
+    }
+
+    function getDiagramsForSubpage(subpageIdx, isSpread) {
+      return getActiveDiagrams().filter(d => {
+        const p = Math.max(0, d.page || 0);
+        if (isSpread) {
+          const targetSub = (p * 2) + (d.spreadSide === 'right' ? 1 : 0);
+          return targetSub === subpageIdx;
+        }
+        return p === subpageIdx;
+      });
+    }
+
+    function syncActiveDiagramRef() {
+      const curPage = Math.max(0, state.currentPage || 0);
+      const activeOnPage = getDiagramForPage(curPage);
+      if (activeOnPage) {
+        state.diagram = activeOnPage;
+      } else {
+        state.diagram = createDefaultDiagram({ enabled: false, type: 'none', page: curPage });
+      }
+      return activeOnPage;
+    }
+
+    function upsertDiagramOnPage(props = {}, targetPage = Math.max(0, state.currentPage || 0)) {
+      const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_left.jpg'];
+      const isSpread = !!cfg.isSpread;
+      const page = Math.max(0, Math.min(29, parseInt(targetPage, 10) || 0));
+      const side = props.spreadSide || 'right';
+
+      const existingIdx = state.diagrams.findIndex(d =>
+        d && d.enabled && Math.max(0, d.page || 0) === page && (!isSpread || (d.spreadSide || 'right') === side)
+      );
+
+      if (existingIdx !== -1) {
+        Object.assign(state.diagrams[existingIdx], props, { enabled: true, page, spreadSide: side });
+        state.diagram = state.diagrams[existingIdx];
+        return state.diagrams[existingIdx];
+      }
+
+      const newDiag = createDefaultDiagram(Object.assign({}, props, {
+        enabled: true,
+        page,
+        spreadSide: side
+      }));
+      state.diagrams.push(newDiag);
+      state.diagram = newDiag;
+      return newDiag;
+    }
+
+    function jumpToDiagramPage(pageIdx) {
+      const clamped = Math.max(0, Math.min(Math.max(0, (state.totalPages || 1) - 1), parseInt(pageIdx, 10) || 0));
+      state.currentPage = clamped;
+      syncActiveDiagramRef();
+      updatePaginationUI();
+      renderCanvas();
+      syncDiagramPositionUI();
+      const sheet = document.getElementById('mobileSheet');
+      if (sheet && sheet.classList.contains('active') && sheet.dataset.type === 'diagram') {
+        openMobileSheet('diagram');
+      }
+    }
+
+    // Debounced (~400ms) Draft Auto-Save
+    let _draftSaveTimer = null;
+    function saveDraftToStorage(immediate = false) {
+      const writeDraft = () => {
+        _draftSaveTimer = null;
+        try {
+          const draft = {
+            text: state.text || '',
+            notebookTemplate: state.notebookTemplate,
+            font: state.font,
+            inkColor: state.inkColor,
+            fontSize: state.fontSize,
+            messiness: state.messiness,
+            baselineOffset: state.baselineOffset,
+            marginOffset: state.marginOffset,
+            topMarginLines: state.topMarginLines,
+            bottomMarginLines: state.bottomMarginLines,
+            skipLine: !!state.skipLine,
+            autoTypo: !!state.autoTypo
+          };
+          localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
+        } catch (e) {
+          // Ignore quota or storage restriction errors
+        }
+      };
+      if (immediate) {
+        clearTimeout(_draftSaveTimer);
+        writeDraft();
+        return;
+      }
+      clearTimeout(_draftSaveTimer);
+      _draftSaveTimer = setTimeout(writeDraft, 400);
+    }
+
+    function restoreDraftFromStorage(hasUrlTemplate = false) {
+      try {
+        const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
+        if (!raw) return;
+        const draft = JSON.parse(raw);
+        if (!draft || typeof draft !== 'object') return;
+
+        if (typeof draft.text === 'string') {
+          state.text = draft.text;
+          if (textInput) textInput.value = draft.text;
+        }
+        if (!hasUrlTemplate && typeof draft.notebookTemplate === 'string') {
+          state.notebookTemplate = normalizeTemplateKey(draft.notebookTemplate);
+        }
+        if (typeof draft.font === 'string' && draft.font) {
+          state.font = draft.font;
+        }
+        if (['gel_black', 'blue', 'purple', 'deep_black'].includes(draft.inkColor)) {
+          state.inkColor = draft.inkColor;
+        }
+        if (!hasUrlTemplate && Number.isFinite(Number(draft.fontSize))) {
+          state.fontSize = Math.max(12, Math.min(32, parseInt(draft.fontSize, 10)));
+        }
+        if (Number.isFinite(Number(draft.messiness))) {
+          state.messiness = Math.max(0, Math.min(100, parseInt(draft.messiness, 10)));
+        }
+        if (Number.isFinite(Number(draft.baselineOffset))) {
+          state.baselineOffset = Math.max(-20, Math.min(20, parseInt(draft.baselineOffset, 10)));
+        }
+        if (Number.isFinite(Number(draft.marginOffset))) {
+          state.marginOffset = Math.max(-40, Math.min(40, parseInt(draft.marginOffset, 10)));
+        }
+        if (Number.isFinite(Number(draft.topMarginLines))) {
+          state.topMarginLines = Math.max(0, Math.min(8, parseInt(draft.topMarginLines, 10)));
+        }
+        if (Number.isFinite(Number(draft.bottomMarginLines))) {
+          state.bottomMarginLines = Math.max(0, Math.min(8, parseInt(draft.bottomMarginLines, 10)));
+        }
+        if (typeof draft.skipLine === 'boolean') {
+          state.skipLine = draft.skipLine;
+        }
+        if (typeof draft.autoTypo === 'boolean') {
+          state.autoTypo = draft.autoTypo;
+        }
+      } catch (e) {
+        console.warn('Could not restore saved draft:', e);
+      }
+    }
+
+    function syncAllControlsFromState() {
+      if (textInput && textInput.value !== state.text) textInput.value = state.text || '';
+      updateCharCount();
+
+      const sel = document.getElementById('fontSelector');
+      if (sel) sel.value = state.font;
+
+      ['btnInkGel', 'btnInkBlue', 'btnInkPurple', 'btnInkDeep'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+      if (state.inkColor === 'gel_black') document.getElementById('btnInkGel')?.classList.add('active');
+      if (state.inkColor === 'blue') document.getElementById('btnInkBlue')?.classList.add('active');
+      if (state.inkColor === 'purple') document.getElementById('btnInkPurple')?.classList.add('active');
+      if (state.inkColor === 'deep_black') document.getElementById('btnInkDeep')?.classList.add('active');
+
+      const syncSlider = (ids, valIds, val, suffix) => {
+        ids.forEach(id => { const el = document.getElementById(id); if (el) el.value = val; });
+        valIds.forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + suffix; });
+      };
+      syncSlider(['fontSizeSlider', 'mFontSizeSlider'], ['fontSizeVal', 'mFontSizeVal'], state.fontSize, 'px');
+      syncSlider(['messinessSlider', 'mMessinessSlider'], ['messinessVal', 'mMessinessVal'], state.messiness, '%');
+      syncSlider(['baselineSlider', 'mBaselineSlider'], ['baselineVal', 'mBaselineVal'], state.baselineOffset, 'px');
+      syncSlider(['marginSlider', 'mMarginSlider'], ['marginVal', 'mMarginVal'], state.marginOffset, 'px');
+      syncSlider(['topMarginSlider', 'mTopMarginSlider'], ['topMarginVal', 'mTopMarginVal'], state.topMarginLines, ' dòng');
+      syncSlider(['bottomMarginSlider', 'mBottomMarginSlider'], ['bottomMarginVal', 'mBottomMarginVal'], state.bottomMarginLines, ' dòng');
+
+      const bDesktop = document.getElementById('btnSkipLineDesktop');
+      if (bDesktop) {
+        bDesktop.innerText = state.skipLine ? '📝 Đang BẬT' : '📝 Đang Tắt';
+        bDesktop.classList.toggle('active', !!state.skipLine);
+      }
+      const chipSkip = document.getElementById('chipPresetSkip');
+      if (chipSkip) chipSkip.classList.toggle('active', !!state.skipLine);
+    }
 
     const canvas = document.getElementById('renderCanvas');
     const ctx = canvas.getContext('2d');
@@ -2977,21 +2910,18 @@
         }).catch(err => console.log('SW failed', err));
       }
 
-      renderTemplateGallery('all');
-
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('template')) {
+      const hasUrlTemplate = urlParams.has('template');
+      restoreDraftFromStorage(hasUrlTemplate);
+
+      if (hasUrlTemplate) {
         const tpl = normalizeTemplateKey(urlParams.get('template'));
         state.notebookTemplate = tpl;
         state.fontSize = TEMPLATES_CONFIG[tpl].isSpread ? 15 : 20;
       }
 
-      // Populate initial values
-      const elT2 = document.getElementById('t2Rows'); if (elT2) elT2.value = state.diagram.t2Rows;
-      const elT3 = document.getElementById('t3Rows'); if (elT3) elT3.value = state.diagram.t3Rows;
-      const elMM = document.getElementById('mindmapBranchesArea'); if (elMM) elMM.value = state.diagram.mindmapBranches;
-      const elPS = document.getElementById('processStepsArea'); if (elPS) elPS.value = state.diagram.processSteps;
-      const elCO = document.getElementById('calloutTextArea'); if (elCO) elCO.value = state.diagram.calloutText;
+      syncAllControlsFromState();
+      renderTemplateGallery('all');
 
       loadNotebookImage('assets/' + state.notebookTemplate);
       if (urlParams.get('view') === 'preview') {
@@ -3003,10 +2933,11 @@
         }, 150);
       }
 
-      // Listen for text input (coalesced 60fps for silky IME composition)
+      // Listen for text input (coalesced 60fps for silky IME composition + debounced auto-save)
       textInput.addEventListener('input', () => {
         state.text = textInput.value;
         updateCharCount();
+        saveDraftToStorage();
         if (typeof scheduleRender === 'function') {
           scheduleRender(true);
         } else {
@@ -3015,7 +2946,11 @@
         }
       });
 
-      // Init sketchpad
+      window.addEventListener('beforeunload', () => {
+        if (_draftSaveTimer) saveDraftToStorage(true);
+      });
+
+      // Init sketchpad (if present)
       initSketchpad();
 
       // Wait for fonts to be loaded for pristine first-frame render & accurate width measurement
@@ -3264,6 +3199,8 @@
       const activeFilter = activeFilterChip ? activeFilterChip.id.replace('filterTpl', '').toLowerCase() : 'all';
       renderTemplateGallery(activeFilter);
       loadNotebookImage('assets/' + filename);
+      syncDiagramPositionUI();
+      saveDraftToStorage();
       showToast('Đã chọn mẫu: ' + cfg.name);
     }
 
@@ -3309,6 +3246,7 @@
       showToast('🤖 AI đang phân tích ảnh và trích xuất cấu trúc bảng/sơ đồ...');
 
       try {
+        await ensureTesseractLoaded();
         const worker = await Tesseract.createWorker(['chi_tra', 'chi_sim', 'vie'], 1, {
           langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0_fast'
         });
@@ -3419,56 +3357,15 @@
     }
 
     // ========================================================
-    // DIAGRAM SELECTOR & LIVE EDITORS
+    // DIAGRAM SELECTOR & MULTI-PAGE POSITION CONTROLLERS
     // ========================================================
     function selectDiagramType(type) {
-      const wasDisabled = !state.diagram.enabled || state.diagram.type === 'none';
-      state.diagram.type = type;
-      state.diagram.enabled = (type !== 'none');
-      if (wasDisabled && state.diagram.enabled) {
-        state.diagram.page = Math.max(0, state.currentPage || 0);
-      }
-
-      const cardMap = {
-        'none': 'cardDiagNone',
-        'conversion': 'cardDiagConversion',
-        'tree': 'cardDiagTree',
-        'table2': 'cardDiagTable2',
-        'table3': 'cardDiagTable3',
-        'mindmap': 'cardDiagMindmap',
-        'process': 'cardDiagProcess',
-        'callout': 'cardDiagCallout',
-        'sketch': 'cardDiagSketch'
-      };
-      Object.values(cardMap).forEach(cid => {
-        document.getElementById(cid)?.classList.remove('active');
-      });
-      document.getElementById(cardMap[type])?.classList.add('active');
-
-      const subpanels = ['subpanelConversion', 'subpanelTree', 'subpanelTable2', 'subpanelTable3', 'subpanelMindmap', 'subpanelProcess', 'subpanelCallout', 'subpanelSketch'];
-      subpanels.forEach(sp => {
-        const el = document.getElementById(sp);
-        if (el) el.style.display = 'none';
-      });
-
-      const posBox = document.getElementById('diagPosBox');
-      const badge = document.getElementById('diagramStatusBadge');
-
       if (type === 'none') {
-        if (posBox) posBox.style.display = 'none';
-        if (badge) { badge.innerText = 'Đang tắt'; badge.style.background = '#475569'; }
-      } else {
-        if (posBox) posBox.style.display = 'flex';
-        if (badge) { badge.innerText = 'Đang bật'; badge.style.background = 'var(--ink-black)'; badge.style.color = '#FAF8F5'; }
-
-        const targetSub = 'subpanel' + type.charAt(0).toUpperCase() + type.slice(1);
-        const subEl = document.getElementById(targetSub);
-        if (subEl) subEl.style.display = 'flex';
-
-        if (type === 'sketch') {
-          setTimeout(initSketchpad, 60);
-        }
+        removeDiagram();
+        return;
       }
+      const curPage = Math.max(0, state.currentPage || 0);
+      upsertDiagramOnPage({ type, enabled: true }, curPage);
 
       paginateText();
       renderCanvas();
@@ -3479,107 +3376,214 @@
     function syncDiagramPositionUI() {
       const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
       const isSpread = !!cfg.isSpread;
-      const isEnabled = !!(state.diagram && state.diagram.enabled && state.diagram.type !== 'none');
+      const curPage = Math.max(0, state.currentPage || 0);
+      const activeList = getActiveDiagrams();
+      const totalCount = activeList.length;
+      const pageDiag = getDiagramForPage(curPage);
+      syncActiveDiagramRef();
 
-      const posBox = document.getElementById('diagPosBox');
-      if (posBox) posBox.style.display = isEnabled ? 'flex' : 'none';
+      const hasAny = totalCount > 0;
+      const hasOnCurPage = !!pageDiag;
+      const countPrefix = totalCount > 1 ? `Sơ đồ (${totalCount})` : 'Sơ đồ';
 
       const btnRem = document.getElementById('btnRemoveDiagram');
-      if (btnRem) btnRem.style.display = isEnabled ? 'inline-flex' : 'none';
+      if (btnRem) {
+        btnRem.style.display = hasOnCurPage ? 'inline-flex' : 'none';
+        btnRem.innerText = totalCount > 1 ? `Xóa sơ đồ T${curPage + 1}` : 'Xóa sơ đồ';
+      }
+
+      const mobileHdrDel = document.getElementById('mobileClearDiagHeaderBtn');
+      if (mobileHdrDel) {
+        mobileHdrDel.style.display = hasOnCurPage ? 'inline-flex' : 'none';
+      }
+
+      const barDiagLabel = document.querySelector('#btnBar_diagram span');
+      if (barDiagLabel) {
+        barDiagLabel.innerText = totalCount > 1 ? `Sơ Đồ (${totalCount})` : 'Sơ Đồ';
+      }
 
       const qBar = document.getElementById('diagramQuickPageBar');
-      if (qBar) qBar.style.display = isEnabled ? 'inline-flex' : 'none';
+      if (qBar) qBar.style.display = hasAny ? 'inline-flex' : 'none';
+
       const qLabel = document.getElementById('qDiagPageLabel');
-      if (qLabel) {
-        qLabel.innerText = (isSpread && state.spreadWriteMode === 'both')
-          ? `Sơ đồ: T${state.diagram.page * 2 + 1}-${state.diagram.page * 2 + 2}`
-          : `Sơ đồ: Trang ${state.diagram.page + 1}`;
-      }
       const qPrev = document.getElementById('qDiagPrevBtn');
-      if (qPrev) qPrev.disabled = (state.diagram.page <= 0);
+      const qNext = document.getElementById('qDiagNextBtn');
+      if (hasOnCurPage) {
+        if (qLabel) {
+          qLabel.innerText = (isSpread && state.spreadWriteMode === 'both')
+            ? `${countPrefix}: T${pageDiag.page * 2 + 1}-${pageDiag.page * 2 + 2}`
+            : `${countPrefix}: Trang ${pageDiag.page + 1}`;
+          qLabel.style.cursor = 'default';
+          qLabel.onclick = null;
+        }
+        if (qPrev) { qPrev.style.display = ''; qPrev.disabled = (pageDiag.page <= 0); }
+        if (qNext) { qNext.style.display = ''; qNext.disabled = false; }
+      } else if (hasAny) {
+        const pagesList = [...new Set(activeList.map(d => (d.page || 0) + 1))].sort((a, b) => a - b);
+        if (qLabel) {
+          qLabel.innerText = `${countPrefix}: T${pagesList.join(', T')}`;
+          qLabel.style.cursor = 'pointer';
+          qLabel.onclick = () => jumpToDiagramPage(activeList[0].page || 0);
+        }
+        if (qPrev) qPrev.style.display = 'none';
+        if (qNext) qNext.style.display = 'none';
+      }
 
-      const spreadSideRow = document.getElementById('spreadSideRow');
-      if (spreadSideRow) spreadSideRow.style.display = isSpread ? '' : 'none';
+      // Desktop inline multi-diagram bar
+      const dPosBar = document.getElementById('desktopDiagramPosBar');
+      if (dPosBar) {
+        dPosBar.style.display = hasAny ? 'flex' : 'none';
+        const dHdr = document.getElementById('dDiagHeaderLabel');
+        if (dHdr) {
+          dHdr.innerText = hasOnCurPage
+            ? (totalCount > 1 ? `Sơ đồ (${totalCount}) · Đang chỉnh Trang ${curPage + 1}` : `Vị trí sơ đồ · Trang ${curPage + 1}`)
+            : `Sơ đồ (${totalCount}) · Trang ${curPage + 1} chưa có sơ đồ`;
+        }
+        const chipsBox = document.getElementById('dDiagPageChips');
+        if (chipsBox) {
+          const sorted = [...activeList].sort((a, b) => (a.page || 0) - (b.page || 0));
+          let chipsHtml = sorted.map(d => {
+            const pNum = (d.page || 0) + 1;
+            const isCur = (d.page || 0) === curPage;
+            return `<button type="button" class="tool-chip ${isCur ? 'active' : ''}" style="padding:2px 7px; font-size:11px;" onclick="jumpToDiagramPage(${d.page || 0})">T${pNum}${isSpread ? (d.spreadSide === 'left' ? '·Trái' : '·Phải') : ''}</button>`;
+          }).join('');
+          if (totalCount > 1) {
+            chipsHtml += `<button type="button" class="tool-chip tool-chip-danger" style="padding:2px 7px; font-size:11px;" onclick="removeAllDiagrams()">Xóa tất cả</button>`;
+          }
+          chipsBox.innerHTML = chipsHtml;
+        }
+        const activeControls = document.getElementById('dDiagActiveControls');
+        if (activeControls) {
+          activeControls.style.display = hasOnCurPage ? 'flex' : 'none';
+        }
+        if (hasOnCurPage) {
+          const dSpreadRow = document.getElementById('dDiagSpreadRow');
+          if (dSpreadRow) dSpreadRow.style.display = isSpread ? 'flex' : 'none';
+          const dL = document.getElementById('dDiagSideLeft');
+          const dR = document.getElementById('dDiagSideRight');
+          if (dL) dL.classList.toggle('active', pageDiag.spreadSide === 'left');
+          if (dR) dR.classList.toggle('active', pageDiag.spreadSide !== 'left');
 
-      const targetInput = document.getElementById('diagTargetPage');
-      if (targetInput) targetInput.value = String((state.diagram.page || 0) + 1);
+          const dStart = document.getElementById('dDiagStartSlider');
+          const dStartVal = document.getElementById('dDiagStartVal');
+          if (dStart) dStart.value = String(pageDiag.startLine || 0);
+          if (dStartVal) dStartVal.innerText = `Dòng ${(pageDiag.startLine || 0) + 1}`;
 
-      const sideSelect = document.getElementById('diagSpreadSide');
-      if (sideSelect) sideSelect.value = state.diagram.spreadSide || 'right';
-
-      const startSlider = document.getElementById('diagStartSlider');
-      if (startSlider) startSlider.value = String(state.diagram.startLine || 0);
-      const startVal = document.getElementById('diagStartVal');
-      if (startVal) startVal.innerText = String(state.diagram.startLine || 0);
-
-      const spanSlider = document.getElementById('diagSpanSlider');
-      if (spanSlider) spanSlider.value = String(state.diagram.lineSpan || 9);
-      const spanVal = document.getElementById('diagSpanVal');
-      if (spanVal) spanVal.innerText = String(state.diagram.lineSpan || 9);
-
-      const mPageVal = document.getElementById('mDiagPageVal');
-      if (mPageVal) {
-        if (isSpread && state.spreadWriteMode === 'both') {
-          const p1 = state.diagram.page * 2 + 1;
-          const p2 = state.diagram.page * 2 + 2;
-          mPageVal.innerText = `Trang ${p1}-${p2} (Tờ ${state.diagram.page + 1}/${state.totalPages})`;
-        } else {
-          mPageVal.innerText = `Trang ${state.diagram.page + 1} / ${state.totalPages}`;
+          const dSpan = document.getElementById('dDiagSpanSlider');
+          const dSpanVal = document.getElementById('dDiagSpanVal');
+          if (dSpan) dSpan.value = String(pageDiag.lineSpan || 9);
+          if (dSpanVal) dSpanVal.innerText = `${pageDiag.lineSpan || 9} dòng`;
         }
       }
-      const mPrevBtn = document.getElementById('mDiagPrevPageBtn');
-      if (mPrevBtn) mPrevBtn.disabled = (state.diagram.page <= 0);
-      const mSideL = document.getElementById('mDiagSideLeft');
-      const mSideR = document.getElementById('mDiagSideRight');
-      if (mSideL) mSideL.classList.toggle('active', state.diagram.spreadSide === 'left');
-      if (mSideR) mSideR.classList.toggle('active', state.diagram.spreadSide !== 'left');
+
+      // Sync Mobile Sheet live labels if currently open
+      if (hasOnCurPage) {
+        const mPageVal = document.getElementById('mDiagPageVal');
+        if (mPageVal) {
+          if (isSpread && state.spreadWriteMode === 'both') {
+            const p1 = pageDiag.page * 2 + 1;
+            const p2 = pageDiag.page * 2 + 2;
+            mPageVal.innerText = `Trang ${p1}-${p2} (Tờ ${pageDiag.page + 1}/${state.totalPages})`;
+          } else {
+            mPageVal.innerText = `Trang ${pageDiag.page + 1} / ${state.totalPages}`;
+          }
+        }
+        const mPrevBtn = document.getElementById('mDiagPrevPageBtn');
+        if (mPrevBtn) mPrevBtn.disabled = (pageDiag.page <= 0);
+        const mSideL = document.getElementById('mDiagSideLeft');
+        const mSideR = document.getElementById('mDiagSideRight');
+        if (mSideL) mSideL.classList.toggle('active', pageDiag.spreadSide === 'left');
+        if (mSideR) mSideR.classList.toggle('active', pageDiag.spreadSide !== 'left');
+      }
     }
 
     function setDiagramPage(pageIdx, jumpToPage = true) {
+      const targetDiag = getDiagramForPage(state.currentPage) || getActiveDiagrams()[0];
+      if (!targetDiag) return;
       const clamped = Math.max(0, Math.min(29, parseInt(pageIdx, 10) || 0));
-      state.diagram.page = clamped;
+      targetDiag.page = clamped;
       paginateText();
       if (jumpToPage) {
         state.currentPage = Math.min(state.totalPages - 1, clamped);
+        syncActiveDiagramRef();
         updatePaginationUI();
       }
       renderCanvas();
       syncDiagramPositionUI();
       updateDiagramUIButtons();
+      const sheet = document.getElementById('mobileSheet');
+      if (sheet && sheet.classList.contains('active') && sheet.dataset.type === 'diagram') {
+        openMobileSheet('diagram');
+      }
     }
 
     function moveDiagramPage(delta) {
-      setDiagramPage((state.diagram.page || 0) + delta, true);
+      const targetDiag = getDiagramForPage(state.currentPage) || getActiveDiagrams()[0];
+      if (!targetDiag) return;
+      setDiagramPage((targetDiag.page || 0) + delta, true);
     }
 
     function setDiagramSpreadSide(side) {
-      state.diagram.spreadSide = (side === 'left') ? 'left' : 'right';
+      const targetDiag = getDiagramForPage(state.currentPage);
+      if (!targetDiag) return;
+      targetDiag.spreadSide = (side === 'left') ? 'left' : 'right';
+      state.diagram = targetDiag;
       paginateText();
-      state.currentPage = Math.min(state.totalPages - 1, state.diagram.page || 0);
+      state.currentPage = Math.min(state.totalPages - 1, targetDiag.page || 0);
       updatePaginationUI();
       renderCanvas();
       syncDiagramPositionUI();
     }
 
+    function updateDiagramStartLine(val) {
+      const targetDiag = getDiagramForPage(state.currentPage);
+      if (!targetDiag) return;
+      targetDiag.startLine = Math.max(0, Math.min(25, parseInt(val, 10) || 0));
+      state.diagram = targetDiag;
+      paginateText();
+      renderCanvas();
+      syncDiagramPositionUI();
+    }
+
+    function updateDiagramLineSpan(val) {
+      const targetDiag = getDiagramForPage(state.currentPage);
+      if (!targetDiag) return;
+      targetDiag.lineSpan = Math.max(2, Math.min(22, parseInt(val, 10) || 9));
+      state.diagram = targetDiag;
+      paginateText();
+      renderCanvas();
+      syncDiagramPositionUI();
+    }
+
     function updateDiagramPos(jumpToPage = false) {
-      const start = parseInt(document.getElementById('diagStartSlider').value, 10) || 0;
-      const span = parseInt(document.getElementById('diagSpanSlider').value, 10) || 9;
-      const side = document.getElementById('diagSpreadSide').value;
-      const parsedPage = parseInt(document.getElementById('diagTargetPage').value, 10);
-      const prevPage = state.diagram.page;
+      const targetDiag = getDiagramForPage(state.currentPage);
+      if (!targetDiag) return;
+      const startEl = document.getElementById('diagStartSlider');
+      const spanEl = document.getElementById('diagSpanSlider');
+      const sideEl = document.getElementById('diagSpreadSide');
+      const pageEl = document.getElementById('diagTargetPage');
+
+      const start = startEl ? (parseInt(startEl.value, 10) || 0) : targetDiag.startLine;
+      const span = spanEl ? (parseInt(spanEl.value, 10) || 9) : targetDiag.lineSpan;
+      const side = sideEl ? sideEl.value : (targetDiag.spreadSide || 'right');
+      const parsedPage = pageEl ? parseInt(pageEl.value, 10) : NaN;
+      const prevPage = targetDiag.page;
       const targetPage = isNaN(parsedPage) ? prevPage : Math.max(0, Math.min(29, parsedPage - 1));
 
-      state.diagram.startLine = start;
-      state.diagram.lineSpan = span;
-      state.diagram.spreadSide = side;
-      state.diagram.page = targetPage;
+      targetDiag.startLine = start;
+      targetDiag.lineSpan = span;
+      targetDiag.spreadSide = side;
+      targetDiag.page = targetPage;
 
-      document.getElementById('diagStartVal').innerText = start;
-      document.getElementById('diagSpanVal').innerText = span;
+      const startValEl = document.getElementById('diagStartVal');
+      const spanValEl = document.getElementById('diagSpanVal');
+      if (startValEl) startValEl.innerText = start;
+      if (spanValEl) spanValEl.innerText = span;
 
       paginateText();
       if (jumpToPage || targetPage !== prevPage) {
         state.currentPage = Math.min(state.totalPages - 1, targetPage);
+        syncActiveDiagramRef();
         updatePaginationUI();
       }
       renderCanvas();
@@ -3587,36 +3591,33 @@
       updateDiagramUIButtons();
     }
 
-
-    // Update Handlers for Conversion & Tree Diagrams
+    // Update Handlers for Conversion & Tree Diagrams (guarded)
     function updateConversionContent() {
-      state.diagram.convNodes = document.getElementById('convNodes').value;
-      state.diagram.convSubtexts = document.getElementById('convSubtexts').value;
-      state.diagram.convTopOps = document.getElementById('convTopOps').value;
-      state.diagram.convBotOps = document.getElementById('convBotOps').value;
-      state.diagram.convNote = document.getElementById('convNote').value;
+      const d = getDiagramForPage(state.currentPage) || state.diagram;
+      if (!d) return;
+      const n = document.getElementById('convNodes'); if (n) d.convNodes = n.value;
+      const s = document.getElementById('convSubtexts'); if (s) d.convSubtexts = s.value;
+      const t = document.getElementById('convTopOps'); if (t) d.convTopOps = t.value;
+      const b = document.getElementById('convBotOps'); if (b) d.convBotOps = b.value;
+      const nt = document.getElementById('convNote'); if (nt) d.convNote = nt.value;
       renderCanvas();
       updateDiagramUIButtons();
     }
 
     function updateTreeContent() {
-      state.diagram.treeRoot = document.getElementById('treeRoot').value;
-      state.diagram.treeLeftCat = document.getElementById('treeLeftCat').value;
-      state.diagram.treeRightCat = document.getElementById('treeRightCat').value;
-      state.diagram.treeLeftContent = document.getElementById('treeLeftContent').value;
-      state.diagram.treeRightContent = document.getElementById('treeRightContent').value;
+      const d = getDiagramForPage(state.currentPage) || state.diagram;
+      if (!d) return;
+      const r = document.getElementById('treeRoot'); if (r) d.treeRoot = r.value;
+      const lc = document.getElementById('treeLeftCat'); if (lc) d.treeLeftCat = lc.value;
+      const rc = document.getElementById('treeRightCat'); if (rc) d.treeRightCat = rc.value;
+      const lct = document.getElementById('treeLeftContent'); if (lct) d.treeLeftContent = lct.value;
+      const rct = document.getElementById('treeRightContent'); if (rct) d.treeRightContent = rct.value;
       renderCanvas();
       updateDiagramUIButtons();
     }
 
     function clearDiagram() {
-      state.diagram.type = 'none';
-      state.diagram.enabled = false;
-      selectDiagramType('none');
-      paginateText();
-      renderCanvas();
-      updateDiagramUIButtons();
-      showToast('🗑️ Đã xóa sơ đồ! Dòng kẻ vở đã được phục hồi đầy đủ.');
+      removeDiagram();
     }
 
     // ========================================================
@@ -3820,6 +3821,7 @@
       }
 
       try {
+        await ensureTesseractLoaded();
         const worker = await Tesseract.createWorker(['chi_tra', 'chi_sim', 'vie'], 1, {
           langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0_fast'
         });
@@ -3876,18 +3878,14 @@
 
     function applyAiDiagramFromStudio() {
       const arch = currentStudioArch;
+      const curPage = Math.max(0, state.currentPage || 0);
 
       if (arch === 'chem') {
         const nodes = document.getElementById('stuConvNodes')?.value || state.diagram.convNodes;
         const topOps = document.getElementById('stuConvTopOps')?.value || state.diagram.convTopOps;
         const botOps = document.getElementById('stuConvBotOps')?.value || state.diagram.convBotOps;
         const note = document.getElementById('stuConvNote')?.value || state.diagram.convNote;
-
-        state.diagram.convNodes = nodes;
-        state.diagram.convTopOps = topOps;
-        state.diagram.convBotOps = botOps;
-        state.diagram.convNote = note;
-        selectDiagramType('conversion');
+        upsertDiagramOnPage({ type: 'conversion', convNodes: nodes, convTopOps: topOps, convBotOps: botOps, convNote: note, startLine: 2, lineSpan: 9 }, curPage);
 
       } else if (arch === 'tree') {
         const root = document.getElementById('stuTreeRoot')?.value || state.diagram.treeRoot;
@@ -3895,41 +3893,25 @@
         const rCat = document.getElementById('stuTreeRightCat')?.value || state.diagram.treeRightCat;
         const lContent = document.getElementById('stuTreeLeftContent')?.value || state.diagram.treeLeftContent;
         const rContent = document.getElementById('stuTreeRightContent')?.value || state.diagram.treeRightContent;
-
-        state.diagram.treeRoot = root;
-        state.diagram.treeLeftCat = lCat;
-        state.diagram.treeRightCat = rCat;
-        state.diagram.treeLeftContent = lContent;
-        state.diagram.treeRightContent = rContent;
-        selectDiagramType('tree');
+        upsertDiagramOnPage({ type: 'tree', treeRoot: root, treeLeftCat: lCat, treeRightCat: rCat, treeLeftContent: lContent, treeRightContent: rContent, startLine: 2, lineSpan: 13 }, curPage);
 
       } else if (arch === 'table3') {
         const c1 = document.getElementById('stuT3Col1')?.value || state.diagram.t3Col1;
         const c2 = document.getElementById('stuT3Col2')?.value || state.diagram.t3Col2;
         const c3 = document.getElementById('stuT3Col3')?.value || state.diagram.t3Col3;
         const rows = document.getElementById('stuT3Rows')?.value || state.diagram.t3Rows;
-
-        state.diagram.t3Col1 = c1;
-        state.diagram.t3Col2 = c2;
-        state.diagram.t3Col3 = c3;
-        state.diagram.t3Rows = rows;
-        selectDiagramType('table3');
+        upsertDiagramOnPage({ type: 'table3', t3Col1: c1, t3Col2: c2, t3Col3: c3, t3Rows: rows, startLine: 2, lineSpan: 9 }, curPage);
 
       } else if (arch === 'process') {
         const steps = document.getElementById('stuProcSteps')?.value || state.diagram.processSteps;
-        state.diagram.processSteps = steps;
-        selectDiagramType('process');
+        upsertDiagramOnPage({ type: 'process', processSteps: steps, startLine: 2, lineSpan: 8 }, curPage);
 
       } else if (arch === 'mindmap') {
         const root = document.getElementById('stuMindmapRoot')?.value || state.diagram.mindmapRoot;
         const branches = document.getElementById('stuMindmapBranches')?.value || state.diagram.mindmapBranches;
-        state.diagram.mindmapRoot = root;
-        state.diagram.mindmapBranches = branches;
-        selectDiagramType('mindmap');
+        upsertDiagramOnPage({ type: 'mindmap', mindmapRoot: root, mindmapBranches: branches, startLine: 2, lineSpan: 10 }, curPage);
       }
 
-      state.diagram.enabled = true;
-      state.diagram.page = Math.max(0, state.currentPage || 0);
       closeAiDiagramStudio();
       paginateText();
       renderCanvas();
@@ -3941,15 +3923,16 @@
         switchMobileView('preview');
       }
 
-      showToast('✨ AI đã vẽ lại sơ đồ vào trang vở bằng nét bút viết tay!');
+      showToast(`✨ AI đã vẽ lại sơ đồ vào Trang ${curPage + 1}!`);
     }
 
     function updateDiagramUIButtons() {
-      const isEnabled = (state.diagram && state.diagram.enabled && state.diagram.type !== 'none');
+      const activeList = getActiveDiagrams();
+      const isEnabled = activeList.length > 0;
       
       const badge = document.getElementById('diagramStatusBadge');
       if (badge) {
-        badge.innerText = isEnabled ? 'Đang bật' : 'Đang tắt';
+        badge.innerText = isEnabled ? `Đang bật (${activeList.length})` : 'Đang tắt';
         badge.style.background = isEnabled ? 'var(--ink-black)' : 'var(--bg-input)';
         badge.style.color = isEnabled ? '#FAF8F5' : 'var(--text-muted)';
       }
@@ -3957,54 +3940,56 @@
 
 
     function loadDiagramSample(sampleKey) {
+      const curPage = Math.max(0, state.currentPage || 0);
       if (sampleKey === 'chem') {
-        state.diagram.convNodes = '質量 (Mass), 莫耳數 (No. of mole), 粒子數 (No. of particles)';
-        state.diagram.convSubtexts = ',, 原子、分子、個數';
-        state.diagram.convTopOps = '÷ 原子量(分), × 6.02×10²³';
-        state.diagram.convBotOps = '× 原(分)子量, ÷ 6.02×10²³';
-        state.diagram.convNote = '1 mole ≡ 6.02×10²³\n   ↓\n原子, 分子…\n  恰 12g';
-        state.diagram.lineSpan = 9;
-        state.diagram.startLine = 3;
-
-        const cn = document.getElementById('convNodes'); if (cn) cn.value = state.diagram.convNodes;
-        const cs = document.getElementById('convSubtexts'); if (cs) cs.value = state.diagram.convSubtexts;
-        const cto = document.getElementById('convTopOps'); if (cto) cto.value = state.diagram.convTopOps;
-        const cbo = document.getElementById('convBotOps'); if (cbo) cbo.value = state.diagram.convBotOps;
-        const cnote = document.getElementById('convNote'); if (cnote) cnote.value = state.diagram.convNote;
-        const spanS = document.getElementById('diagSpanSlider'); if (spanS) spanS.value = 9;
-        const spanV = document.getElementById('diagSpanVal'); if (spanV) spanV.innerText = '9';
-
-        selectDiagramType('conversion');
+        upsertDiagramOnPage({
+          type: 'conversion',
+          convNodes: '質量 (Mass), 莫耳數 (No. of mole), 粒子數 (No. of particles)',
+          convSubtexts: ',, 原子、分子、個數',
+          convTopOps: '÷ 原子量(分), × 6.02×10²³',
+          convBotOps: '× 原(分)子量, ÷ 6.02×10²³',
+          convNote: '1 mole ≡ 6.02×10²³\n   ↓\n原子, 分子…\n  恰 12g',
+          lineSpan: 9,
+          startLine: 3
+        }, curPage);
+        paginateText();
+        renderCanvas();
+        syncDiagramPositionUI();
+        updateDiagramUIButtons();
         showToast('🧪 Đã vẽ lại Sơ đồ Hóa học (Chuyển đổi Mol / Khối lượng)!');
 
       } else if (sampleKey === 'tree') {
-        state.diagram.treeRoot = '生態系統';
-        state.diagram.treeLeftCat = '非生物成分 (生命維持系統)';
-        state.diagram.treeRightCat = '生物成分';
-        state.diagram.treeLeftContent = '1. 非生物環境\n  (1) 能源：太陽輻射\n  (2) 生物生存環境：岩石、土壤、水、空氣…\n  (3) 氣候：溫度、濕度、風和雨雪…\n2. 生命代謝原料\n  二氧化碳、水、氧、氮、無機鹽、有機質…';
-        state.diagram.treeRightContent = '1. 生產者：綠色植物\n2. 消費者\n  (1) 一級消費者：草食動物\n  (2) 二級消費者：肉食動物\n  (3) 三級消費者：頂級肉食動物\n  (4) 其他：雜食、腐食、寄食動物…\n3. 分解者：細菌、真菌等微生物';
-        state.diagram.treeCrossArrows = true;
-        state.diagram.lineSpan = 13;
-        state.diagram.startLine = 2;
-
-        const tr = document.getElementById('treeRoot'); if (tr) tr.value = state.diagram.treeRoot;
-        const tlc = document.getElementById('treeLeftCat'); if (tlc) tlc.value = state.diagram.treeLeftCat;
-        const trc = document.getElementById('treeRightCat'); if (trc) trc.value = state.diagram.treeRightCat;
-        const tlcont = document.getElementById('treeLeftContent'); if (tlcont) tlcont.value = state.diagram.treeLeftContent;
-        const trcont = document.getElementById('treeRightContent'); if (trcont) trcont.value = state.diagram.treeRightContent;
-        const spanS = document.getElementById('diagSpanSlider'); if (spanS) spanS.value = 13;
-        const spanV = document.getElementById('diagSpanVal'); if (spanV) spanV.innerText = '13';
-
-        selectDiagramType('tree');
+        upsertDiagramOnPage({
+          type: 'tree',
+          treeRoot: '生態系統',
+          treeLeftCat: '非生物成分 (生命維持系統)',
+          treeRightCat: '生物成分',
+          treeLeftContent: '1. 非生物環境\n  (1) 能源：太陽輻射\n  (2) 生物生存環境：岩石、土壤、水、空氣…\n  (3) 氣候：溫度、濕度、風和雨雪…\n2. 生命代謝原料\n  二氧化碳、水、氧、氮、無機鹽、有機質…',
+          treeRightContent: '1. 生產者：綠色植物\n2. 消費者\n  (1) 一級消費者：草食動物\n  (2) 二級消費者：肉食動物\n  (3) 三級消費者：頂級肉食動物\n  (4) 其他：雜食、腐食、寄食動物…\n3. 分解者：細菌、真菌等微生物',
+          treeCrossArrows: true,
+          lineSpan: 13,
+          startLine: 2
+        }, curPage);
+        paginateText();
+        renderCanvas();
+        syncDiagramPositionUI();
+        updateDiagramUIButtons();
         showToast('🌲 Đã vẽ lại Cây Phân Cấp Hệ Sinh Thái Đa Tầng!');
 
       } else if (sampleKey === 'table3') {
-        state.diagram.t3Col1 = '漢字';
-        state.diagram.t3Col2 = '拼音';
-        state.diagram.t3Col3 = '釋義 & 詞性';
-        state.diagram.t3Rows = '徘徊 | pái huái | 來回走動，猶豫不決 (動詞)\n繁華 | fán huá | 繁榮熱鬧，指市容 (形容詞)\n闌珊 | lán shān | 將盡、衰落，夜色已深 (形容詞)\n眷戀 | juàn liàn | 深切留戀與懷念 (動詞)';
-        state.diagram.lineSpan = 9;
-        selectDiagramType('table3');
+        upsertDiagramOnPage({
+          type: 'table3',
+          t3Col1: '漢字',
+          t3Col2: '拼音',
+          t3Col3: '釋義 & 詞性',
+          t3Rows: '徘徊 | pái huái | 來回走動，猶豫不決 (動詞)\n繁華 | fán huá | 繁榮熱鬧，指市容 (形容詞)\n闌珊 | lán shān | 將盡、衰落，夜色已深 (形容詞)\n眷戀 | juàn liàn | 深切留戀與懷念 (動詞)',
+          lineSpan: 9,
+          startLine: 2
+        }, curPage);
+        paginateText();
+        renderCanvas();
+        syncDiagramPositionUI();
+        updateDiagramUIButtons();
         showToast('📊 Đã nạp Bảng Từ Vựng HSK 3 Cột!');
       }
 
@@ -4369,13 +4354,16 @@
       // Chunk directly into subpages using each subpage's true maxW and line capacity
       state.allPagesLines = [];
       let subpageIdx = 0;
-      const targetDiagramSubpage = state.diagram.enabled
-        ? (isSpread
-            ? (Math.max(0, state.diagram.page || 0) * 2) + (state.diagram.spreadSide === 'right' ? 1 : 0)
-            : Math.max(0, state.diagram.page || 0))
-        : -1;
+      const activeDiagrams = getActiveDiagrams();
+      let maxDiagramSubpage = -1;
+      for (const d of activeDiagrams) {
+        const sub = isSpread
+          ? (Math.max(0, d.page || 0) * 2) + (d.spreadSide === 'right' ? 1 : 0)
+          : Math.max(0, d.page || 0);
+        if (sub > maxDiagramSubpage) maxDiagramSubpage = sub;
+      }
 
-      while (hasMoreContent() || (state.diagram.enabled && subpageIdx <= targetDiagramSubpage)) {
+      while (hasMoreContent() || (maxDiagramSubpage >= 0 && subpageIdx <= maxDiagramSubpage)) {
         const isRightSubpage = isSpread && (subpageIdx % 2 === 1);
         const bounds = getPageBounds(cfg, isRightSubpage);
         const subpageCapacity = Math.max(1, getActivePageLines(bounds.rawLines).length);
@@ -4394,20 +4382,12 @@
           slots[b] = { isMarginPlaceholder: true, chars: [] };
         }
 
-        // Check if diagram is targeted on this exact subpage
-        let hasDiagramOnThisSubpage = false;
-        if (state.diagram.enabled) {
-          if (isSpread) {
-            const targetSub = (state.diagram.page * 2) + (state.diagram.spreadSide === 'right' ? 1 : 0);
-            hasDiagramOnThisSubpage = (subpageIdx === targetSub);
-          } else {
-            hasDiagramOnThisSubpage = (subpageIdx === state.diagram.page);
-          }
-        }
-
-        if (hasDiagramOnThisSubpage) {
-          const dStart = Math.max(topSkip, Math.min(subpageCapacity - botSkip - 2, state.diagram.startLine));
-          const dSpan = Math.max(2, Math.min(subpageCapacity - botSkip - dStart, state.diagram.lineSpan));
+        // Reserve slots for every diagram placed on this exact subpage
+        const subDiagrams = getDiagramsForSubpage(subpageIdx, isSpread);
+        const hasDiagramOnThisSubpage = subDiagrams.length > 0;
+        for (const d of subDiagrams) {
+          const dStart = Math.max(topSkip, Math.min(subpageCapacity - botSkip - 2, d.startLine || 0));
+          const dSpan = Math.max(2, Math.min(subpageCapacity - botSkip - dStart, d.lineSpan || 9));
           for (let s = dStart; s < dStart + dSpan; s++) {
             slots[s] = { isDiagramPlaceholder: true, chars: [] };
           }
@@ -4463,7 +4443,9 @@
         state.currentPage = state.totalPages - 1;
       }
 
+      syncActiveDiagramRef();
       updatePaginationUI();
+      syncDiagramPositionUI();
     }
 
     function updatePaginationUI() {
@@ -4507,8 +4489,14 @@
     function prevPage() {
       if (state.currentPage > 0) {
         state.currentPage--;
+        syncActiveDiagramRef();
         updatePaginationUI();
         renderCanvas();
+        syncDiagramPositionUI();
+        const sheet = document.getElementById('mobileSheet');
+        if (sheet && sheet.classList.contains('active') && sheet.dataset.type === 'diagram') {
+          openMobileSheet('diagram');
+        }
         const vp = document.getElementById('viewport');
         if (vp) vp.scrollTop = 0;
       }
@@ -4517,8 +4505,14 @@
     function nextPage() {
       if (state.currentPage < state.totalPages - 1) {
         state.currentPage++;
+        syncActiveDiagramRef();
         updatePaginationUI();
         renderCanvas();
+        syncDiagramPositionUI();
+        const sheet = document.getElementById('mobileSheet');
+        if (sheet && sheet.classList.contains('active') && sheet.dataset.type === 'diagram') {
+          openMobileSheet('diagram');
+        }
         const vp = document.getElementById('viewport');
         if (vp) vp.scrollTop = 0;
       }
@@ -4577,14 +4571,15 @@
         const leftSubpage = state.allPagesLines[pageIndex * 2] || [];
         const rightSubpage = state.allPagesLines[pageIndex * 2 + 1] || [];
 
-        // Draw diagram on designated spread side
-        if (state.diagram.enabled && pageIndex === state.diagram.page) {
-          const isRight = (state.diagram.spreadSide === 'right');
-          const sideCfg = isRight ?
-            { lines: cfg.rightPage.lines, leftMargin: boundsR.leftM, rightMargin: boundsR.rightM } :
-            { lines: cfg.leftPage.lines, leftMargin: boundsL.leftM, rightMargin: boundsL.rightM };
-          drawDiagramOnCanvas(targetCtx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, sideCfg);
-        }
+        // Draw all diagrams belonging to left & right subpages of this spread sheet
+        getDiagramsForSubpage(pageIndex * 2, true).forEach(d => {
+          drawDiagramOnCanvas(targetCtx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`,
+            { lines: cfg.leftPage.lines, leftMargin: boundsL.leftM, rightMargin: boundsL.rightM }, d);
+        });
+        getDiagramsForSubpage(pageIndex * 2 + 1, true).forEach(d => {
+          drawDiagramOnCanvas(targetCtx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`,
+            { lines: cfg.rightPage.lines, leftMargin: boundsR.leftM, rightMargin: boundsR.rightM }, d);
+        });
 
         renderLineSet(targetCtx, leftSubpage, cfg.leftPage.lines, boundsL.leftM, boundsL.rightM, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, true, false);
         renderLineSet(targetCtx, rightSubpage, cfg.rightPage.lines, boundsR.leftM, boundsR.rightM, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, true, true);
@@ -4593,9 +4588,10 @@
         const bounds = getPageBounds(cfg, false);
         const pageLines = state.allPagesLines[pageIndex] || [];
 
-        if (state.diagram.enabled && pageIndex === state.diagram.page) {
-          drawDiagramOnCanvas(targetCtx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`, { lines: cfg.lines, leftMargin: bounds.leftM, rightMargin: bounds.rightM });
-        }
+        getDiagramsForSubpage(pageIndex, false).forEach(d => {
+          drawDiagramOnCanvas(targetCtx, prng, `rgb(${baseR}, ${baseG}, ${baseB})`,
+            { lines: cfg.lines, leftMargin: bounds.leftM, rightMargin: bounds.rightM }, d);
+        });
 
         renderLineSet(targetCtx, pageLines, cfg.lines, bounds.leftM, bounds.rightM, blOffset, prng, baseR, baseG, baseB, mFactor, state.fontSize, state.font, false, false);
       }
@@ -4858,8 +4854,9 @@
     }
 
 
-    function drawDiagramOnCanvas(ctx, prng, inkColor, activePageCfg) {
-      const d = state.diagram;
+    function drawDiagramOnCanvas(ctx, prng, inkColor, activePageCfg, diagramObj) {
+      const d = diagramObj || state.diagram;
+      if (!d || !d.enabled || d.type === 'none') return;
       const allLines = activePageCfg ? activePageCfg.lines : BASELINES;
       const baselines = getActivePageLines(allLines);
 
@@ -5329,6 +5326,7 @@
 
       renderCanvas();
       updateDiagramUIButtons();
+      saveDraftToStorage();
     }
 
     const FONT_DISPLAY_NAMES = {
@@ -5367,6 +5365,7 @@
       state.font = fontName;
       const sel = document.getElementById('fontSelector');
       if (sel && sel.value !== fontName) sel.value = fontName;
+      saveDraftToStorage();
 
       const doRender = () => {
         charWidthCache.clear();
@@ -5393,6 +5392,7 @@
       state.fontSize = parseInt(val);
       ['fontSizeVal', 'mFontSizeVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + 'px'; });
       ['fontSizeSlider', 'mFontSizeSlider'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== String(val)) el.value = val; });
+      saveDraftToStorage();
       scheduleRender(true);
     }
 
@@ -5400,6 +5400,7 @@
       state.messiness = parseInt(val);
       ['messinessVal', 'mMessinessVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + '%'; });
       ['messinessSlider', 'mMessinessSlider'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== String(val)) el.value = val; });
+      saveDraftToStorage();
       scheduleRender(false);
     }
 
@@ -5407,6 +5408,7 @@
       state.baselineOffset = parseInt(val);
       ['baselineVal', 'mBaselineVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + 'px'; });
       ['baselineSlider', 'mBaselineSlider'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== String(val)) el.value = val; });
+      saveDraftToStorage();
       scheduleRender(false);
     }
 
@@ -5414,6 +5416,7 @@
       state.marginOffset = parseInt(val);
       ['marginVal', 'mMarginVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + 'px'; });
       ['marginSlider', 'mMarginSlider'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== String(val)) el.value = val; });
+      saveDraftToStorage();
       scheduleRender(true);
     }
 
@@ -5421,6 +5424,7 @@
       state.topMarginLines = parseInt(val);
       ['topMarginVal', 'mTopMarginVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + ' dòng'; });
       ['topMarginSlider', 'mTopMarginSlider'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== String(val)) el.value = val; });
+      saveDraftToStorage();
       scheduleRender(true);
     }
 
@@ -5428,6 +5432,7 @@
       state.bottomMarginLines = parseInt(val);
       ['bottomMarginVal', 'mBottomMarginVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = val + ' dòng'; });
       ['bottomMarginSlider', 'mBottomMarginSlider'].forEach(id => { const el = document.getElementById(id); if (el && el.value !== String(val)) el.value = val; });
+      saveDraftToStorage();
       scheduleRender(true);
     }
 
@@ -5446,6 +5451,7 @@
       if (chipSkip) {
         chipSkip.classList.toggle('active', state.skipLine);
       }
+      saveDraftToStorage();
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
@@ -5460,6 +5466,7 @@
       textInput.setRangeText(repl, start, end, 'end');
       state.text = textInput.value;
       updateCharCount();
+      saveDraftToStorage();
       paginateText();
       renderCanvas();
       updateDiagramUIButtons();
@@ -5470,6 +5477,7 @@
         textInput.value = '';
         state.text = '';
         updateCharCount();
+        saveDraftToStorage(true);
         paginateText();
         renderCanvas();
       }
@@ -5490,6 +5498,7 @@
       }
       state.text = textInput.value;
       updateCharCount();
+      saveDraftToStorage();
       paginateText();
       renderCanvas();
       showToast('Đã nạp bài tập mẫu!');
@@ -5570,6 +5579,8 @@
       try {
         processedBlob = await preprocessImageForOcr(file);
 
+        showToast('Đang tải bộ nhận diện OCR chữ Hán...');
+        await ensureTesseractLoaded();
         showToast('Đang nạp dữ liệu nhận diện chữ Hán...');
         const worker = await Tesseract.createWorker('chi_tra+chi_sim', 1, {
           workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js',
@@ -5598,6 +5609,7 @@
           textInput.value = cleaned;
           state.text = cleaned;
           updateCharCount();
+          saveDraftToStorage();
           paginateText();
           renderCanvas();
           showToast('Quét chữ hoàn tất!');
@@ -5608,6 +5620,7 @@
         console.warn('OCR primary error, trying fallback:', err);
         try {
           showToast('Đang thử lại với bộ quét dự phòng...');
+          await ensureTesseractLoaded();
           const ret = await Tesseract.recognize(processedBlob || file, 'chi_tra', {
             langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0_fast'
           });
@@ -5616,6 +5629,7 @@
             textInput.value = cleaned;
             state.text = cleaned;
             updateCharCount();
+            saveDraftToStorage();
             paginateText();
             renderCanvas();
             showToast('Quét chữ hoàn tất!');
@@ -5674,20 +5688,19 @@
         const img = new Image();
         img.onload = () => {
           processImageToBallpointSketch(img, (sketchImg) => {
-            state.diagram.image = sketchImg;
-            state.diagram.rawImage = img;
-            state.diagram.enabled = true;
-            state.diagram.type = 'image';
-            state.diagram.page = Math.max(0, state.currentPage || 0);
-            state.diagram.startLine = 1;
-            state.diagram.lineSpan = 11;
-            const btnRem = document.getElementById('btnRemoveDiagram');
-            if (btnRem) btnRem.style.display = 'inline-flex';
+            const curPage = Math.max(0, state.currentPage || 0);
+            upsertDiagramOnPage({
+              image: sketchImg,
+              rawImage: img,
+              type: 'image',
+              startLine: 1,
+              lineSpan: 11
+            }, curPage);
             paginateText();
             renderCanvas();
             syncDiagramPositionUI();
             if (window.innerWidth <= 991) switchMobileView('preview');
-            showToast('✨ Đã vẽ lại sơ đồ bằng nét bút bi vào vở!');
+            showToast(`✨ Đã vẽ lại sơ đồ bằng nét bút bi vào Trang ${curPage + 1}!`);
           });
         };
         img.src = e.target.result;
@@ -5695,31 +5708,47 @@
       reader.readAsDataURL(file);
     }
 
-    function removeDiagram() {
-      state.diagram.enabled = false;
-      state.diagram.image = null;
-      state.diagram.rawImage = null;
-      state.diagram.type = 'none';
-      const btnRem = document.getElementById('btnRemoveDiagram');
-      if (btnRem) btnRem.style.display = 'none';
+    function removeDiagram(targetId = null) {
+      const curPage = Math.max(0, state.currentPage || 0);
+      if (targetId) {
+        state.diagrams = state.diagrams.filter(d => d && d.id !== targetId);
+      } else {
+        const pageDiag = getDiagramForPage(curPage);
+        if (pageDiag) {
+          state.diagrams = state.diagrams.filter(d => d !== pageDiag);
+        } else if (state.diagrams.length > 0) {
+          state.diagrams.pop();
+        }
+      }
+      syncActiveDiagramRef();
       paginateText();
       renderCanvas();
       syncDiagramPositionUI();
-      showToast('Đã xóa sơ đồ khỏi trang!');
+      updateDiagramUIButtons();
+      showToast(`Đã xóa sơ đồ khỏi Trang ${curPage + 1}!`);
+    }
+
+    function removeAllDiagrams() {
+      state.diagrams = [];
+      syncActiveDiagramRef();
+      paginateText();
+      renderCanvas();
+      syncDiagramPositionUI();
+      updateDiagramUIButtons();
+      showToast('Đã xóa tất cả sơ đồ khỏi các trang!');
     }
 
     function loadSampleHanddrawnDiagram() {
       showToast('Đang nạp sơ đồ bút bi mẫu...');
       const img = new Image();
       img.onload = () => {
-        state.diagram.image = img;
-        state.diagram.enabled = true;
-        state.diagram.type = 'image';
-        state.diagram.page = Math.max(0, state.currentPage || 0);
-        state.diagram.startLine = 1;
-        state.diagram.lineSpan = 12;
-        const btnRem = document.getElementById('btnRemoveDiagram');
-        if (btnRem) btnRem.style.display = 'inline-flex';
+        const curPage = Math.max(0, state.currentPage || 0);
+        upsertDiagramOnPage({
+          image: img,
+          type: 'image',
+          startLine: 1,
+          lineSpan: 12
+        }, curPage);
         paginateText();
         renderCanvas();
         syncDiagramPositionUI();
@@ -5727,7 +5756,7 @@
           switchMobileView('preview');
           openMobileSheet('diagram');
         }
-        showToast('✨ Đã chèn sơ đồ Thủy triều vẽ tay vào vở!');
+        showToast(`✨ Đã chèn sơ đồ Thủy triều vẽ tay vào Trang ${curPage + 1}!`);
       };
       img.src = getAssetUrl('assets/so_do_ve_tay_but_bi_xanh.jpg');
     }
@@ -5736,14 +5765,13 @@
       showToast('Đang nạp sơ đồ bút bi vẽ tay của anh...');
       const img = new Image();
       img.onload = () => {
-        state.diagram.image = img;
-        state.diagram.enabled = true;
-        state.diagram.type = 'image';
-        state.diagram.page = Math.max(0, state.currentPage || 0);
-        state.diagram.startLine = 0;
-        state.diagram.lineSpan = 14;
-        const btnRem = document.getElementById('btnRemoveDiagram');
-        if (btnRem) btnRem.style.display = 'inline-flex';
+        const curPage = Math.max(0, state.currentPage || 0);
+        upsertDiagramOnPage({
+          image: img,
+          type: 'image',
+          startLine: 0,
+          lineSpan: 14
+        }, curPage);
         paginateText();
         renderCanvas();
         syncDiagramPositionUI();
@@ -5751,7 +5779,7 @@
           switchMobileView('preview');
           openMobileSheet('diagram');
         }
-        showToast('✨ Đã chèn sơ đồ vẽ tay bút bi chuẩn vào vở!');
+        showToast(`✨ Đã chèn sơ đồ vẽ tay bút bi chuẩn vào Trang ${curPage + 1}!`);
       };
       img.src = getAssetUrl('assets/so_do_chatgpt_but_bi.jpg');
     }
@@ -5829,7 +5857,8 @@
           restylerState.labels = [];
 
           try {
-            if (msg) msg.innerText = 'AI đang quét vị trí các chữ trong ảnh...';
+            if (msg) msg.innerText = 'Đang tải bộ OCR và quét vị trí chữ...';
+            await ensureTesseractLoaded();
             if (window.Tesseract) {
               const worker = await Tesseract.createWorker(['chi_tra', 'chi_sim'], 1, {
                 workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js',
@@ -5998,20 +6027,19 @@
       const dataUrl = c.toDataURL('image/png');
       const img = new Image();
       img.onload = () => {
-        state.diagram.image = img;
-        state.diagram.enabled = true;
-        state.diagram.type = 'image';
-        state.diagram.page = Math.max(0, state.currentPage || 0);
-        state.diagram.startLine = 1;
-        state.diagram.lineSpan = 12;
-        const btnRem = document.getElementById('btnRemoveDiagram');
-        if (btnRem) btnRem.style.display = 'inline-flex';
+        const curPage = Math.max(0, state.currentPage || 0);
+        upsertDiagramOnPage({
+          image: img,
+          type: 'image',
+          startLine: 1,
+          lineSpan: 12
+        }, curPage);
         paginateText();
         renderCanvas();
         syncDiagramPositionUI();
         closeDiagramRestylerModal();
         if (window.innerWidth <= 991) switchMobileView('preview');
-        showToast('✨ Đã áp dụng sơ đồ font viết tay vào trang vở!');
+        showToast(`✨ Đã áp dụng sơ đồ font viết tay vào Trang ${curPage + 1}!`);
       };
       img.src = dataUrl;
     }
@@ -6101,6 +6129,12 @@
       }
       if (allBtnText) {
         allBtnText.innerText = `Tải Toàn Bộ ${totalPages} Trang (${scaleTag} .JPG)`;
+      }
+      const printPdfText = document.getElementById('printPdfBtnText');
+      if (printPdfText) {
+        printPdfText.innerText = totalPages > 1
+          ? `In / Lưu PDF (Tất cả ${totalPages} trang)`
+          : 'In / Lưu PDF (Tất cả trang)';
       }
     }
 
@@ -6325,6 +6359,131 @@
       showToast(`Đã tải xong toàn bộ ${total} trang ảnh ${scaleName}!`);
     }
 
+    function buildPrintPagesHtml(pageDataUrls, isLandscape = false) {
+      const pagesHtml = pageDataUrls.map((src, idx) =>
+        `<div class="print-page"><img src="${src}" alt="Trang ${idx + 1}"></div>`
+      ).join('\n');
+      return `<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chép Tay — In / Lưu PDF (${pageDataUrls.length} trang)</title>
+  <style>
+    @page { size: ${isLandscape ? 'landscape' : 'portrait'}; margin: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: #fff; }
+    .print-page {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      page-break-after: always;
+      break-after: page;
+      overflow: hidden;
+    }
+    .print-page:last-child {
+      page-break-after: auto;
+      break-after: auto;
+    }
+    .print-page img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+    @media screen {
+      body { background: #E8E4DB; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+      .print-page { width: auto; height: auto; box-shadow: 0 8px 28px rgba(0,0,0,0.18); background: #fff; }
+      .print-page img { max-width: min(92vw, 900px); max-height: none; }
+    }
+  </style>
+</head>
+<body>
+${pagesHtml}
+</body>
+</html>`;
+    }
+
+    function executePrintPdfAll() {
+      if (!canvas) return;
+      const total = Math.max(1, state.totalPages || 1);
+      const scale = Math.min(Math.max(state.exportScale || 2, 1), 2);
+      const isLandscape = canvas.width > canvas.height;
+      closeDownloadModal();
+      showToast(`Đang chuẩn bị bản in PDF (${total} trang)...`);
+
+      // Render every page at high resolution synchronously
+      const pageDataUrls = [];
+      const off = document.createElement('canvas');
+      off.width = Math.round(canvas.width * scale);
+      off.height = Math.round(canvas.height * scale);
+      const offCtx = off.getContext('2d');
+
+      for (let p = 0; p < total; p++) {
+        offCtx.clearRect(0, 0, off.width, off.height);
+        renderPageToContext(offCtx, off.width, off.height, p, scale);
+        pageDataUrls.push(off.toDataURL('image/jpeg', 0.94));
+      }
+
+      const printHtml = buildPrintPagesHtml(pageDataUrls, isLandscape);
+
+      const triggerPrintInDoc = (win, onDone) => {
+        try {
+          const imgs = Array.from(win.document.images || []);
+          const waits = imgs.map(im => im.complete ? Promise.resolve() : new Promise(res => {
+            im.onload = res;
+            im.onerror = res;
+          }));
+          Promise.all(waits).then(() => {
+            setTimeout(() => {
+              try {
+                win.focus();
+                win.print();
+              } catch (e) {
+                console.warn('Print trigger failed:', e);
+              }
+              if (onDone) onDone();
+            }, 120);
+          });
+        } catch (e) {
+          console.warn('Print wait failed:', e);
+          if (onDone) onDone();
+        }
+      };
+
+      // Try clean print window first; seamlessly fall back to hidden iframe if popup blocked
+      let printWin = null;
+      try {
+        printWin = window.open('', '_blank');
+      } catch (e) {
+        printWin = null;
+      }
+
+      if (printWin && printWin.document) {
+        printWin.document.open();
+        printWin.document.write(printHtml);
+        printWin.document.close();
+        triggerPrintInDoc(printWin);
+        return printHtml;
+      }
+
+      const iframe = document.createElement('iframe');
+      iframe.style.cssText = 'position:fixed; right:0; bottom:0; width:0; height:0; border:0; visibility:hidden;';
+      document.body.appendChild(iframe);
+      const iDoc = iframe.contentDocument || iframe.contentWindow.document;
+      iDoc.open();
+      iDoc.write(printHtml);
+      iDoc.close();
+      triggerPrintInDoc(iframe.contentWindow, () => {
+        setTimeout(() => iframe.remove(), 30000);
+      });
+      return printHtml;
+    }
+
     // Alias for compatibility
     function downloadCurrentPageImage() {
       confirmDownloadImage();
@@ -6410,6 +6569,8 @@
       ti.setSelectionRange(newPos, newPos);
       ti.focus();
       state.text = ti.value;
+      updateCharCount();
+      saveDraftToStorage();
       paginateText();
       renderCanvas();
     }
@@ -6427,6 +6588,8 @@
       }
       ti.value = sample;
       state.text = sample;
+      updateCharCount();
+      saveDraftToStorage();
       paginateText();
       renderCanvas();
       showToast('✨ Đã nạp mẫu phép tính toán vào vở!');
@@ -6434,16 +6597,45 @@
 
     
     // ========================================================
-    // DIRECT AI DIAGRAM GENERATION ENGINE (GEMINI / IMAGEN 3)
+    // DIRECT AI DIAGRAM GENERATION ENGINE (GEMINI 2.5 / IMAGEN 3)
     // ========================================================
     
     // ========================================================
-    // 1-CLICK AI DIAGRAM REDRAW PIPELINE (v6.3.2)
-    // Upload image -> AI redraws as ballpoint sketch -> Auto-inserts into notebook
+    // 1-CLICK AI DIAGRAM REDRAW PIPELINE (v6.6.0)
+    // Upload image -> AI redraws as ballpoint sketch (with guaranteed local fallback) -> Auto-inserts into current page
     // ========================================================
     async function handleAiDiagramAutoUpload(file) {
       if (!file) return;
+      const autoInput = document.getElementById('aiDiagramAutoFileInput');
+      if (autoInput) autoInput.value = '';
       showToast('📸 Đang tải ảnh lên để AI vẽ lại...');
+
+      const applyLocalBallpointSketch = (rawDataUrl) => {
+        showToast('🪄 Đang chuyển sơ đồ sang nét bút bi tự nhiên...');
+        const tempImg = new Image();
+        tempImg.onload = () => {
+          processImageToBallpointSketch(tempImg, (sketchImg) => {
+            const curPage = Math.max(0, state.currentPage || 0);
+            upsertDiagramOnPage({
+              image: sketchImg,
+              rawImage: tempImg,
+              type: 'image',
+              startLine: 0,
+              lineSpan: 13
+            }, curPage);
+            paginateText();
+            renderCanvas();
+            syncDiagramPositionUI();
+            closeMobileSheet();
+            if (window.innerWidth <= 991) switchMobileView('preview');
+            showToast(`✨ Đã vẽ lại sơ đồ bằng nét bút bi vào Trang ${curPage + 1}!`);
+          });
+        };
+        tempImg.onerror = () => {
+          showToast('Không thể đọc file ảnh sơ đồ!');
+        };
+        tempImg.src = rawDataUrl;
+      };
       
       const reader = new FileReader();
       reader.onload = async (e) => {
@@ -6453,12 +6645,12 @@
         
         let apiKey = localStorage.getItem('gemini_api_key');
         
-        // If API key is available, use Gemini Multimodal Vision + Imagen Redraw
+        // If API key is available, use Gemini 2.5 Flash Vision + Imagen Redraw (with clean fallback on any rejection/error)
         if (apiKey) {
           showToast('🤖 AI đang phân tích nội dung ảnh sơ đồ...');
           try {
-            // Step 1: Gemini Vision analyzes diagram content & layout
-            const visionUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+            // Step 1: Gemini 2.5 Flash Vision analyzes diagram content & layout
+            const visionUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + apiKey;
             const visionRes = await fetch(visionUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -6471,8 +6663,13 @@
                 }]
               })
             });
-            
+            if (!visionRes.ok) {
+              throw new Error('Gemini API HTTP ' + visionRes.status);
+            }
             const visionData = await visionRes.json();
+            if (visionData.error) {
+              throw new Error(visionData.error.message || 'Gemini API error');
+            }
             const diagramDesc = visionData.candidates?.[0]?.content?.parts?.[0]?.text || '';
             
             if (diagramDesc) {
@@ -6488,58 +6685,46 @@
                   parameters: { sampleCount: 1, aspectRatio: '1:1' }
                 })
               });
-              
+              if (!imgRes.ok) {
+                throw new Error('Imagen API HTTP ' + imgRes.status);
+              }
               const imgData = await imgRes.json();
+              if (imgData.error) {
+                throw new Error(imgData.error.message || 'Imagen API error');
+              }
               if (imgData.predictions?.[0]?.bytesBase64Encoded) {
                 const aiResultUrl = 'data:image/jpeg;base64,' + imgData.predictions[0].bytesBase64Encoded;
                 const aiImg = new Image();
                 aiImg.onload = () => {
-                  state.diagram.image = aiImg;
-                  state.diagram.enabled = true;
-                  state.diagram.type = 'image';
-                  state.diagram.page = Math.max(0, state.currentPage || 0);
-                  state.diagram.startLine = 0;
-                  state.diagram.lineSpan = 14;
-                  const btnRem = document.getElementById('btnRemoveDiagram');
-                  if (btnRem) btnRem.style.display = 'inline-flex';
+                  const curPage = Math.max(0, state.currentPage || 0);
+                  upsertDiagramOnPage({
+                    image: aiImg,
+                    type: 'image',
+                    startLine: 0,
+                    lineSpan: 14
+                  }, curPage);
                   paginateText();
                   renderCanvas();
                   syncDiagramPositionUI();
                   closeMobileSheet();
                   if (window.innerWidth <= 991) switchMobileView('preview');
-                  showToast('✨ AI đã vẽ lại sơ đồ và tự động thêm vào vở!');
+                  showToast(`✨ AI đã vẽ lại sơ đồ và thêm vào Trang ${curPage + 1}!`);
+                };
+                aiImg.onerror = () => {
+                  console.warn('AI generated image decode failed, falling back to local ballpoint sketch');
+                  applyLocalBallpointSketch(rawDataUrl);
                 };
                 aiImg.src = aiResultUrl;
                 return;
               }
             }
           } catch (err) {
-            console.warn('Online AI redraw fallback to instant ballpoint artist:', err);
+            console.warn('Online AI redraw fallback to local ballpoint sketch:', err);
           }
         }
 
         // Fallback or Instant mode: Automatically transform image into authentic hand-drawn ballpoint sketch
-        showToast('🪄 AI đang vẽ lại sơ đồ bằng nét bút bi...');
-        const tempImg = new Image();
-        tempImg.onload = () => {
-          processImageToBallpointSketch(tempImg, (sketchImg) => {
-            state.diagram.image = sketchImg;
-            state.diagram.enabled = true;
-            state.diagram.type = 'image';
-            state.diagram.page = Math.max(0, state.currentPage || 0);
-            state.diagram.startLine = 0;
-            state.diagram.lineSpan = 13;
-            const btnRem = document.getElementById('btnRemoveDiagram');
-            if (btnRem) btnRem.style.display = 'inline-flex';
-            paginateText();
-            renderCanvas();
-            syncDiagramPositionUI();
-            closeMobileSheet();
-            if (window.innerWidth <= 991) switchMobileView('preview');
-            showToast('✨ AI đã vẽ lại sơ đồ bằng nét bút bi vào trang vở!');
-          });
-        };
-        tempImg.src = rawDataUrl;
+        applyLocalBallpointSketch(rawDataUrl);
       };
       reader.readAsDataURL(file);
     }
@@ -6600,14 +6785,13 @@
           const dataUrl = 'data:image/jpeg;base64,' + data.predictions[0].bytesBase64Encoded;
           const img = new Image();
           img.onload = () => {
-            state.diagram.image = img;
-            state.diagram.enabled = true;
-            state.diagram.type = 'image';
-            state.diagram.page = Math.max(0, state.currentPage || 0);
-            state.diagram.startLine = 0;
-            state.diagram.lineSpan = 14;
-            const btnRem = document.getElementById('btnRemoveDiagram');
-            if (btnRem) btnRem.style.display = 'inline-flex';
+            const curPage = Math.max(0, state.currentPage || 0);
+            upsertDiagramOnPage({
+              image: img,
+              type: 'image',
+              startLine: 0,
+              lineSpan: 14
+            }, curPage);
             paginateText();
             renderCanvas();
             syncDiagramPositionUI();
@@ -6615,7 +6799,7 @@
               switchMobileView('preview');
               openMobileSheet('diagram');
             }
-            showToast('✨ AI đã vẽ lại sơ đồ bằng nét bút bi vào vở!');
+            showToast(`✨ AI đã vẽ lại sơ đồ bằng nét bút bi vào Trang ${curPage + 1}!`);
           };
           img.src = dataUrl;
         } else {
@@ -6713,7 +6897,7 @@
           <div class="ios-switch-row" style="margin-top:8px;">
             <span class="ios-switch-label">Tự động gạch chữ sai</span>
             <label class="ios-switch">
-              <input type="checkbox" id="mAutoTypo" ${state.autoTypo ? 'checked' : ''} onchange="state.autoTypo = this.checked; paginateText(); renderCanvas();">
+              <input type="checkbox" id="mAutoTypo" ${state.autoTypo ? 'checked' : ''} onchange="state.autoTypo = this.checked; saveDraftToStorage(); paginateText(); renderCanvas();">
               <span class="ios-switch-track"></span>
             </label>
           </div>
@@ -6782,18 +6966,40 @@
         `;
         body.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px;">${tplCardsHtml}</div>`;
       } else if (normType === 'diagram') {
-        if (title) title.innerText = 'Chèn sơ đồ vào vở';
-        const hasDiag = state.diagram && state.diagram.enabled;
+        const curPage = Math.max(0, state.currentPage || 0);
+        const activeList = getActiveDiagrams();
+        const totalDiagCount = activeList.length;
+        const pageDiag = getDiagramForPage(curPage);
+        if (title) title.innerText = totalDiagCount > 1 ? `Sơ đồ (${totalDiagCount}) · Trang ${curPage + 1}` : `Chèn sơ đồ · Trang ${curPage + 1}`;
+        const dCfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
+        const dIsSpread = !!dCfg.isSpread;
+        const sortedDiags = [...activeList].sort((a, b) => (a.page || 0) - (b.page || 0));
+        const multiChipsHtml = totalDiagCount > 0 ? `
+          <div style="background:var(--bg-base); border:1px solid var(--border-color); border-radius:10px; padding:9px 11px; margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:11.5px; font-weight:600; color:var(--text-main);">Sơ đồ đã chèn (${totalDiagCount})</span>
+              ${totalDiagCount > 1 ? `<button type="button" class="tool-chip tool-chip-danger" style="padding:2px 8px; font-size:11px;" onclick="removeAllDiagrams(); openMobileSheet('diagram');">Xóa tất cả</button>` : ''}
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:6px;">
+              ${sortedDiags.map(d => {
+                const pNum = (d.page || 0) + 1;
+                const isCur = (d.page || 0) === curPage;
+                return `<button type="button" class="tool-chip ${isCur ? 'active' : ''}" style="padding:4px 9px; font-size:11.5px;" onclick="jumpToDiagramPage(${d.page || 0})">Trang ${pNum}${dIsSpread ? (d.spreadSide === 'left' ? ' · Trái' : ' · Phải') : ''}</button>`;
+              }).join('')}
+            </div>
+          </div>
+        ` : '';
         body.innerHTML = `
-          <div style="background:var(--bg-base); border:1.5px dashed var(--border-hover); border-radius:14px; padding:18px 14px; margin-bottom:12px; text-align:center; cursor:pointer;" onclick="document.getElementById('aiDiagramAutoFileInput').click()">
-            <div style="width:38px; height:38px; border-radius:10px; background:#fff; border:1px solid var(--border-color); display:inline-flex; align-items:center; justify-content:center; margin-bottom:8px; color:var(--text-main);">
+          ${multiChipsHtml}
+          <div style="background:var(--bg-base); border:1.5px dashed var(--border-hover); border-radius:14px; padding:16px 14px; margin-bottom:12px; text-align:center; cursor:pointer;" onclick="document.getElementById('aiDiagramAutoFileInput').click()">
+            <div style="width:36px; height:36px; border-radius:10px; background:#fff; border:1px solid var(--border-color); display:inline-flex; align-items:center; justify-content:center; margin-bottom:6px; color:var(--text-main);">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             </div>
-            <strong style="font-size:14px; color:var(--text-main); display:block; margin-bottom:3px;">Tải ảnh sơ đồ từ máy</strong>
-            <span style="font-size:12px; color:var(--text-muted); display:block; line-height:1.45;">
-              Tự động chuyển nét bút bi và hòa mực vào trang vở
+            <strong style="font-size:13.5px; color:var(--text-main); display:block; margin-bottom:3px;">${pageDiag ? `Đổi ảnh sơ đồ cho Trang ${curPage + 1}` : `Thêm ảnh sơ đồ vào Trang ${curPage + 1}`}</strong>
+            <span style="font-size:11.5px; color:var(--text-muted); display:block; line-height:1.45;">
+              Tự động chuyển nét bút bi, giữ nguyên sơ đồ ở các trang khác
             </span>
-            <button type="button" class="btn btn-primary" style="margin-top:12px; width:100%; justify-content:center; padding:10px; font-size:13px;">
+            <button type="button" class="btn btn-primary" style="margin-top:10px; width:100%; justify-content:center; padding:9px; font-size:13px;">
               Chọn ảnh sơ đồ
             </button>
           </div>
@@ -6807,22 +7013,20 @@
             <button class="btn btn-secondary" onclick="loadChatGptSampleDiagram()" style="justify-content:center; padding:9px 8px; font-size:11.5px;">Mẫu Thủy triều 1</button>
             <button class="btn btn-secondary" onclick="loadSampleHanddrawnDiagram()" style="justify-content:center; padding:9px 8px; font-size:11.5px;">Mẫu Thủy triều 2</button>
           </div>
-          ${hasDiag ? (() => {
-            const dCfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
-            const dIsSpread = !!dCfg.isSpread;
+          ${pageDiag ? (() => {
             const dPageLabel = (dIsSpread && state.spreadWriteMode === 'both')
-              ? `Trang ${state.diagram.page * 2 + 1}-${state.diagram.page * 2 + 2} (Tờ ${state.diagram.page + 1}/${state.totalPages})`
-              : `Trang ${state.diagram.page + 1} / ${state.totalPages}`;
+              ? `Trang ${pageDiag.page * 2 + 1}-${pageDiag.page * 2 + 2} (Tờ ${pageDiag.page + 1}/${state.totalPages})`
+              : `Trang ${pageDiag.page + 1} / ${state.totalPages}`;
             return `
             <div style="background:var(--bg-base); border:1px solid var(--border-color); border-radius:12px; padding:12px; margin-bottom:10px;">
-              <div style="font-size:12.5px; font-weight:600; margin-bottom:10px; color:var(--text-main);">Vị trí sơ đồ trên trang</div>
+              <div style="font-size:12.5px; font-weight:600; margin-bottom:10px; color:var(--text-main);">Vị trí sơ đồ trên Trang ${curPage + 1}</div>
               <div style="margin-bottom:12px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-bottom:6px;">
                   <span style="color:var(--text-muted);">Trang đặt sơ đồ:</span>
                   <strong id="mDiagPageVal" style="color:var(--accent); font-variant-numeric:tabular-nums;">${dPageLabel}</strong>
                 </div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                  <button type="button" id="mDiagPrevPageBtn" class="btn btn-secondary" ${state.diagram.page <= 0 ? 'disabled' : ''} onclick="moveDiagramPage(-1)" style="justify-content:center; padding:8px; font-size:12px;">◀ Trang trước</button>
+                  <button type="button" id="mDiagPrevPageBtn" class="btn btn-secondary" ${pageDiag.page <= 0 ? 'disabled' : ''} onclick="moveDiagramPage(-1)" style="justify-content:center; padding:8px; font-size:12px;">◀ Trang trước</button>
                   <button type="button" id="mDiagNextPageBtn" class="btn btn-secondary" onclick="moveDiagramPage(1)" style="justify-content:center; padding:8px; font-size:12px;">Trang sau ▶</button>
                 </div>
               </div>
@@ -6830,30 +7034,30 @@
               <div style="margin-bottom:12px;">
                 <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;">Mặt trang (Vở đôi):</div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                  <button type="button" id="mDiagSideLeft" class="btn btn-secondary ${state.diagram.spreadSide === 'left' ? 'active' : ''}" onclick="setDiagramSpreadSide('left')" style="justify-content:center; padding:8px; font-size:12px;">Trang Trái</button>
-                  <button type="button" id="mDiagSideRight" class="btn btn-secondary ${state.diagram.spreadSide !== 'left' ? 'active' : ''}" onclick="setDiagramSpreadSide('right')" style="justify-content:center; padding:8px; font-size:12px;">Trang Phải</button>
+                  <button type="button" id="mDiagSideLeft" class="btn btn-secondary ${pageDiag.spreadSide === 'left' ? 'active' : ''}" onclick="setDiagramSpreadSide('left')" style="justify-content:center; padding:8px; font-size:12px;">Trang Trái</button>
+                  <button type="button" id="mDiagSideRight" class="btn btn-secondary ${pageDiag.spreadSide !== 'left' ? 'active' : ''}" onclick="setDiagramSpreadSide('right')" style="justify-content:center; padding:8px; font-size:12px;">Trang Phải</button>
                 </div>
               </div>
               ` : ''}
               <div style="margin-bottom:12px;">
                 <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
-                  <span style="color:var(--text-muted);">Dòng bắt đầu:</span><strong id="mDiagStartVal" style="font-variant-numeric:tabular-nums;">Dòng ${state.diagram.startLine + 1}</strong>
+                  <span style="color:var(--text-muted);">Dòng bắt đầu:</span><strong id="mDiagStartVal" style="font-variant-numeric:tabular-nums;">Dòng ${(pageDiag.startLine || 0) + 1}</strong>
                 </div>
-                <input type="range" class="range-slider" min="0" max="25" value="${state.diagram.startLine}" oninput="state.diagram.startLine = parseInt(this.value, 10); paginateText(); renderCanvas(); syncDiagramPositionUI(); document.getElementById('mDiagStartVal').innerText = 'Dòng ' + (parseInt(this.value, 10) + 1);">
+                <input type="range" class="range-slider" min="0" max="25" value="${pageDiag.startLine || 0}" oninput="updateDiagramStartLine(this.value); const el = document.getElementById('mDiagStartVal'); if (el) el.innerText = 'Dòng ' + (parseInt(this.value, 10) + 1);">
               </div>
               <div style="margin-bottom:12px;">
                 <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
-                  <span style="color:var(--text-muted);">Độ cao (số dòng chiếm):</span><strong id="mDiagSpanVal" style="font-variant-numeric:tabular-nums;">${state.diagram.lineSpan} dòng</strong>
+                  <span style="color:var(--text-muted);">Độ cao (số dòng chiếm):</span><strong id="mDiagSpanVal" style="font-variant-numeric:tabular-nums;">${pageDiag.lineSpan || 9} dòng</strong>
                 </div>
-                <input type="range" class="range-slider" min="4" max="22" value="${state.diagram.lineSpan}" oninput="state.diagram.lineSpan = parseInt(this.value, 10); paginateText(); renderCanvas(); syncDiagramPositionUI(); document.getElementById('mDiagSpanVal').innerText = this.value + ' dòng';">
+                <input type="range" class="range-slider" min="4" max="22" value="${pageDiag.lineSpan || 9}" oninput="updateDiagramLineSpan(this.value); const el = document.getElementById('mDiagSpanVal'); if (el) el.innerText = this.value + ' dòng';">
               </div>
               <button class="btn btn-secondary tool-chip-danger" onclick="removeDiagram(); openMobileSheet('diagram');" style="width:100%; justify-content:center; padding:9px; font-size:12px; font-weight:600;">
-                Xóa sơ đồ khỏi trang vở
+                Xóa sơ đồ Trang ${curPage + 1}
               </button>
             </div>
           `; })() : `
             <div style="font-size:12px; color:var(--text-muted); line-height:1.5; background:var(--bg-base); padding:10px 12px; border-radius:10px; border:1px solid var(--border-color);">
-              Sau khi chèn, sơ đồ tự hòa mực không viền trắng và chữ viết tay bên dưới sẽ tự dạt xuống né sơ đồ.
+              ${totalDiagCount > 0 ? `Trang ${curPage + 1} hiện chưa có sơ đồ. Chọn ảnh hoặc mẫu phía trên để thêm mà không mất sơ đồ ở các trang khác.` : 'Sau khi chèn, sơ đồ tự hòa mực không viền trắng và chữ viết tay bên dưới sẽ tự dạt xuống né sơ đồ.'}
             </div>
           `}
         `;
@@ -6906,6 +7110,7 @@
       const chipSkip = document.getElementById('chipPresetSkip');
       if (chipSkip) chipSkip.classList.remove('active');
 
+      saveDraftToStorage();
       paginateText();
       renderCanvas();
       showToast('↺ Đã đặt lại căn lề và dòng chuẩn!');
@@ -6971,6 +7176,7 @@
         ['messinessSlider', 'mMessinessSlider'].forEach(id => { const el = document.getElementById(id); if (el) el.value = 80; });
         ['messinessVal', 'mMessinessVal'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = '80%'; });
         const mAuto = document.getElementById('mAutoTypo'); if (mAuto) mAuto.checked = true;
+        saveDraftToStorage();
         ensureFontAndRender('LiuJianMaoCao', '✍️ Đã áp dụng: Chữ xấu & viết ẩu tự nhiên');
         return;
       }
@@ -7295,6 +7501,15 @@
             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
           </svg>
           <span id="downloadAllBtnText">Tải toàn bộ các trang (.JPG)</span>
+        </button>
+
+        <button class="btn-download-share" id="btnPrintPdfAll" onclick="executePrintPdfAll()" style="display:flex;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 6 2 18 2 18 9"/>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+            <rect x="6" y="14" width="12" height="8"/>
+          </svg>
+          <span id="printPdfBtnText">In / Lưu PDF (Tất cả trang)</span>
         </button>
 
         <button class="btn-download-share" id="btnDownloadShare" onclick="executeShareJpg()">

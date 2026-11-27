@@ -1,13 +1,13 @@
 {
-  "name": "Chép Tay Tiếng Trung - Vở Ô Ly & Kẻ Ngang",
+  "name": "Chép Tay — Vở Viết Tay Tự Nhiên",
   "short_name": "Chép Tay",
   "description": "Trình giả lập viết tay tiếng Trung phồn thể siêu thực trên vở học sinh",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#0b0f19",
-  "theme_color": "#0f172a",
+  "background_color": "#F7F5F0",
+  "theme_color": "#F7F5F0",
   "categories": ["education", "productivity", "utilities"],
   "icons": [
     {
