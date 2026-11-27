@@ -1,5 +1,5 @@
 // Service Worker for Chép Tay Tiếng Trung PWA
-const CACHE_NAME = 'cheptay-v6.4.0-fixed-render-align-ui';
+const CACHE_NAME = 'cheptay-v6.4.1-diagram-multipage';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

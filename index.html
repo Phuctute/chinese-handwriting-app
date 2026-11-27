@@ -2118,6 +2118,11 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
               📸 Up ảnh để AI vẽ lại
             </button>
+            <div id="diagramQuickPageBar" style="display:none; align-items:center; gap:4px; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.35); border-radius:20px; padding:2px 6px; font-size:11.5px; color:var(--accent);">
+              <button type="button" id="qDiagPrevBtn" onclick="moveDiagramPage(-1)" style="background:none; border:none; color:inherit; cursor:pointer; padding:2px 5px; font-weight:700;" title="Đưa sơ đồ về trang trước">◀</button>
+              <span id="qDiagPageLabel" style="font-weight:600; white-space:nowrap;">Sơ đồ: Trang 1</span>
+              <button type="button" id="qDiagNextBtn" onclick="moveDiagramPage(1)" style="background:none; border:none; color:inherit; cursor:pointer; padding:2px 5px; font-weight:700;" title="Đưa sơ đồ sang trang sau">▶</button>
+            </div>
             <button class="tool-chip" id="btnRemoveDiagram" onclick="removeDiagram()" style="display:none; color:#f87171;">
               ✕ Xóa sơ đồ
             </button>
@@ -2315,7 +2320,11 @@
             </div>
             <div class="form-row">
               <span class="form-label">Số trang xuất hiện:</span>
-              <input type="number" class="form-input" id="diagTargetPage" value="1" min="1" max="10" onchange="updateDiagramPos()">
+              <div style="display:flex; align-items:center; gap:4px;">
+                <button type="button" class="btn btn-secondary" onclick="moveDiagramPage(-1)" style="padding:5px 9px; font-size:12px;" title="Chuyển về trang trước">◀</button>
+                <input type="number" class="form-input" id="diagTargetPage" value="1" min="1" max="30" style="text-align:center;" oninput="updateDiagramPos(true)" onchange="updateDiagramPos(true)">
+                <button type="button" class="btn btn-secondary" onclick="moveDiagramPage(1)" style="padding:5px 9px; font-size:12px;" title="Chuyển sang trang sau">▶</button>
+              </div>
             </div>
           </div>
 
@@ -2726,7 +2735,7 @@
     // ========================================================
     // CACHE BUSTING & ASSET VERSIONING (GUARANTEES FRESH ASSETS)
     // ========================================================
-    const APP_VERSION = '6.4.0';
+    const APP_VERSION = '6.4.1';
     if (localStorage.getItem('cheptay_app_ver') !== APP_VERSION) {
       localStorage.setItem('cheptay_app_ver', APP_VERSION);
       if ('caches' in window) {
@@ -3755,8 +3764,12 @@
     // DIAGRAM SELECTOR & LIVE EDITORS
     // ========================================================
     function selectDiagramType(type) {
+      const wasDisabled = !state.diagram.enabled || state.diagram.type === 'none';
       state.diagram.type = type;
       state.diagram.enabled = (type !== 'none');
+      if (wasDisabled && state.diagram.enabled) {
+        state.diagram.page = Math.max(0, state.currentPage || 0);
+      }
 
       const cardMap = {
         'none': 'cardDiagNone',
@@ -3801,25 +3814,118 @@
 
       paginateText();
       renderCanvas();
+      syncDiagramPositionUI();
       updateDiagramUIButtons();
     }
 
-    function updateDiagramPos() {
-      const start = parseInt(document.getElementById('diagStartSlider').value);
-      const span = parseInt(document.getElementById('diagSpanSlider').value);
+    function syncDiagramPositionUI() {
+      const cfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
+      const isSpread = !!cfg.isSpread;
+      const isEnabled = !!(state.diagram && state.diagram.enabled && state.diagram.type !== 'none');
+
+      const posBox = document.getElementById('diagPosBox');
+      if (posBox) posBox.style.display = isEnabled ? 'flex' : 'none';
+
+      const btnRem = document.getElementById('btnRemoveDiagram');
+      if (btnRem) btnRem.style.display = isEnabled ? 'inline-flex' : 'none';
+
+      const qBar = document.getElementById('diagramQuickPageBar');
+      if (qBar) qBar.style.display = isEnabled ? 'inline-flex' : 'none';
+      const qLabel = document.getElementById('qDiagPageLabel');
+      if (qLabel) {
+        qLabel.innerText = (isSpread && state.spreadWriteMode === 'both')
+          ? `Sơ đồ: T${state.diagram.page * 2 + 1}-${state.diagram.page * 2 + 2}`
+          : `Sơ đồ: Trang ${state.diagram.page + 1}`;
+      }
+      const qPrev = document.getElementById('qDiagPrevBtn');
+      if (qPrev) qPrev.disabled = (state.diagram.page <= 0);
+
+      const spreadSideRow = document.getElementById('spreadSideRow');
+      if (spreadSideRow) spreadSideRow.style.display = isSpread ? '' : 'none';
+
+      const targetInput = document.getElementById('diagTargetPage');
+      if (targetInput) targetInput.value = String((state.diagram.page || 0) + 1);
+
+      const sideSelect = document.getElementById('diagSpreadSide');
+      if (sideSelect) sideSelect.value = state.diagram.spreadSide || 'right';
+
+      const startSlider = document.getElementById('diagStartSlider');
+      if (startSlider) startSlider.value = String(state.diagram.startLine || 0);
+      const startVal = document.getElementById('diagStartVal');
+      if (startVal) startVal.innerText = String(state.diagram.startLine || 0);
+
+      const spanSlider = document.getElementById('diagSpanSlider');
+      if (spanSlider) spanSlider.value = String(state.diagram.lineSpan || 9);
+      const spanVal = document.getElementById('diagSpanVal');
+      if (spanVal) spanVal.innerText = String(state.diagram.lineSpan || 9);
+
+      const mPageVal = document.getElementById('mDiagPageVal');
+      if (mPageVal) {
+        if (isSpread && state.spreadWriteMode === 'both') {
+          const p1 = state.diagram.page * 2 + 1;
+          const p2 = state.diagram.page * 2 + 2;
+          mPageVal.innerText = `Trang ${p1}-${p2} (Tờ ${state.diagram.page + 1}/${state.totalPages})`;
+        } else {
+          mPageVal.innerText = `Trang ${state.diagram.page + 1} / ${state.totalPages}`;
+        }
+      }
+      const mPrevBtn = document.getElementById('mDiagPrevPageBtn');
+      if (mPrevBtn) mPrevBtn.disabled = (state.diagram.page <= 0);
+      const mSideL = document.getElementById('mDiagSideLeft');
+      const mSideR = document.getElementById('mDiagSideRight');
+      if (mSideL) mSideL.classList.toggle('active', state.diagram.spreadSide === 'left');
+      if (mSideR) mSideR.classList.toggle('active', state.diagram.spreadSide !== 'left');
+    }
+
+    function setDiagramPage(pageIdx, jumpToPage = true) {
+      const clamped = Math.max(0, Math.min(29, parseInt(pageIdx, 10) || 0));
+      state.diagram.page = clamped;
+      paginateText();
+      if (jumpToPage) {
+        state.currentPage = Math.min(state.totalPages - 1, clamped);
+        updatePaginationUI();
+      }
+      renderCanvas();
+      syncDiagramPositionUI();
+      updateDiagramUIButtons();
+    }
+
+    function moveDiagramPage(delta) {
+      setDiagramPage((state.diagram.page || 0) + delta, true);
+    }
+
+    function setDiagramSpreadSide(side) {
+      state.diagram.spreadSide = (side === 'left') ? 'left' : 'right';
+      paginateText();
+      state.currentPage = Math.min(state.totalPages - 1, state.diagram.page || 0);
+      updatePaginationUI();
+      renderCanvas();
+      syncDiagramPositionUI();
+    }
+
+    function updateDiagramPos(jumpToPage = false) {
+      const start = parseInt(document.getElementById('diagStartSlider').value, 10) || 0;
+      const span = parseInt(document.getElementById('diagSpanSlider').value, 10) || 9;
       const side = document.getElementById('diagSpreadSide').value;
-      const targetPage = parseInt(document.getElementById('diagTargetPage').value) - 1;
+      const parsedPage = parseInt(document.getElementById('diagTargetPage').value, 10);
+      const prevPage = state.diagram.page;
+      const targetPage = isNaN(parsedPage) ? prevPage : Math.max(0, Math.min(29, parsedPage - 1));
 
       state.diagram.startLine = start;
       state.diagram.lineSpan = span;
       state.diagram.spreadSide = side;
-      state.diagram.page = Math.max(0, targetPage);
+      state.diagram.page = targetPage;
 
       document.getElementById('diagStartVal').innerText = start;
       document.getElementById('diagSpanVal').innerText = span;
 
       paginateText();
+      if (jumpToPage || targetPage !== prevPage) {
+        state.currentPage = Math.min(state.totalPages - 1, targetPage);
+        updatePaginationUI();
+      }
       renderCanvas();
+      syncDiagramPositionUI();
       updateDiagramUIButtons();
     }
 
@@ -4165,9 +4271,11 @@
       }
 
       state.diagram.enabled = true;
+      state.diagram.page = Math.max(0, state.currentPage || 0);
       closeAiDiagramStudio();
       paginateText();
       renderCanvas();
+      syncDiagramPositionUI();
       updateDiagramUIButtons();
 
       // On mobile: automatically switch to preview view so user sees the newly drawn diagram immediately!
@@ -4603,8 +4711,13 @@
       // Chunk directly into subpages using each subpage's true maxW and line capacity
       state.allPagesLines = [];
       let subpageIdx = 0;
+      const targetDiagramSubpage = state.diagram.enabled
+        ? (isSpread
+            ? (Math.max(0, state.diagram.page || 0) * 2) + (state.diagram.spreadSide === 'right' ? 1 : 0)
+            : Math.max(0, state.diagram.page || 0))
+        : -1;
 
-      while (hasMoreContent() || (state.diagram.enabled && subpageIdx === 0 && state.allPagesLines.length === 0)) {
+      while (hasMoreContent() || (state.diagram.enabled && subpageIdx <= targetDiagramSubpage)) {
         const isRightSubpage = isSpread && (subpageIdx % 2 === 1);
         const bounds = getPageBounds(cfg, isRightSubpage);
         const subpageCapacity = Math.max(1, getActivePageLines(bounds.rawLines).length);
@@ -4675,7 +4788,7 @@
         state.allPagesLines.push(slots);
         subpageIdx++;
         if (subpageIdx > 60) break;
-        if (!placedAnyOnSubpage && hasMoreContent()) break;
+        if (!placedAnyOnSubpage && hasMoreContent() && !hasDiagramOnThisSubpage) break;
       }
 
       if (state.allPagesLines.length === 0) {
@@ -5935,12 +6048,14 @@
             state.diagram.rawImage = img;
             state.diagram.enabled = true;
             state.diagram.type = 'image';
+            state.diagram.page = Math.max(0, state.currentPage || 0);
             state.diagram.startLine = 1;
             state.diagram.lineSpan = 11;
             const btnRem = document.getElementById('btnRemoveDiagram');
             if (btnRem) btnRem.style.display = 'inline-flex';
             paginateText();
             renderCanvas();
+            syncDiagramPositionUI();
             if (window.innerWidth <= 991) switchMobileView('preview');
             showToast('✨ Đã vẽ lại sơ đồ bằng nét bút bi vào vở!');
           });
@@ -5959,6 +6074,7 @@
       if (btnRem) btnRem.style.display = 'none';
       paginateText();
       renderCanvas();
+      syncDiagramPositionUI();
       showToast('Đã xóa sơ đồ khỏi trang!');
     }
 
@@ -5969,12 +6085,14 @@
         state.diagram.image = img;
         state.diagram.enabled = true;
         state.diagram.type = 'image';
+        state.diagram.page = Math.max(0, state.currentPage || 0);
         state.diagram.startLine = 1;
         state.diagram.lineSpan = 12;
         const btnRem = document.getElementById('btnRemoveDiagram');
         if (btnRem) btnRem.style.display = 'inline-flex';
         paginateText();
         renderCanvas();
+        syncDiagramPositionUI();
         if (window.innerWidth <= 991) {
           switchMobileView('preview');
           openMobileSheet('diagram');
@@ -5991,12 +6109,14 @@
         state.diagram.image = img;
         state.diagram.enabled = true;
         state.diagram.type = 'image';
+        state.diagram.page = Math.max(0, state.currentPage || 0);
         state.diagram.startLine = 0;
         state.diagram.lineSpan = 14;
         const btnRem = document.getElementById('btnRemoveDiagram');
         if (btnRem) btnRem.style.display = 'inline-flex';
         paginateText();
         renderCanvas();
+        syncDiagramPositionUI();
         if (window.innerWidth <= 991) {
           switchMobileView('preview');
           openMobileSheet('diagram');
@@ -6251,12 +6371,14 @@
         state.diagram.image = img;
         state.diagram.enabled = true;
         state.diagram.type = 'image';
+        state.diagram.page = Math.max(0, state.currentPage || 0);
         state.diagram.startLine = 1;
         state.diagram.lineSpan = 12;
         const btnRem = document.getElementById('btnRemoveDiagram');
         if (btnRem) btnRem.style.display = 'inline-flex';
         paginateText();
         renderCanvas();
+        syncDiagramPositionUI();
         closeDiagramRestylerModal();
         if (window.innerWidth <= 991) switchMobileView('preview');
         showToast('✨ Đã áp dụng sơ đồ font viết tay vào trang vở!');
@@ -6745,12 +6867,14 @@
                   state.diagram.image = aiImg;
                   state.diagram.enabled = true;
                   state.diagram.type = 'image';
+                  state.diagram.page = Math.max(0, state.currentPage || 0);
                   state.diagram.startLine = 0;
                   state.diagram.lineSpan = 14;
                   const btnRem = document.getElementById('btnRemoveDiagram');
                   if (btnRem) btnRem.style.display = 'inline-flex';
                   paginateText();
                   renderCanvas();
+                  syncDiagramPositionUI();
                   closeMobileSheet();
                   if (window.innerWidth <= 991) switchMobileView('preview');
                   showToast('✨ AI đã vẽ lại sơ đồ và tự động thêm vào vở!');
@@ -6772,12 +6896,14 @@
             state.diagram.image = sketchImg;
             state.diagram.enabled = true;
             state.diagram.type = 'image';
+            state.diagram.page = Math.max(0, state.currentPage || 0);
             state.diagram.startLine = 0;
             state.diagram.lineSpan = 13;
             const btnRem = document.getElementById('btnRemoveDiagram');
             if (btnRem) btnRem.style.display = 'inline-flex';
             paginateText();
             renderCanvas();
+            syncDiagramPositionUI();
             closeMobileSheet();
             if (window.innerWidth <= 991) switchMobileView('preview');
             showToast('✨ AI đã vẽ lại sơ đồ bằng nét bút bi vào trang vở!');
@@ -6847,12 +6973,14 @@
             state.diagram.image = img;
             state.diagram.enabled = true;
             state.diagram.type = 'image';
+            state.diagram.page = Math.max(0, state.currentPage || 0);
             state.diagram.startLine = 0;
             state.diagram.lineSpan = 14;
             const btnRem = document.getElementById('btnRemoveDiagram');
             if (btnRem) btnRem.style.display = 'inline-flex';
             paginateText();
             renderCanvas();
+            syncDiagramPositionUI();
             if (window.innerWidth <= 991) {
               switchMobileView('preview');
               openMobileSheet('diagram');
@@ -7061,26 +7189,51 @@
               🌊 Hoặc dùng mẫu Thủy triều bút bi xanh số 2
             </button>
           </div>
-          ${hasDiag ? `
+          ${hasDiag ? (() => {
+            const dCfg = TEMPLATES_CONFIG[state.notebookTemplate] || TEMPLATES_CONFIG['notebook_thanhnam_spread.jpg'];
+            const dIsSpread = !!dCfg.isSpread;
+            const dPageLabel = (dIsSpread && state.spreadWriteMode === 'both')
+              ? `Trang ${state.diagram.page * 2 + 1}-${state.diagram.page * 2 + 2} (Tờ ${state.diagram.page + 1}/${state.totalPages})`
+              : `Trang ${state.diagram.page + 1} / ${state.totalPages}`;
+            return `
             <div style="background:rgba(255,255,255,0.04); border:1px solid var(--border-color); border-radius:10px; padding:12px; margin-bottom:14px;">
               <div style="font-size:13px; font-weight:600; margin-bottom:10px; color:var(--text-main);">⚙️ Điều chỉnh vị trí sơ đồ:</div>
+              <div style="margin-bottom:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-bottom:6px;">
+                  <span>Trang đặt sơ đồ:</span>
+                  <strong id="mDiagPageVal" style="color:var(--accent);">${dPageLabel}</strong>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                  <button type="button" id="mDiagPrevPageBtn" class="btn btn-secondary" ${state.diagram.page <= 0 ? 'disabled' : ''} onclick="moveDiagramPage(-1)" style="justify-content:center; padding:8px; font-size:12px;">◀ Trang trước</button>
+                  <button type="button" id="mDiagNextPageBtn" class="btn btn-secondary" onclick="moveDiagramPage(1)" style="justify-content:center; padding:8px; font-size:12px;">Trang sau ▶</button>
+                </div>
+              </div>
+              ${dIsSpread ? `
+              <div style="margin-bottom:12px;">
+                <div style="font-size:12px; margin-bottom:6px;">Mặt trang (Vở đôi):</div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                  <button type="button" id="mDiagSideLeft" class="btn btn-secondary ${state.diagram.spreadSide === 'left' ? 'active' : ''}" onclick="setDiagramSpreadSide('left')" style="justify-content:center; padding:8px; font-size:12px;">📄 Trang Trái</button>
+                  <button type="button" id="mDiagSideRight" class="btn btn-secondary ${state.diagram.spreadSide !== 'left' ? 'active' : ''}" onclick="setDiagramSpreadSide('right')" style="justify-content:center; padding:8px; font-size:12px;">📄 Trang Phải</button>
+                </div>
+              </div>
+              ` : ''}
               <div style="margin-bottom:12px;">
                 <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
                   <span>Dòng bắt đầu:</span><strong id="mDiagStartVal">Dòng ${state.diagram.startLine + 1}</strong>
                 </div>
-                <input type="range" class="range-slider" min="0" max="25" value="${state.diagram.startLine}" oninput="state.diagram.startLine = parseInt(this.value); paginateText(); renderCanvas(); document.getElementById('mDiagStartVal').innerText = 'Dòng ' + (parseInt(this.value) + 1);">
+                <input type="range" class="range-slider" min="0" max="25" value="${state.diagram.startLine}" oninput="state.diagram.startLine = parseInt(this.value, 10); paginateText(); renderCanvas(); syncDiagramPositionUI(); document.getElementById('mDiagStartVal').innerText = 'Dòng ' + (parseInt(this.value, 10) + 1);">
               </div>
               <div style="margin-bottom:12px;">
                 <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
                   <span>Độ cao (số dòng chiếm):</span><strong id="mDiagSpanVal">${state.diagram.lineSpan} dòng</strong>
                 </div>
-                <input type="range" class="range-slider" min="4" max="22" value="${state.diagram.lineSpan}" oninput="state.diagram.lineSpan = parseInt(this.value); paginateText(); renderCanvas(); document.getElementById('mDiagSpanVal').innerText = this.value + ' dòng';">
+                <input type="range" class="range-slider" min="4" max="22" value="${state.diagram.lineSpan}" oninput="state.diagram.lineSpan = parseInt(this.value, 10); paginateText(); renderCanvas(); syncDiagramPositionUI(); document.getElementById('mDiagSpanVal').innerText = this.value + ' dòng';">
               </div>
               <button class="btn btn-secondary" onclick="removeDiagram(); openMobileSheet('diagram');" style="width:100%; justify-content:center; color:#f87171; border-color:rgba(239,68,68,0.3); padding:10px; font-size:12px; font-weight:600;">
                 ✕ Xóa sơ đồ khỏi trang vở
               </button>
             </div>
-          ` : `
+          `; })() : `
             <div style="font-size:12px; color:var(--text-dim); line-height:1.5; background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; border:1px dashed var(--border-color);">
               💡 <strong>Mẹo:</strong> Sau khi tải ảnh sơ đồ, ảnh sẽ tự động hòa mực bút bi vào trang vở (chế độ Multiply không viền trắng), và toàn bộ chữ viết tay bên dưới sẽ tự động dạt xuống dưới né sơ đồ.
             </div>
